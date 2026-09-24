@@ -71,11 +71,14 @@
     <script>
         const container = document.getElementById('game-container');
         const modal = document.getElementById('game-modal');
+        const mobileControls = document.getElementById('mobile-controls');
+        const actionControl = document.getElementById('btn-action');
+        
         let currentTimer = null;
         let score = 0, currentId = null;
         let keys = { up: false, down: false, left: false, right: false, action: false };
 
-        // 전역 이벤트 방어 및 매핑
+        // 전역 이벤트 방어 (스크롤 방지)
         window.addEventListener('keydown', e => {
             if(['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', ' '].includes(e.key)) {
                 if(document.activeElement.tagName !== 'INPUT') e.preventDefault();
@@ -113,7 +116,7 @@
 
         // 100선 게임 데이터 정의
         const gameDefs = [
-            // 아케이드 (캔버스 기반)
+            // 아케이드 (캔버스)
             { c:"아케이드", t:"뱀 게임 (기본)", d:"벽과 꼬리를 피하세요.", e:"snake", cfg:{spd:120} },
             { c:"아케이드", t:"스피드 뱀 게임", d:"속도가 2배 빠른 뱀입니다.", e:"snake", cfg:{spd:60} },
             { c:"아케이드", t:"클래식 퐁 (Pong)", d:"상하로 패들을 움직이세요.", e:"pong", cfg:{spd:1} },
@@ -201,7 +204,7 @@
             { c:"학급 도구", t:"우주선 발사", d:"연료를 채워 로켓을 발사해요.", e:"tycoon", cfg:{emo:"🚀", txt:"연료충전"} },
             { c:"학급 도구", t:"칭찬 스티커판", d:"칭찬 스티커를 모아보세요.", e:"tycoon", cfg:{emo:"⭐", txt:"스티커 받기"} },
 
-            // 엽쌤 스페셜 (새로운 로직 20개 완전 재개발 완료)
+            // 엽쌤 스페셜 (새로운 로직 20개 완전 재개발)
             { c:"엽쌤 스페셜", t:"숨은 별 찾기", d:"달 사이에서 별(⭐)을 찾아 터치하세요.", e:"find_target", cfg:{ico:"⭐", bg:"🌑"} },
             { c:"엽쌤 스페셜", t:"알파벳 순서", d:"A부터 P까지 순서대로 누르세요.", e:"order_click", cfg:{type:"alpha"} },
             { c:"엽쌤 스페셜", t:"숫자 1부터 16", d:"1부터 16까지 순서대로 누르세요.", e:"order_click", cfg:{type:"num"} },
@@ -214,17 +217,14 @@
             { c:"엽쌤 스페셜", t:"비밀번호 풀기", d:"힌트를 보고 3자리 자물쇠를 여세요.", e:"lock", cfg:{} },
             { c:"엽쌤 스페셜", t:"동물 울음소리", d:"울음소리에 맞는 동물을 고르세요.", e:"sound_quiz", cfg:{} },
             { c:"엽쌤 스페셜", t:"짝수 홀수 분류", d:"숫자를 보고 짝수/홀수를 고르세요.", e:"even_odd", cfg:{} },
-            
-            // 완벽 구동되는 전용 로직들
             { c:"엽쌤 스페셜", t:"분리수거 게임", d:"쓰레기를 알맞은 통에 넣으세요.", e:"recycle_real", cfg:{} },
-            { c:"엽쌤 스페셜", t:"우주 탐험", d:"우주선을 조종해 운석을 피하세요.", e:"space_real", cfg:{} },
-            
-            { c:"엽쌤 스페셜", t:"구구단 운석", d:"운석(캔버스) 대신 정답을 입력!", e:"quiz", cfg:{mode:"mul"} },
+            { c:"엽쌤 스페셜", t:"지구 지키기", d:"쓰레기를 터치해 지구를 보호하세요.", e:"catch_dom", cfg:{emo:"🗑️"} },
+            { c:"엽쌤 스페셜", t:"구구단 운석", d:"운석(캔버스) 대신 정답을 입력!", e:"quiz", cfg:{mode:"mul"} }, 
+            { c:"엽쌤 스페셜", t:"우주 탐험", d:"우주선을 조종해 운석을 피하세요.", e:"space_real", cfg:{} }, 
             { c:"엽쌤 스페셜", t:"눈싸움 미니", d:"상대에게 눈덩이를 던지세요.", e:"shooter", cfg:{hard:false} },
             { c:"엽쌤 스페셜", t:"할로윈 유령", d:"호박 사이에 유령을 잡아 점수를 얻으세요.", e:"find_target", cfg:{ico:"👻", bg:"🎃"} },
             { c:"엽쌤 스페셜", t:"선물 받기", d:"하늘에서 떨어지는 선물을 받으세요.", e:"catch", cfg:{} },
-            { c:"엽쌤 스페셜", t:"행운의 포춘", d:"엽쌤이 전하는 따뜻한 한마디.", e:"tool", cfg:{type:"yeop"} },
-            { c:"엽쌤 스페셜", t:"시력 테스트", d:"가장 작은 글씨를 찾아보세요.", e:"vision", cfg:{} }
+            { c:"엽쌤 스페셜", t:"행운의 포춘", d:"엽쌤이 전하는 따뜻한 한마디.", e:"tool", cfg:{type:"yeop"} }
         ];
 
         gameDefs.forEach((g, i) => g.id = i + 1);
@@ -235,7 +235,7 @@
             const cats = [...new Set(gameDefs.map(g => g.c))];
             cats.forEach(cName => {
                 html += `<div class="mb-4"><p class="font-bold text-yellow-400 mb-2 border-b border-slate-700 pb-1">${cName}</p><div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-1 gap-1">`;
-                gameDefs.filter(g => g.c === cName).forEach(g => { html += `<button id="btn-menu-${g.id}" class="text-left px-3 py-2 rounded bg-slate-800 hover:bg-indigo-600 transition truncate text-slate-200">${g.id}. ${g.t}</button>`; });
+                gameDefs.filter(g => g.c === cName).forEach(g => { html += `<button id="btn-menu-${g.id}" class="text-left px-3 py-2 rounded bg-slate-800 hover:bg-indigo-600 transition truncate text-slate-200 focus:outline-none focus:ring-2 focus:ring-cyan-400">${g.id}. ${g.t}</button>`; });
                 html += `</div></div>`;
             });
             menu.innerHTML = html;
@@ -259,7 +259,10 @@
             if(isCanvas) { mobileControls.classList.remove('hidden'); mobileControls.classList.add('grid'); actionControl.classList.remove('hidden'); }
             else { mobileControls.classList.add('hidden'); mobileControls.classList.remove('grid'); actionControl.classList.add('hidden'); }
 
+            // 게임 시작 전 대기 화면 (검은화면 에러 해결용 핵심 로직)
             container.innerHTML = `<div class="text-center p-6 flex flex-col items-center justify-center w-full h-full bg-slate-900"><h3 class="text-3xl font-bold text-cyan-400 mb-4">${game.t}</h3><p class="text-sm md:text-base text-slate-300 mb-8">${game.d}</p><button id="btn-start-game" class="px-10 py-4 bg-emerald-600 hover:bg-emerald-500 rounded-xl font-bold text-xl text-white shadow-[0_4px_0_rgb(4,120,87)] active:translate-y-1 active:shadow-none transition">🚀 게임 시작하기</button></div>`;
+            
+            // 여기서 startGame을 바인딩함으로써, 버튼을 클릭해야만 캔버스가 그려지고 타이머가 돔
             document.getElementById('btn-start-game').addEventListener('click', () => startGame(id));
         }
 
@@ -360,14 +363,14 @@
         }
 
         // ==========================================
-        // 100% 개별 작동하는 DOM 게임 엔진 (분리수거 게임, 자물쇠 풀기 등 추가)
+        // 100% 개별 작동하는 DOM 게임 엔진 (분리수거 게임 등 추가)
         // ==========================================
         function runDOMEngine(g) {
             if (currentTimer) { clearInterval(currentTimer); currentTimer = null; }
             container.innerHTML = `<div id="dom-wrapper" class="w-full h-full flex flex-col items-center justify-center p-4 text-center overflow-y-auto bg-slate-950"></div>`;
             const wrap = document.getElementById('dom-wrapper');
 
-            // 93. 분리수거 미니 (새로 개발된 전용 드래그 앤 터치 로직)
+            // 93. 분리수거 미니 (새로 개발된 전용 버튼 로직)
             if(g.e === 'recycle_real') {
                 let trashTypes = [
                     { name: '📄 종이컵', type: 'paper' }, { name: '📰 신문지', type: 'paper' }, 
@@ -423,33 +426,7 @@
                 });
             }
 
-            // 시력 테스트 게임
-            else if(g.e === 'vision') {
-                let lvl = 1;
-                const renderVision = () => {
-                    let textList = ['안','망','강','방','항','장','상','당'];
-                    let target = textList[Math.floor(Math.random()*textList.length)];
-                    let fake = textList[Math.floor(Math.random()*textList.length)];
-                    while(fake === target) fake = textList[Math.floor(Math.random()*textList.length)];
-                    
-                    let sz = Math.max(12, 40 - (lvl*3)); // 갈수록 폰트가 작아짐
-                    let targetIdx = Math.floor(Math.random()*25);
-                    let h = `<h2 class="text-xl font-bold text-cyan-400 mb-4">시력 테스트 (레벨 ${lvl})</h2><p class="mb-4">다른 글자를 찾아 누르세요!</p><div class="grid grid-cols-5 gap-1 bg-slate-800 p-2 rounded-lg w-[300px]">`;
-                    for(let i=0; i<25; i++) {
-                        h += `<button id="vi-${i}" class="aspect-square flex items-center justify-center rounded hover:bg-slate-700" style="font-size: ${sz}px;">${i===targetIdx ? target : fake}</button>`;
-                    }
-                    wrap.innerHTML = h + `</div>`;
-                    for(let i=0; i<25; i++) {
-                        document.getElementById(`vi-${i}`).addEventListener('click', () => {
-                            if(i === targetIdx) { lvl++; score+=10; document.getElementById('score-board').innerText='SCORE: '+score; renderVision(); }
-                            else triggerGameOver(score);
-                        });
-                    }
-                };
-                renderVision();
-            }
-
-            // 그 외 공통 퍼즐 및 도구 엔진들... (스도쿠, 사다리, 퀴즈, 타이쿤 등 안전하게 바인딩)
+            // 그 외 공통 퍼즐 및 도구 엔진들 (스도쿠, 사다리, 퀴즈, 타이쿤 등)
             else if(g.e === '2048') {
                 wrap.innerHTML = `<h2 class="text-2xl font-bold text-yellow-400 mb-4">2048 퍼즐 미니</h2><div class="grid grid-cols-2 gap-2 bg-slate-800 p-4 rounded-lg text-3xl font-bold w-full max-w-[250px]"><div id="t-0" class="w-24 h-24 bg-slate-700 flex items-center justify-center rounded">2</div><div id="t-1" class="w-24 h-24 bg-slate-700 flex items-center justify-center rounded">2</div><div id="t-2" class="w-24 h-24 bg-slate-700 flex items-center justify-center rounded">4</div><div id="t-3" class="w-24 h-24 bg-slate-700 flex items-center justify-center rounded"></div></div><button id="btn-2048" class="mt-6 px-8 py-3 bg-indigo-600 hover:bg-indigo-500 rounded-xl font-bold text-xl shadow">합치기!</button>`;
                 document.getElementById('btn-2048').addEventListener('click', () => { score+=20; document.getElementById('score-board').innerText='SCORE: '+score; document.getElementById('t-0').innerText='4'; document.getElementById('t-1').innerText='8'; document.getElementById('t-2').innerText='16'; document.getElementById('t-3').innerText='2'; if(score>100) triggerSuccess('2048 완성!', score); });
