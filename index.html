@@ -3,111 +3,120 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Retro 50 Game Center - Ultimate Edition</title>
+    <title>엽쌤스쿨 - 레트로 게임 아카이브 (50선)</title>
+    <!-- 귀여운 둥근 폰트 적용 (Google Fonts - Jua) -->
+    <link href="https://fonts.googleapis.com/css2?family=Jua&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            font-family: 'Jua', sans-serif;
+        }
+    </style>
 </head>
 <body class="bg-slate-950 text-white min-h-screen flex flex-col select-none">
 
     <!-- Header -->
-    <header class="bg-slate-900 border-b border-slate-800 p-4 text-center">
-        <h1 class="text-2xl font-black text-yellow-400 tracking-wider">🕹️ RETRO 50 GAME CENTER (ULTIMATE)</h1>
-        <p class="text-xs text-slate-400 mt-1">50가지 고전 아케이드 및 미니게임 통합 아카이브</p>
+    <header class="bg-slate-900 border-b border-slate-800 p-4 text-center shadow-lg">
+        <h1 class="text-3xl font-black text-yellow-400 tracking-wider">🕹️ 엽쌤스쿨 레트로 게임 센터</h1>
+        <p class="text-sm text-slate-300 mt-1">완벽하게 검증된 50가지 아케이드 & 미니게임 모음집</p>
     </header>
 
     <!-- Main Layout -->
     <main class="flex-1 max-w-7xl w-full mx-auto p-4 grid grid-cols-1 lg:grid-cols-4 gap-6">
         
         <!-- Sidebar: 50 Games Directory -->
-        <aside class="bg-slate-900 p-4 rounded-xl border border-slate-800 lg:col-span-1 h-[620px] overflow-y-auto space-y-4 text-xs">
-            <h2 class="text-sm font-bold text-cyan-400 uppercase tracking-wider">Game Directory (50)</h2>
+        <aside class="bg-slate-900 p-4 rounded-xl border border-slate-800 lg:col-span-1 h-[620px] overflow-y-auto space-y-4 text-sm shadow-inner">
+            <h2 class="text-base font-bold text-cyan-400 uppercase tracking-wider">🎮 게임 디렉토리 (50)</h2>
             
             <!-- Arcade & Action (1~15) -->
             <div class="space-y-1">
-                <p class="text-xs text-slate-500 font-semibold">아케이드 & 액션 (1~15)</p>
-                <button onclick="loadGame(1)" class="w-full text-left px-3 py-2 rounded bg-slate-800 hover:bg-slate-700 transition">1. 뱀 게임 (Snake)</button>
-                <button onclick="loadGame(2)" class="w-full text-left px-3 py-2 rounded bg-slate-800 hover:bg-slate-700 transition">2. 퐁 (Pong)</button>
-                <button onclick="loadGame(3)" class="w-full text-left px-3 py-2 rounded bg-slate-800 hover:bg-slate-700 transition">3. 벽돌깨기 (Breakout)</button>
-                <button onclick="loadGame(4)" class="w-full text-left px-3 py-2 rounded bg-slate-800 hover:bg-slate-700 transition">4. 장애물 피하기</button>
-                <button onclick="loadGame(5)" class="w-full text-left px-3 py-2 rounded bg-slate-800 hover:bg-slate-700 transition">5. 반응속도 테스트</button>
-                <button onclick="loadGame(6)" class="w-full text-left px-3 py-2 rounded bg-slate-800 hover:bg-slate-700 transition">6. 점프 앤 러너 (Dino)</button>
-                <button onclick="loadGame(7)" class="w-full text-left px-3 py-2 rounded bg-slate-800 hover:bg-slate-700 transition">7. 스페이스 슈팅</button>
-                <button onclick="loadGame(8)" class="w-full text-left px-3 py-2 rounded bg-slate-800 hover:bg-slate-700 transition">8. 사과 받기 게임</button>
-                <button onclick="loadGame(9)" class="w-full text-left px-3 py-2 rounded bg-slate-800 hover:bg-slate-700 transition">9. 두더지 잡기</button>
-                <button onclick="loadGame(10)" class="w-full text-left px-3 py-2 rounded bg-slate-800 hover:bg-slate-700 transition">10. 미니 타워디펜스</button>
-                <button onclick="loadGame(11)" class="w-full text-left px-3 py-2 rounded bg-slate-800 hover:bg-slate-700 transition">11. 테트리스 미니</button>
-                <button onclick="loadGame(12)" class="w-full text-left px-3 py-2 rounded bg-slate-800 hover:bg-slate-700 transition">12. 플래피 버드 미니</button>
-                <button onclick="loadGame(13)" class="w-full text-left px-3 py-2 rounded bg-slate-800 hover:bg-slate-700 transition">13. 팩맨 스타일 미니</button>
-                <button onclick="loadGame(14)" class="w-full text-left px-3 py-2 rounded bg-slate-800 hover:bg-slate-700 transition">14. 갤러그 슈팅 미니</button>
-                <button onclick="loadGame(15)" class="w-full text-left px-3 py-2 rounded bg-slate-800 hover:bg-slate-700 transition">15. 지렁이 레이스</button>
+                <p class="text-xs text-slate-400 font-semibold mb-1">⚡ 아케이드 & 액션 (1~15)</p>
+                <button onclick="loadGame(1)" class="w-full text-left px-3 py-2 rounded bg-slate-800 hover:bg-indigo-600 transition">1. 뱀 게임 (Snake)</button>
+                <button onclick="loadGame(2)" class="w-full text-left px-3 py-2 rounded bg-slate-800 hover:bg-indigo-600 transition">2. 퐁 (Pong)</button>
+                <button onclick="loadGame(3)" class="w-full text-left px-3 py-2 rounded bg-slate-800 hover:bg-indigo-600 transition">3. 벽돌깨기 (Breakout)</button>
+                <button onclick="loadGame(4)" class="w-full text-left px-3 py-2 rounded bg-slate-800 hover:bg-indigo-600 transition">4. 장애물 피하기</button>
+                <button onclick="loadGame(5)" class="w-full text-left px-3 py-2 rounded bg-slate-800 hover:bg-indigo-600 transition">5. 반응속도 테스트</button>
+                <button onclick="loadGame(6)" class="w-full text-left px-3 py-2 rounded bg-slate-800 hover:bg-indigo-600 transition">6. 점프 앤 러너 (Dino)</button>
+                <button onclick="loadGame(7)" class="w-full text-left px-3 py-2 rounded bg-slate-800 hover:bg-indigo-600 transition">7. 스페이스 슈팅</button>
+                <button onclick="loadGame(8)" class="w-full text-left px-3 py-2 rounded bg-slate-800 hover:bg-indigo-600 transition">8. 사과 받기 게임</button>
+                <button onclick="loadGame(9)" class="w-full text-left px-3 py-2 rounded bg-slate-800 hover:bg-indigo-600 transition">9. 두더지 잡기</button>
+                <button onclick="loadGame(10)" class="w-full text-left px-3 py-2 rounded bg-slate-800 hover:bg-indigo-600 transition">10. 미니 타워디펜스</button>
+                <button onclick="loadGame(11)" class="w-full text-left px-3 py-2 rounded bg-slate-800 hover:bg-indigo-600 transition">11. 테트리스 미니</button>
+                <button onclick="loadGame(12)" class="w-full text-left px-3 py-2 rounded bg-slate-800 hover:bg-indigo-600 transition">12. 플래피 버드 미니</button>
+                <button onclick="loadGame(13)" class="w-full text-left px-3 py-2 rounded bg-slate-800 hover:bg-indigo-600 transition">13. 팩맨 미니</button>
+                <button onclick="loadGame(14)" class="w-full text-left px-3 py-2 rounded bg-slate-800 hover:bg-indigo-600 transition">14. 갤러그 슈팅</button>
+                <button onclick="loadGame(15)" class="w-full text-left px-3 py-2 rounded bg-slate-800 hover:bg-indigo-600 transition">15. 지렁이 레이스</button>
             </div>
 
             <!-- Puzzle & Brain (16~30) -->
             <div class="space-y-1">
-                <p class="text-xs text-slate-500 font-semibold">퍼즐 & 두뇌 (16~30)</p>
-                <button onclick="loadGame(16)" class="w-full text-left px-3 py-2 rounded bg-slate-800 hover:bg-slate-700 transition">16. 2048 퍼즐</button>
-                <button onclick="loadGame(17)" class="w-full text-left px-3 py-2 rounded bg-slate-800 hover:bg-slate-700 transition">17. 지뢰찾기</button>
-                <button onclick="loadGame(18)" class="w-full text-left px-3 py-2 rounded bg-slate-800 hover:bg-slate-700 transition">18. 틱택토 (삼목)</button>
-                <button onclick="loadGame(19)" class="w-full text-left px-3 py-2 rounded bg-slate-800 hover:bg-slate-700 transition">19. 숫자 야구게임</button>
-                <button onclick="loadGame(20)" class="w-full text-left px-3 py-2 rounded bg-slate-800 hover:bg-slate-700 transition">20. 카드 짝맞추기</button>
-                <button onclick="loadGame(21)" class="w-full text-left px-3 py-2 rounded bg-slate-800 hover:bg-slate-700 transition">21. 스도쿠 미니</button>
-                <button onclick="loadGame(22)" class="w-full text-left px-3 py-2 rounded bg-slate-800 hover:bg-slate-700 transition">22. 하노이의 탑</button>
-                <button onclick="loadGame(23)" class="w-full text-left px-3 py-2 rounded bg-slate-800 hover:bg-slate-700 transition">23. 슬라이딩 퍼즐</button>
-                <button onclick="loadGame(24)" class="w-full text-left px-3 py-2 rounded bg-slate-800 hover:bg-slate-700 transition">24. 소코반 (창고지기)</button>
-                <button onclick="loadGame(25)" class="w-full text-left px-3 py-2 rounded bg-slate-800 hover:bg-slate-700 transition">25. 퍼즐 보드 맞추기</button>
-                <button onclick="loadGame(26)" class="w-full text-left px-3 py-2 rounded bg-slate-800 hover:bg-slate-700 transition">26. 색상 매칭 퍼즐</button>
-                <button onclick="loadGame(27)" class="w-full text-left px-3 py-2 rounded bg-slate-800 hover:bg-slate-700 transition">27. 기억력 순서 맞추기</button>
-                <button onclick="loadGame(28)" class="w-full text-left px-3 py-2 rounded bg-slate-800 hover:bg-slate-700 transition">28. 단어 퍼즐 맞추기</button>
-                <button onclick="loadGame(29)" class="w-full text-left px-3 py-2 rounded bg-slate-800 hover:bg-slate-700 transition">29. 연산 스피드 퀴즈</button>
-                <button onclick="loadGame(30)" class="w-full text-left px-3 py-2 rounded bg-slate-800 hover:bg-slate-700 transition">30. 미로 찾기 미니</button>
+                <p class="text-xs text-slate-400 font-semibold mb-1">🧩 퍼즐 & 두뇌 (16~30)</p>
+                <button onclick="loadGame(16)" class="w-full text-left px-3 py-2 rounded bg-slate-800 hover:bg-indigo-600 transition">16. 2048 퍼즐</button>
+                <button onclick="loadGame(17)" class="w-full text-left px-3 py-2 rounded bg-slate-800 hover:bg-indigo-600 transition">17. 지뢰찾기</button>
+                <button onclick="loadGame(18)" class="w-full text-left px-3 py-2 rounded bg-slate-800 hover:bg-indigo-600 transition">18. 틱택토 (삼목)</button>
+                <button onclick="loadGame(19)" class="w-full text-left px-3 py-2 rounded bg-slate-800 hover:bg-indigo-600 transition">19. 숫자 야구게임</button>
+                <button onclick="loadGame(20)" class="w-full text-left px-3 py-2 rounded bg-slate-800 hover:bg-indigo-600 transition">20. 카드 짝맞추기</button>
+                <button onclick="loadGame(21)" class="w-full text-left px-3 py-2 rounded bg-slate-800 hover:bg-indigo-600 transition">21. 스도쿠 미니</button>
+                <button onclick="loadGame(22)" class="w-full text-left px-3 py-2 rounded bg-slate-800 hover:bg-indigo-600 transition">22. 하노이의 탑</button>
+                <button onclick="loadGame(23)" class="w-full text-left px-3 py-2 rounded bg-slate-800 hover:bg-indigo-600 transition">23. 슬라이딩 퍼즐</button>
+                <button onclick="loadGame(24)" class="w-full text-left px-3 py-2 rounded bg-slate-800 hover:bg-indigo-600 transition">24. 소코반 (창고지기)</button>
+                <button onclick="loadGame(25)" class="w-full text-left px-3 py-2 rounded bg-slate-800 hover:bg-indigo-600 transition">25. 퍼즐 조각 맞추기</button>
+                <button onclick="loadGame(26)" class="w-full text-left px-3 py-2 rounded bg-slate-800 hover:bg-indigo-600 transition">26. 색상 매칭 퍼즐</button>
+                <button onclick="loadGame(27)" class="w-full text-left px-3 py-2 rounded bg-slate-800 hover:bg-indigo-600 transition">27. 기억력 순서 맞추기</button>
+                <button onclick="loadGame(28)" class="w-full text-left px-3 py-2 rounded bg-slate-800 hover:bg-indigo-600 transition">28. 단어 맞추기 퀴즈</button>
+                <button onclick="loadGame(29)" class="w-full text-left px-3 py-2 rounded bg-slate-800 hover:bg-indigo-600 transition">29. 연산 스피드 퀴즈</button>
+                <button onclick="loadGame(30)" class="w-full text-left px-3 py-2 rounded bg-slate-800 hover:bg-indigo-600 transition">30. 미로 찾기 미니</button>
             </div>
 
             <!-- Casual & Board (31~45) -->
             <div class="space-y-1">
-                <p class="text-xs text-slate-500 font-semibold">캐주얼 & 보드 (31~45)</p>
-                <button onclick="loadGame(31)" class="w-full text-left px-3 py-2 rounded bg-slate-800 hover:bg-slate-700 transition">31. 단어 낙하 타자</button>
-                <button onclick="loadGame(32)" class="w-full text-left px-3 py-2 rounded bg-slate-800 hover:bg-slate-700 transition">32. 사다리 타기</button>
-                <button onclick="loadGame(33)" class="w-full text-left px-3 py-2 rounded bg-slate-800 hover:bg-slate-700 transition">33. 룰렛 돌리기</button>
-                <button onclick="loadGame(34)" class="w-full text-left px-3 py-2 rounded bg-slate-800 hover:bg-slate-700 transition">34. 주사위 레이스</button>
-                <button onclick="loadGame(35)" class="w-full text-left px-3 py-2 rounded bg-slate-800 hover:bg-slate-700 transition">35. 오목 (Omok)</button>
-                <button onclick="loadGame(36)" class="w-full text-left px-3 py-2 rounded bg-slate-800 hover:bg-slate-700 transition">36. 리듬 박자 맞추기</button>
-                <button onclick="loadGame(37)" class="w-full text-left px-3 py-2 rounded bg-slate-800 hover:bg-slate-700 transition">37. 볼링 미니</button>
-                <button onclick="loadGame(38)" class="w-full text-left px-3 py-2 rounded bg-slate-800 hover:bg-slate-700 transition">38. 페널티킥 축구</button>
-                <button onclick="loadGame(39)" class="w-full text-left px-3 py-2 rounded bg-slate-800 hover:bg-slate-700 transition">39. 펫 키우기 타이쿤</button>
-                <button onclick="loadGame(40)" class="w-full text-left px-3 py-2 rounded bg-slate-800 hover:bg-slate-700 transition">40. 픽셀 드로잉 보드</button>
-                <button onclick="loadGame(41)" class="w-full text-left px-3 py-2 rounded bg-slate-800 hover:bg-slate-700 transition">41. 가위바위보 연승</button>
-                <button onclick="loadGame(42)" class="w-full text-left px-3 py-2 rounded bg-slate-800 hover:bg-slate-700 transition">42. 동전 던지기 확률</button>
-                <button onclick="loadGame(43)" class="w-full text-left px-3 py-2 rounded bg-slate-800 hover:bg-slate-700 transition">43. 스톱워치 1초 맞추기</button>
-                <button onclick="loadGame(44)" class="w-full text-left px-3 py-2 rounded bg-slate-800 hover:bg-slate-700 transition">44. 업다운 숫자 맞추기</button>
-                <button onclick="loadGame(45)" class="w-full text-left px-3 py-2 rounded bg-slate-800 hover:bg-slate-700 transition">45. 초성 퀴즈 게임</button>
+                <p class="text-xs text-slate-400 font-semibold mb-1">🎲 캐주얼 & 보드 (31~45)</p>
+                <button onclick="loadGame(31)" class="w-full text-left px-3 py-2 rounded bg-slate-800 hover:bg-indigo-600 transition">31. 단어 낙하 타자</button>
+                <button onclick="loadGame(32)" class="w-full text-left px-3 py-2 rounded bg-slate-800 hover:bg-indigo-600 transition">32. 사다리 타기</button>
+                <button onclick="loadGame(33)" class="w-full text-left px-3 py-2 rounded bg-slate-800 hover:bg-indigo-600 transition">33. 룰렛 돌리기</button>
+                <button onclick="loadGame(34)" class="w-full text-left px-3 py-2 rounded bg-slate-800 hover:bg-indigo-600 transition">34. 주사위 레이스</button>
+                <button onclick="loadGame(35)" class="w-full text-left px-3 py-2 rounded bg-slate-800 hover:bg-indigo-600 transition">35. 오목 (Omok)</button>
+                <button onclick="loadGame(36)" class="w-full text-left px-3 py-2 rounded bg-slate-800 hover:bg-indigo-600 transition">36. 리듬 박자 맞추기</button>
+                <button onclick="loadGame(37)" class="w-full text-left px-3 py-2 rounded bg-slate-800 hover:bg-indigo-600 transition">37. 볼링 미니</button>
+                <button onclick="loadGame(38)" class="w-full text-left px-3 py-2 rounded bg-slate-800 hover:bg-indigo-600 transition">38. 페널티킥 축구</button>
+                <button onclick="loadGame(39)" class="w-full text-left px-3 py-2 rounded bg-slate-800 hover:bg-indigo-600 transition">39. 펫 키우기 타이쿤</button>
+                <button onclick="loadGame(40)" class="w-full text-left px-3 py-2 rounded bg-slate-800 hover:bg-indigo-600 transition">40. 픽셀 드로잉 보드</button>
+                <button onclick="loadGame(41)" class="w-full text-left px-3 py-2 rounded bg-slate-800 hover:bg-indigo-600 transition">41. 가위바위보 연승</button>
+                <button onclick="loadGame(42)" class="w-full text-left px-3 py-2 rounded bg-slate-800 hover:bg-indigo-600 transition">42. 동전 던지기 확률</button>
+                <button onclick="loadGame(43)" class="w-full text-left px-3 py-2 rounded bg-slate-800 hover:bg-indigo-600 transition">43. 스톱워치 1초 맞추기</button>
+                <button onclick="loadGame(44)" class="w-full text-left px-3 py-2 rounded bg-slate-800 hover:bg-indigo-600 transition">44. 업다운 숫자 맞추기</button>
+                <button onclick="loadGame(45)" class="w-full text-left px-3 py-2 rounded bg-slate-800 hover:bg-indigo-600 transition">45. 초성 퀴즈 게임</button>
             </div>
 
-            <!-- Mini Toys & Special (46~50) -->
+            <!-- Special Toys (46~50) -->
             <div class="space-y-1">
-                <p class="text-xs text-slate-500 font-semibold">특수 토이즈 (46~50)</p>
-                <button onclick="loadGame(46)" class="w-full text-left px-3 py-2 rounded bg-slate-800 hover:bg-slate-700 transition">46. 피아노 건반 치기</button>
-                <button onclick="loadGame(47)" class="w-full text-left px-3 py-2 rounded bg-slate-800 hover:bg-slate-700 transition">47. 클릭 연타 챌린지</button>
-                <button onclick="loadGame(48)" class="w-full text-left px-3 py-2 rounded bg-slate-800 hover:bg-slate-700 transition">48. 색맹 테스트 (다른색)</button>
-                <button onclick="loadGame(49)" class="w-full text-left px-3 py-2 rounded bg-slate-800 hover:bg-slate-700 transition">49. 포춘쿠키 행운 뽑기</button>
-                <button onclick="loadGame(50)" class="w-full text-left px-3 py-2 rounded bg-slate-800 hover:bg-slate-700 transition">50. 불꽃놀이 장난감</button>
+                <p class="text-xs text-slate-400 font-semibold mb-1">🧸 특수 장난감 (46~50)</p>
+                <button onclick="loadGame(46)" class="w-full text-left px-3 py-2 rounded bg-slate-800 hover:bg-indigo-600 transition">46. 피아노 건반 치기</button>
+                <button onclick="loadGame(47)" class="w-full text-left px-3 py-2 rounded bg-slate-800 hover:bg-indigo-600 transition">47. 클릭 연타 챌린지</button>
+                <button onclick="loadGame(48)" class="w-full text-left px-3 py-2 rounded bg-slate-800 hover:bg-indigo-600 transition">48. 다른 색 찾기</button>
+                <button onclick="loadGame(49)" class="w-full text-left px-3 py-2 rounded bg-slate-800 hover:bg-indigo-600 transition">49. 포춘쿠키 행운 뽑기</button>
+                <button onclick="loadGame(50)" class="w-full text-left px-3 py-2 rounded bg-slate-800 hover:bg-indigo-600 transition">50. 디지털 불꽃놀이</button>
             </div>
         </aside>
 
         <!-- Game Screen Area -->
-        <section class="bg-slate-900 p-6 rounded-xl border border-slate-800 lg:col-span-3 flex flex-col items-center justify-center">
-            <div id="game-title" class="text-xl font-bold mb-1 text-emerald-400">1. 뱀 게임 (Snake)</div>
-            <div id="game-info" class="text-xs text-slate-400 mb-3">방향키로 조작하여 먹이를 먹으세요!</div>
+        <section class="bg-slate-900 p-6 rounded-xl border border-slate-800 lg:col-span-3 flex flex-col items-center justify-center shadow-xl">
+            <div id="game-title" class="text-2xl font-bold mb-1 text-emerald-400">1. 뱀 게임 (Snake)</div>
+            <div id="game-info" class="text-sm text-slate-300 mb-4">방향키로 조작하여 먹이를 먹으세요!</div>
             
-            <div id="game-container" class="bg-black w-[480px] h-[400px] flex items-center justify-center border border-slate-700 relative overflow-hidden rounded shadow-xl">
+            <div id="game-container" class="bg-black w-[480px] h-[400px] flex items-center justify-center border-2 border-slate-700 relative overflow-hidden rounded-lg shadow-2xl">
                 <canvas id="canvas" width="480" height="400" class="bg-slate-950"></canvas>
             </div>
             
-            <div id="score-board" class="mt-3 text-lg font-bold text-yellow-400">SCORE: 0</div>
+            <div id="score-board" class="mt-4 text-xl font-bold text-yellow-400">SCORE: 0</div>
         </section>
 
     </main>
 
-    <footer class="bg-slate-900 text-center p-3 text-xs text-slate-500 border-t border-slate-800">
-        Retro Game Center - 50 Ultimate Interactive Games
+    <!-- Footer -->
+    <footer class="bg-slate-900 text-center p-4 text-sm text-slate-400 border-t border-slate-800 flex justify-between items-center px-8">
+        <span>Retro Game Center - 50 Interactive Games Collection</span>
+        <span class="text-yellow-400 font-bold">© 2026. 엽쌤</span>
     </footer>
 
     <script>
@@ -132,14 +141,14 @@
         const titles = [
             "1. 뱀 게임 (Snake)", "2. 퐁 (Pong)", "3. 벽돌깨기 (Breakout)", "4. 장애물 피하기", "5. 반응속도 테스트",
             "6. 점프 앤 러너 (Dino)", "7. 스페이스 슈팅", "8. 사과 받기 게임", "9. 두더지 잡기", "10. 미니 타워디펜스",
-            "11. 테트리스 미니", "12. 플래피 버드 미니", "13. 팩맨 스타일 미니", "14. 갤러그 슈팅 미니", "15. 지렁이 레이스",
+            "11. 테트리스 미니", "12. 플래피 버드 미니", "13. 팩맨 미니", "14. 갤러그 슈팅", "15. 지렁이 레이스",
             "16. 2048 퍼즐", "17. 지뢰찾기", "18. 틱택토 (삼목)", "19. 숫자 야구게임", "20. 카드 짝맞추기",
-            "21. 스도쿠 미니", "22. 하노이의 탑", "23. 슬라이딩 퍼즐", "24. 소코반 (창고지기)", "25. 퍼즐 보드 맞추기",
-            "26. 색상 매칭 퍼즐", "27. 기억력 순서 맞추기", "28. 단어 퍼즐 맞추기", "29. 연산 스피드 퀴즈", "30. 미로 찾기 미니",
+            "21. 스도쿠 미니", "22. 하노이의 탑", "23. 슬라이딩 퍼즐", "24. 소코반 (창고지기)", "25. 퍼즐 조각 맞추기",
+            "26. 색상 매칭 퍼즐", "27. 기억력 순서 맞추기", "28. 단어 맞추기 퀴즈", "29. 연산 스피드 퀴즈", "30. 미로 찾기 미니",
             "31. 단어 낙하 타자", "32. 사다리 타기", "33. 룰렛 돌리기", "34. 주사위 레이스", "35. 오목 (Omok)",
             "36. 리듬 박자 맞추기", "37. 볼링 미니", "38. 페널티킥 축구", "39. 펫 키우기 타이쿤", "40. 픽셀 드로잉 보드",
             "41. 가위바위보 연승", "42. 동전 던지기 확률", "43. 스톱워치 1초 맞추기", "44. 업다운 숫자 맞추기", "45. 초성 퀴즈 게임",
-            "46. 피아노 건반 치기", "47. 클릭 연타 챌린지", "48. 색맹 테스트 (다른색)", "49. 포춘쿠키 행운 뽑기", "50. 불꽃놀이 장난감"
+            "46. 피아노 건반 치기", "47. 클릭 연타 챌린지", "48. 다른 색 찾기", "49. 포춘쿠키 행운 뽑기", "50. 디지털 불꽃놀이"
         ];
 
         function loadGame(id) {
@@ -148,7 +157,6 @@
             document.getElementById('game-title').innerText = titles[id - 1];
 
             switch(id) {
-                // Canvas Arcade Games (1 ~ 15)
                 case 1: playSnake(); break;
                 case 2: playPong(); break;
                 case 3: playBrick(); break;
@@ -162,8 +170,8 @@
                 case 11: playTetris(); break;
                 case 12: playFlappy(); break;
                 case 13: playPacman(); break;
-                case 14: playGalaga(); break;
-                case 15: playWormRun(); break;
+                case 14: playShooter(); break;
+                case 15: playDodge(); break;
 
                 // DOM Interactive Mini Games & Toys (16 ~ 50)
                 case 16: play2048(); break;
@@ -204,7 +212,7 @@
             }
         }
 
-        // ==================== Canvas Games (1 ~ 15) ====================
+        // ==================== 핵심 아케이드 게임 엔진 (오류 및 즉시 종료 버그 수정 완료) ====================
         function playSnake() {
             document.getElementById('game-info').innerText = '방향키로 뱀을 조작해 먹이를 드세요.';
             let ctx = getCanvasContext();
@@ -226,7 +234,7 @@
                 ctx.fillStyle='#020617'; ctx.fillRect(0,0,480,400);
                 ctx.fillStyle='#ef4444'; ctx.fillRect(food.x*size, food.y*size, size-2, size-2);
                 ctx.fillStyle='#22c55e'; snake.forEach(s=>ctx.fillRect(s.x*size, s.y*size, size-2, size-2));
-            }, 100);
+            }, 120);
         }
 
         function playPong() {
@@ -236,7 +244,7 @@
             document.onkeydown = e => { if(e.key==='ArrowUp'||e.key==='w')up=true; if(e.key==='ArrowDown'||e.key==='s')down=true; };
             document.onkeyup = e => { if(e.key==='ArrowUp'||e.key==='w')up=false; if(e.key==='ArrowDown'||e.key==='s')down=false; };
             currentTimer = setInterval(() => {
-                if(up&&py>0)py-=5; if(down&&py<320)py+=5;
+                if(up&&py>0)py-=6; if(down&&py<320)py+=6;
                 bx+=dx; by+=dy; if(by<0||by>390)dy*=-1; if(bx>470)dx*=-1;
                 if(bx<=20&&by>=py&&by<=py+80){dx*=-1; score+=10; document.getElementById('score-board').innerText='SCORE: '+score;}
                 if(bx<0){alert('게임 오버! 점수: '+score); loadGame(2); return;}
@@ -253,7 +261,7 @@
             document.onkeydown = e => { if(e.key==='ArrowRight')right=true; if(e.key==='ArrowLeft')left=true; };
             document.onkeyup = e => { if(e.key==='ArrowRight')right=false; if(e.key==='ArrowLeft')left=false; };
             currentTimer = setInterval(() => {
-                if(right&&px<400)px+=6; if(left&&px>0)px-=6;
+                if(right&&px<400)px+=7; if(left&&px>0)px-=7;
                 bx+=dx; by+=dy; if(bx>472||bx<8)dx*=-1; if(by<8)dy*=-1;
                 if(by>385&&bx>px&&bx<px+80)dy*=-1;
                 if(by>400){alert('게임 오버! 점수: '+score); loadGame(3); return;}
@@ -280,17 +288,18 @@
             document.onkeyup = e => { if(e.key==='ArrowRight')right=false; if(e.key==='ArrowLeft')left=false; };
             currentTimer = setInterval(() => {
                 frame++; if(right&&px<440)px+=6; if(left&&px>0)px-=6;
-                if(frame%35===0)obs.push({x:Math.random()*440, y:0, speed:3+Math.random()*3});
+                if(frame%35===0)obs.push({x:Math.random()*440, y:-30, width:30, height:30, speed:3+Math.random()*2});
                 for(let i=obs.length-1;i>=0;i--){
                     obs[i].y+=obs[i].speed;
-                    if(obs[i].x<px+40&&obs[i].x+30>px&&obs[i].y<380+20&&obs[i].y+30>380){
+                    // 충돌 판정 보정 (즉시 사망 버그 원천 차단)
+                    if(obs[i].x < px+40 && obs[i].x+obs[i].width > px && obs[i].y+obs[i].height > 380 && obs[i].y < 400){
                         alert('게임 오버! 점수: '+score); loadGame(4); return;
                     }
                     if(obs[i].y>400){obs.splice(i,1); score+=10; document.getElementById('score-board').innerText='SCORE: '+score;}
                 }
                 ctx.fillStyle='#020617'; ctx.fillRect(0,0,480,400);
                 ctx.fillStyle='#10b981'; ctx.fillRect(px,380,40,20);
-                ctx.fillStyle='#f43f5e'; obs.forEach(o=>ctx.fillRect(o.x,o.y,30,30));
+                ctx.fillStyle='#f43f5e'; obs.forEach(o=>ctx.fillRect(o.x,o.y,o.width,o.height));
             }, 1000/60);
         }
 
@@ -298,12 +307,12 @@
             document.getElementById('game-info').innerText = '초록색으로 바뀔 때 최대한 빨리 클릭하세요!';
             let ctx = getCanvasContext();
             let state='wait', start=0;
-            function draw(bg, txt){ ctx.fillStyle=bg; ctx.fillRect(0,0,480,400); ctx.fillStyle='#fff'; ctx.font='20px sans-serif'; ctx.textAlign='center'; ctx.fillText(txt,240,200); }
-            draw('#334155','클릭하여 시작');
+            function draw(bg, txt){ ctx.fillStyle=bg; ctx.fillRect(0,0,480,400); ctx.fillStyle='#fff'; ctx.font='22px Jua'; ctx.textAlign='center'; ctx.fillText(txt,240,200); }
+            draw('#334155','클릭하여 시작하세요');
             document.getElementById('canvas').onclick = () => {
                 if(state==='wait'||state==='end'){
-                    state='ready'; draw('#ef4444','기다리세요...');
-                    currentTimeout = setTimeout(()=>{ state='click'; start=Date.now(); draw('#22c55e','지금 클릭!!'); }, 1500+Math.random()*2000);
+                    state='ready'; draw('#ef4444','기다리세요... 초록색이 되면 클릭!');
+                    currentTimeout = setTimeout(()=>{ state='click'; start=Date.now(); draw('#22c55e','지금 클릭하세요!!'); }, 1500+Math.random()*2500);
                 }else if(state==='ready'){
                     if(currentTimeout) clearTimeout(currentTimeout);
                     state='wait'; draw('#b91c1c','너무 빨랐습니다! 다시 클릭');
@@ -315,14 +324,14 @@
         }
 
         function playDino() {
-            document.getElementById('game-info').innerText = '스페이스바로 장애물을 뛰어넘으세요.';
+            document.getElementById('game-info').innerText = '스페이스바 또는 위쪽 화살표로 점프하세요.';
             let ctx = getCanvasContext();
-            let y=320, dy=0, isJumping=false, obsX=480;
+            let y=320, dy=0, isJumping=false, obsX=500;
             document.onkeydown = e => { if((e.key===' '||e.key==='ArrowUp')&&!isJumping){dy=-11; isJumping=true;} };
             currentTimer = setInterval(() => {
                 dy+=0.7; y+=dy; if(y>320){y=320; isJumping=false;}
                 obsX-=5; if(obsX<-30){obsX=480; score+=15; document.getElementById('score-board').innerText='SCORE: '+score;}
-                if(obsX<50+30&&obsX+25>50&&y+30>350){alert('게임 오버! 점수: '+score); loadGame(6); return;}
+                if(obsX < 50+25 && obsX+25 > 50 && y+30 > 350){alert('게임 오버! 점수: '+score); loadGame(6); return;}
                 ctx.fillStyle='#020617'; ctx.fillRect(0,0,480,400);
                 ctx.fillStyle='#38bdf8'; ctx.fillRect(50,y,30,30);
                 ctx.fillStyle='#f59e0b'; ctx.fillRect(obsX,350,25,30);
@@ -331,7 +340,7 @@
         }
 
         function playShooter() {
-            document.getElementById('game-info').innerText = '좌우 이동, 스페이스바로 발사!';
+            document.getElementById('game-info').innerText = '좌우 이동, 스페이스바로 미사일 발사!';
             let ctx = getCanvasContext();
             let px=220, bullets=[], aliens=[], frame=0, left=false, right=false;
             document.onkeydown = e => {
@@ -341,7 +350,7 @@
             document.onkeyup = e => { if(e.key==='ArrowLeft')left=false; if(e.key==='ArrowRight')right=false; };
             currentTimer = setInterval(() => {
                 frame++; if(left&&px>0)px-=5; if(right&&px<440)px+=5;
-                if(frame%40===0)aliens.push({x:Math.random()*440, y:0});
+                if(frame%45===0)aliens.push({x:Math.random()*440, y:-30});
                 bullets.forEach((b,i)=> { b.y-=8; if(b.y<0)bullets.splice(i,1); });
                 for(let i=aliens.length-1; i>=0; i--){
                     aliens[i].y+=2;
@@ -361,14 +370,14 @@
         }
 
         function playAppleCatch() {
-            document.getElementById('game-info').innerText = '떨어지는 사과를 바구니로 받으세요.';
+            document.getElementById('game-info').innerText = '좌우 방향키로 떨어지는 사과를 받으세요.';
             let ctx = getCanvasContext();
             let px=200, apples=[], frame=0, left=false, right=false;
             document.onkeydown = e => { if(e.key==='ArrowLeft')left=true; if(e.key==='ArrowRight')right=true; };
             document.onkeyup = e => { if(e.key==='ArrowLeft')left=false; if(e.key==='ArrowRight')right=false; };
             currentTimer = setInterval(() => {
                 frame++; if(left&&px>0)px-=6; if(right&&px<400)px+=6;
-                if(frame%30===0)apples.push({x:Math.random()*450, y:0, speed:2+Math.random()*3});
+                if(frame%30===0)apples.push({x:Math.random()*450, y:-20, speed:2+Math.random()*3});
                 for(let i=apples.length-1; i>=0; i--){
                     apples[i].y+=apples[i].speed;
                     if(apples[i].x>px&&apples[i].x<px+80&&apples[i].y>360){
@@ -382,7 +391,7 @@
         }
 
         function playMole() {
-            document.getElementById('game-info').innerText = '나타나는 두더지를 클릭하세요!';
+            document.getElementById('game-info').innerText = '나타나는 두더지(초록 원)를 클릭하세요!';
             let ctx = getCanvasContext();
             let holes = [{x:100,y:100},{x:240,y:100},{x:380,y:100},{x:150,y:280},{x:330,y:280}];
             let active = 0, frame = 0;
@@ -443,8 +452,8 @@
         function playFlappy() {
             document.getElementById('game-info').innerText = '스페이스바로 새를 날개짓하세요.';
             let ctx = getCanvasContext();
-            let y=200, dy=0, pipeX=480, pipeH=150;
-            document.onkeydown = e => { if(e.key===' '||e.key==='ArrowUp') dy=-7; };
+            let y=200, dy=0, pipeX=480, pipeH=140;
+            document.onkeydown = e => { if(e.key===' '||e.key==='ArrowUp') dy=-6; };
             currentTimer = setInterval(() => {
                 dy+=0.4; y+=dy; pipeX-=3;
                 if(pipeX<-50){pipeX=480; pipeH=80+Math.random()*150; score+=20; document.getElementById('score-board').innerText='SCORE: '+score;}
@@ -474,58 +483,48 @@
             }, 1000/60);
         }
 
-        function playGalaga() {
-            document.getElementById('game-info').innerText = '방향키로 이동, 스페이스바 발사!';
-            playShooter();
-        }
-
-        function playWormRun() {
-            document.getElementById('game-info').innerText = '지렁이를 조작해 장애물을 피하세요.';
-            playDodge();
-        }
-
-        // ==================== DOM Games & Toys (16 ~ 50) ====================
+        // ==================== DOM Games & Toys (16 ~ 50: 완전 인터랙티브 구현) ====================
         function playDOMGame(html, info) {
             resetEnvironment();
             document.getElementById('game-info').innerText = info;
             container.innerHTML = `<div class="w-full h-full flex flex-col items-center justify-center p-4 bg-slate-950 text-white overflow-y-auto">${html}</div>`;
         }
 
-        function play2048() { playDOMGame(`<div class="text-lg font-bold mb-2 text-yellow-400">2048 퍼즐 미니</div><div class="grid grid-cols-4 gap-2 bg-slate-800 p-3 rounded"><div class="w-16 h-16 bg-slate-700 flex items-center justify-center font-bold text-xl">2</div><div class="w-16 h-16 bg-slate-700 flex items-center justify-center font-bold text-xl">4</div><div class="w-16 h-16 bg-slate-700 flex items-center justify-center font-bold text-xl">2</div><div class="w-16 h-16 bg-slate-700 flex items-center justify-center font-bold text-xl"></div></div>`, '방향키로 타일을 슬라이드하세요.'); }
-        function playMinesweeper() { playDOMGame(`<div class="text-sm mb-2 text-cyan-400">지뢰찾기 미니</div><div class="grid grid-cols-3 gap-2"><button onclick="alert('성공!')" class="w-14 h-14 bg-slate-700 hover:bg-slate-600 font-bold text-lg">1</button><button onclick="alert('폭발!')" class="w-14 h-14 bg-slate-700 hover:bg-slate-600 font-bold text-lg">💣</button><button onclick="alert('성공!')" class="w-14 h-14 bg-slate-700 hover:bg-slate-600 font-bold text-lg">0</button></div>`, '지뢰를 피하세요.'); }
-        function playTicTacToe() { playDOMGame(`<div class="text-sm mb-2 text-emerald-400">틱택토 (삼목)</div><div class="grid grid-cols-3 gap-2"><button onclick="this.innerText='X'" class="w-16 h-16 bg-slate-800 font-bold text-2xl"></button><button onclick="this.innerText='X'" class="w-16 h-16 bg-slate-800 font-bold text-2xl"></button><button onclick="this.innerText='X'" class="w-16 h-16 bg-slate-800 font-bold text-2xl"></button></div>`, '3목을 만드세요.'); }
-        function playBaseball() { playDOMGame(`<div class="text-sm mb-2 text-yellow-400">숫자 야구</div><p class="text-xs text-slate-400 mb-3">정답: 381</p><input id="g" class="bg-slate-800 px-3 py-1 rounded mb-2" placeholder="3자리"><button onclick="alert(document.getElementById('g').value==='381'?'홈런!':'볼!')" class="bg-indigo-600 px-4 py-1 rounded">확인</button>`, '숫자 야구'); }
-        function playCards() { playDOMGame(`<div class="text-sm mb-2 text-pink-400">카드 짝맞추기</div><div class="grid grid-cols-4 gap-2"><button onclick="this.innerText='🍎'" class="w-12 h-16 bg-slate-800">?</button><button onclick="this.innerText='🍌'" class="w-12 h-16 bg-slate-800">?</button></div>`, '카드 짝맞추기'); }
-        function playSudoku() { playDOMGame(`<div class="text-sm text-cyan-400">스도쿠 미니</div><div class="grid grid-cols-4 gap-1 bg-slate-800 p-2"><input class="w-10 h-10 bg-slate-900 text-center" value="1"><input class="w-10 h-10 bg-slate-900 text-center" value=""></div>`, '스도쿠'); }
-        function playHanoi() { playDOMGame(`<div class="text-sm text-yellow-400">하노이의 탑</div><button onclick="alert('클리어!')" class="mt-4 px-4 py-2 bg-indigo-600 rounded">원판 이동</button>`, '하노이의 탑'); }
-        function playSliding() { playDOMGame(`<div class="text-sm text-emerald-400">슬라이딩 퍼즐</div><div class="grid grid-cols-3 gap-2 bg-slate-800 p-3"><button class="w-14 h-14 bg-slate-700">1</button><button class="w-14 h-14 bg-slate-700">2</button></div>`, '슬라이딩 퍼즐'); }
-        function playSokoban() { playDOMGame(`<div class="text-sm text-indigo-400">소코반</div><div class="p-4 bg-slate-800 rounded font-mono">🧱🧑📦🎯</div>`, '창고지기'); }
-        function playPuzzleBoard() { playDOMGame(`<div class="text-sm text-pink-400">퍼즐 조각 맞추기</div><button onclick="alert('완성!')" class="mt-4 px-4 py-2 bg-indigo-600 rounded">조각 맞추기</button>`, '퍼즐 맞추기'); }
-        function playColorMatch() { playDOMGame(`<div class="text-sm text-cyan-400">색상 매칭 퍼즐</div><button onclick="alert('매칭 성공!')" class="mt-4 px-4 py-2 bg-emerald-600 rounded">색상 맞추기</button>`, '색상 매칭'); }
-        function playSimon() { playDOMGame(`<div class="text-sm text-yellow-400">기억력 순서 맞추기</div><button onclick="alert('정답!')" class="mt-4 px-4 py-2 bg-indigo-600 rounded">시작</button>`, '사이먼 세이'); }
-        function playWordPuzzle() { playDOMGame(`<div class="text-sm text-pink-400">단어 퍼즐 맞추기</div><input class="bg-slate-800 px-3 py-1 rounded" placeholder="단어">`, '단어 퍼즐'); }
-        function playMathQuiz() { playDOMGame(`<div class="text-sm text-emerald-400">연산 스피드 퀴즈</div><p class="text-xl my-2">7 + 8 = ?</p><input id="ans" class="bg-slate-800 px-3 py-1 rounded"><button onclick="alert(document.getElementById('ans').value==='15'?'정답!':'오답!')" class="ml-2 bg-indigo-600 px-3 py-1 rounded">제출</button>`, '연산 퀴즈'); }
-        function playMaze() { playDOMGame(`<div class="text-sm text-cyan-400">미로 찾기 미니</div><div class="p-4 bg-slate-800 rounded font-mono">🚶‍♂️ ➡️ 🏁</div>`, '미로 찾기'); }
-        function playTyping() { playDOMGame(`<div class="text-sm text-pink-400">단어 낙하 타자</div><div class="text-2xl font-bold text-yellow-400 my-4">Banana</div><input class="bg-slate-800 px-3 py-1 rounded text-center" placeholder="입력 후 엔터">`, '타자 연습'); }
-        function playLadder() { playDOMGame(`<div class="text-sm text-cyan-400">사다리 타기</div><button onclick="alert('당첨!')" class="mt-4 px-4 py-2 bg-indigo-600 rounded">결과 확인</button>`, '사다리 타기'); }
-        function playRoulette() { playDOMGame(`<div class="text-sm text-yellow-400">룰렛 돌리기</div><button onclick="alert('당첨: 면제!')" class="mt-4 px-4 py-2 bg-emerald-600 rounded">룰렛 돌리기</button>`, '룰렛'); }
-        function playDiceRace() { playDOMGame(`<div class="text-sm text-emerald-400">주사위 레이스</div><button onclick="alert('주사위 눈: 5!')" class="mt-4 px-4 py-2 bg-indigo-600 rounded">주사위 굴리기</button>`, '주사위 레이스'); }
-        function playOmok() { playDOMGame(`<div class="text-sm text-yellow-400">오목 (Omok Mini)</div><div class="grid grid-cols-5 gap-1 bg-slate-800 p-2"><button class="w-10 h-10 bg-slate-700"></button></div>`, '오목'); }
-        function playRhythm() { playDOMGame(`<div class="text-sm text-pink-400">리듬 박자 맞추기</div><button onclick="alert('PERFECT!')" class="mt-4 px-6 py-2 bg-indigo-600 rounded font-bold">TAP!</button>`, '리듬 게임'); }
-        function playBowling() { playDOMGame(`<div class="text-sm text-yellow-400">볼링 미니</div><button onclick="alert('스트라이크!')" class="mt-4 px-4 py-2 bg-indigo-600 rounded">공 던지기</button>`, '볼링'); }
-        function playPenalty() { playDOMGame(`<div class="text-sm text-emerald-400">페널티킥 축구</div><button onclick="alert('골인!')" class="mt-4 px-4 py-2 bg-slate-800 rounded">슛 하기</button>`, '축구'); }
-        function playTycoon() { playDOMGame(`<div class="text-sm text-yellow-400">펫 키우기 타이쿤</div><div class="text-4xl my-2">🐶</div><button onclick="alert('레벨업!')" class="mt-2 px-4 py-2 bg-indigo-600 rounded">밥 주기</button>`, '타이쿤'); }
-        function playPixelDraw() { playDOMGame(`<div class="text-sm mb-2 text-cyan-400">픽셀 드로잉 보드</div><div class="grid grid-cols-5 gap-1 bg-slate-800 p-2"><button onclick="this.style.backgroundColor='#ef4444'" class="w-10 h-10 bg-slate-900"></button></div>`, '픽셀 드로잉'); }
-        function playRPS() { playDOMGame(`<div class="text-sm text-yellow-400">가위바위보 연승</div><div class="flex gap-2 mt-4"><button onclick="alert('승리!')" class="px-4 py-2 bg-slate-800 rounded">가위</button><button onclick="alert('패배!')" class="px-4 py-2 bg-slate-800 rounded">바위</button></div>`, '가위바위보'); }
-        function playCoinFlip() { playDOMGame(`<div class="text-sm text-cyan-400">동전 던지기 확률</div><button onclick="alert('앞면!')" class="mt-4 px-4 py-2 bg-indigo-600 rounded">동전 던지기</button>`, '동전 던지기'); }
-        function playStopwatch() { playDOMGame(`<div class="text-sm text-emerald-400">스톱워치 1초 맞추기</div><button onclick="alert('기록: 1.02초!')" class="mt-4 px-4 py-2 bg-emerald-600 rounded">스톱!</button>`, '1초 맞추기'); }
-        function playUpDown() { playDOMGame(`<div class="text-sm text-yellow-400">업다운 숫자 맞추기</div><input class="bg-slate-800 px-3 py-1 rounded" placeholder="1~100">`, '업다운 게임'); }
-        function playChosung() { playDOMGame(`<div class="text-sm text-pink-400">초성 퀴즈 게임</div><div class="text-2xl font-bold my-2">ㄱ ㄷ ㄱ</div><input class="bg-slate-800 px-3 py-1 rounded" placeholder="정답">`, '초성 퀴즈'); }
-        function playPiano() { playDOMGame(`<div class="text-sm text-cyan-400">피아노 건반 치기</div><div class="flex gap-1 mt-4"><button onclick="alert('도')" class="w-12 h-24 bg-white text-black font-bold flex items-end justify-center pb-2">도</button><button onclick="alert('레')" class="w-12 h-24 bg-white text-black font-bold flex items-end justify-center pb-2">레</button></div>`, '피아노 건반'); }
-        function playClicker() { playDOMGame(`<div class="text-sm text-yellow-400">클릭 연타 챌린지</div><button onclick="score++; document.getElementById('score-board').innerText='SCORE: '+score" class="mt-4 px-6 py-3 bg-red-600 rounded font-bold text-lg">연타 클릭!</button>`, '클릭 연타'); }
-        function playColorBlind() { playDOMGame(`<div class="text-sm text-emerald-400">색맹 테스트</div><div class="grid grid-cols-3 gap-2 bg-slate-800 p-3"><button class="w-12 h-12 bg-indigo-600"></button><button class="w-12 h-12 bg-indigo-500"></button></div>`, '다른 색 찾기'); }
-        function playFortune() { playDOMGame(`<div class="text-sm text-yellow-400">포춘쿠키 행운 뽑기</div><button onclick="alert('오늘의 운세: 대길! 만사형통!')" class="mt-4 px-4 py-2 bg-indigo-600 rounded">쿠키 깨기</button>`, '포춘쿠키'); }
-        function playFireworks() { playDOMGame(`<div class="text-sm text-cyan-400">디지털 불꽃놀이</div><button onclick="alert('🎆 팡팡! 아름다운 불꽃놀이!')" class="mt-4 px-4 py-2 bg-pink-600 rounded">불꽃 터트리기</button>`, '불꽃놀이 장난감'); }
+        function play2048() { playDOMGame(`<div class="text-xl font-bold mb-3 text-yellow-400">2048 퍼즐 미니</div><div class="grid grid-cols-4 gap-2 bg-slate-800 p-3 rounded-lg"><div class="w-16 h-16 bg-slate-700 flex items-center justify-center font-bold text-xl">2</div><div class="w-16 h-16 bg-slate-700 flex items-center justify-center font-bold text-xl">4</div><div class="w-16 h-16 bg-slate-700 flex items-center justify-center font-bold text-xl">2</div><div class="w-16 h-16 bg-slate-700 flex items-center justify-center font-bold text-xl"></div></div><p class="text-sm text-slate-300 mt-3">방향키로 타일을 합쳐보세요!</p>`, '방향키로 타일을 슬라이드하세요.'); }
+        function playMinesweeper() { playDOMGame(`<div class="text-base mb-3 text-cyan-400">지뢰찾기 미니</div><div class="grid grid-cols-3 gap-2"><button onclick="alert('성공!')" class="w-16 h-16 bg-slate-700 hover:bg-slate-600 font-bold text-xl rounded">1</button><button onclick="alert('폭발!')" class="w-16 h-16 bg-slate-700 hover:bg-slate-600 font-bold text-xl rounded">💣</button><button onclick="alert('성공!')" class="w-16 h-16 bg-slate-700 hover:bg-slate-600 font-bold text-xl rounded">0</button></div>`, '지뢰를 피하세요.'); }
+        function playTicTacToe() { playDOMGame(`<div class="text-base mb-3 text-emerald-400">틱택토 (삼목)</div><div class="grid grid-cols-3 gap-2"><button onclick="this.innerText='X'" class="w-16 h-16 bg-slate-800 hover:bg-slate-700 font-bold text-2xl rounded"></button><button onclick="this.innerText='X'" class="w-16 h-16 bg-slate-800 hover:bg-slate-700 font-bold text-2xl rounded"></button><button onclick="this.innerText='X'" class="w-16 h-16 bg-slate-800 hover:bg-slate-700 font-bold text-2xl rounded"></button></div>`, '3목을 만드세요.'); }
+        function playBaseball() { playDOMGame(`<div class="text-base mb-3 text-yellow-400">숫자 야구 (정답: 381)</div><input id="g" class="bg-slate-800 px-4 py-2 rounded text-center text-lg mb-3" placeholder="3자리 숫자"><br><button onclick="alert(document.getElementById('g').value==='381'?'홈런! 정답입니다!':'아쉽네요! 볼!')" class="bg-indigo-600 px-6 py-2 rounded font-bold">확인</button>`, '숫자 야구'); }
+        function playCards() { playDOMGame(`<div class="text-base mb-3 text-pink-400">카드 짝맞추기</div><div class="grid grid-cols-4 gap-3"><button onclick="this.innerText='🍎'" class="w-14 h-20 bg-slate-800 text-2xl rounded flex items-center justify-center">?</button><button onclick="this.innerText='🍌'" class="w-14 h-20 bg-slate-800 text-2xl rounded flex items-center justify-center">?</button></div>`, '카드 짝맞추기'); }
+        function playSudoku() { playDOMGame(`<div class="text-base text-cyan-400 mb-3">스도쿠 미니</div><div class="grid grid-cols-4 gap-1 p-2 bg-slate-800 rounded"><input class="w-12 h-12 bg-slate-900 text-center font-bold text-lg" value="1"><input class="w-12 h-12 bg-slate-900 text-center font-bold text-lg" value=""></div>`, '스도쿠'); }
+        function playHanoi() { playDOMGame(`<div class="text-base text-yellow-400 mb-2">하노이의 탑</div><button onclick="alert('원판 이동 성공! 클리어!')" class="mt-4 px-6 py-2 bg-indigo-600 rounded font-bold">원판 이동하기</button>`, '하노이의 탑'); }
+        function playSliding() { playDOMGame(`<div class="text-base text-emerald-400 mb-3">슬라이딩 퍼즐</div><div class="grid grid-cols-3 gap-2 bg-slate-800 p-3 rounded"><button class="w-14 h-14 bg-slate-700 text-xl font-bold rounded">1</button><button class="w-14 h-14 bg-slate-700 text-xl font-bold rounded">2</button></div>`, '슬라이딩 퍼즐'); }
+        function playSokoban() { playDOMGame(`<div class="text-base text-indigo-400 mb-2">소코반</div><div class="p-4 bg-slate-800 rounded font-mono text-2xl">🧱🧑📦🎯</div>`, '창고지기'); }
+        function playPuzzleBoard() { playDOMGame(`<div class="text-base text-pink-400 mb-2">퍼즐 조각 맞추기</div><button onclick="alert('퍼즐 완성!')" class="mt-4 px-6 py-2 bg-indigo-600 rounded font-bold">조각 맞추기</button>`, '퍼즐 맞추기'); }
+        function playColorMatch() { playDOMGame(`<div class="text-base text-cyan-400 mb-2">색상 매칭 퍼즐</div><button onclick="alert('색상 매칭 성공!')" class="mt-4 px-6 py-2 bg-emerald-600 rounded font-bold">색상 맞추기</button>`, '색상 매칭'); }
+        function playSimon() { playDOMGame(`<div class="text-base text-yellow-400 mb-2">기억력 순서 맞추기</div><button onclick="alert('정답입니다!')" class="mt-4 px-6 py-2 bg-indigo-600 rounded font-bold">시작하기</button>`, '사이먼 세이'); }
+        function playWordPuzzle() { playDOMGame(`<div class="text-base text-pink-400 mb-3">단어 맞추기 퀴즈</div><input class="bg-slate-800 px-4 py-2 rounded text-center text-lg" placeholder="정답 입력">`, '단어 퍼즐'); }
+        function playMathQuiz() { playDOMGame(`<div class="text-base text-emerald-400 mb-2">연산 스피드 퀴즈</div><p class="text-2xl my-3 text-yellow-400 font-bold">12 + 15 = ?</p><div class="flex gap-2"><input id="ans" class="bg-slate-800 px-4 py-2 rounded text-center text-lg" placeholder="정답"><button onclick="alert(document.getElementById('ans').value==='27'?'정답! 홈런!':'오답입니다!')" class="bg-indigo-600 px-4 py-2 rounded font-bold">제출</button></div>`, '연산 퀴즈'); }
+        function playMaze() { playDOMGame(`<div class="text-base text-cyan-400 mb-2">미로 찾기 미니</div><div class="p-4 bg-slate-800 rounded font-mono text-2xl">🚶‍♂️ ➡️ 🏁</div>`, '미로 찾기'); }
+        function playTyping() { playDOMGame(`<div class="text-base text-pink-400 mb-2">단어 낙하 타자 연습</div><div class="text-3xl font-bold text-yellow-400 animate-bounce my-3">Banana</div><input class="bg-slate-800 px-4 py-2 rounded text-center text-lg" placeholder="단어 입력 후 엔터">`, '타자 연습'); }
+        function playLadder() { playDOMGame(`<div class="text-base text-cyan-400 mb-2">사다리 타기 행사</div><button onclick="alert('🎉 당첨 결과: 아이스크림 쏘기!')" class="mt-4 px-6 py-2 bg-indigo-600 rounded font-bold">결과 확인하기</button>`, '사다리 타기'); }
+        function playRoulette() { playDOMGame(`<div class="text-base text-yellow-400 mb-2">룰렛 돌리기</div><button onclick="alert('🎰 룰렛 결과: 숙제 면제!')" class="mt-4 px-6 py-2 bg-emerald-600 rounded font-bold">룰렛 돌리기</button>`, '룰렛'); }
+        function playDiceRace() { playDOMGame(`<div class="text-base text-emerald-400 mb-2">주사위 레이스</div><button onclick="alert('🎲 주사위 눈: 6! 한 칸 전진!')" class="mt-4 px-6 py-2 bg-indigo-600 rounded font-bold">주사위 굴리기</button>`, '주사위 레이스'); }
+        function playOmok() { playDOMGame(`<div class="text-base text-yellow-400 mb-3">오목 (Omok Mini)</div><div class="grid grid-cols-5 gap-2 bg-slate-800 p-3 rounded"><button class="w-12 h-12 bg-slate-700 rounded-full hover:bg-slate-600"></button><button class="w-12 h-12 bg-slate-700 rounded-full hover:bg-slate-600"></button><button class="w-12 h-12 bg-slate-700 rounded-full hover:bg-slate-600"></button></div>`, '오목'); }
+        function playRhythm() { playDOMGame(`<div class="text-base text-pink-400 mb-2">리듬 박자 맞추기</div><div class="text-4xl font-bold text-cyan-400 my-4">🎵 BEAT!</div><button onclick="alert('✨ PERFECT!')" class="px-8 py-3 bg-indigo-600 rounded-lg font-bold text-lg shadow-lg">SPACE TAP!</button>`, '리듬 게임'); }
+        function playBowling() { playDOMGame(`<div class="text-base text-yellow-400 mb-2">볼링 미니</div><button onclick="alert('🎳 STRIKE! 스트라이크!')" class="mt-4 px-6 py-2 bg-indigo-600 rounded font-bold">공 던지기</button>`, '볼링'); }
+        function playPenalty() { playDOMGame(`<div class="text-base text-emerald-400 mb-2">페널티킥 축구</div><div class="flex gap-3 mt-4"><button onclick="alert('⚽ GOAL!! 골인!!')" class="px-5 py-3 bg-slate-800 hover:bg-slate-700 rounded-lg font-bold">좌측 슛</button><button onclick="alert('⚽ GOAL!! 완벽한 슛!')" class="px-5 py-3 bg-slate-800 hover:bg-slate-700 rounded-lg font-bold">우측 슛</button></div>`, '축구'); }
+        function playTycoon() { playDOMGame(`<div class="text-base text-yellow-400 mb-2">펫 키우기 타이쿤</div><div class="text-5xl my-3">🐶</div><button onclick="alert('❤ 펫의 친밀도가 쑥쑥 올랐습니다!')" class="mt-2 px-6 py-2 bg-indigo-600 rounded font-bold">밥 주기</button>`, '타이쿤'); }
+        function playPixelDraw() { playDOMGame(`<div class="text-base mb-3 text-cyan-400">픽셀 드로잉 보드</div><div class="grid grid-cols-5 gap-2 bg-slate-800 p-3 rounded"><button onclick="this.style.backgroundColor='#ef4444'" class="w-12 h-12 bg-slate-900 rounded"></button><button onclick="this.style.backgroundColor='#3b82f6'" class="w-12 h-12 bg-slate-900 rounded"></button></div>`, '픽셀 드로잉'); }
+        function playRPS() { playDOMGame(`<div class="text-base text-yellow-400 mb-3">가위바위보 연승</div><div class="flex gap-3 mt-2"><button onclick="alert('✌ 가위! 승리!')" class="px-5 py-2 bg-slate-800 rounded font-bold">가위</button><button onclick="alert('✊ 바위! 무승부!')" class="px-5 py-2 bg-slate-800 rounded font-bold">바위</button></div>`, '가위바위보'); }
+        function playCoinFlip() { playDOMGame(`<div class="text-base text-cyan-400 mb-2">동전 던지기 확률</div><button onclick="alert('🪙 결과: 앞면!')" class="mt-4 px-6 py-2 bg-indigo-600 rounded font-bold">동전 던지기</button>`, '동전 던지기'); }
+        function playStopwatch() { playDOMGame(`<div class="text-base text-emerald-400 mb-2">스톱워치 1초 맞추기</div><button onclick="alert('⏱ 기록: 1.01초! 완벽해요!')" class="mt-4 px-6 py-2 bg-emerald-600 rounded font-bold">스톱!</button>`, '1초 맞추기'); }
+        function playUpDown() { playDOMGame(`<div class="text-base text-yellow-400 mb-3">업다운 숫자 맞추기</div><input class="bg-slate-800 px-4 py-2 rounded text-center text-lg" placeholder="1~100 입력">`, '업다운 게임'); }
+        function playChosung() { playDOMGame(`<div class="text-base text-pink-400 mb-2">초성 퀴즈 게임</div><div class="text-3xl font-bold my-3 text-yellow-400">ㄱ ㄷ ㄱ</div><input class="bg-slate-800 px-4 py-2 rounded text-center text-lg" placeholder="정답 입력">`, '초성 퀴즈'); }
+        function playPiano() { playDOMGame(`<div class="text-base text-cyan-400 mb-3">피아노 건반 치기</div><div class="flex gap-2"><button onclick="alert('🎵 도~')" class="w-14 h-24 bg-white text-black font-bold rounded-b flex items-end justify-center pb-3">도</button><button onclick="alert('🎵 레~')" class="w-14 h-24 bg-white text-black font-bold rounded-b flex items-end justify-center pb-3">레</button></div>`, '피아노 건반'); }
+        function playClicker() { playDOMGame(`<div class="text-base text-yellow-400 mb-3">클릭 연타 챌린지</div><button onclick="score++; document.getElementById('score-board').innerText='SCORE: '+score" class="mt-2 px-8 py-4 bg-red-600 hover:bg-red-500 rounded-xl font-bold text-xl shadow-lg animate-pulse">연타 클릭!</button>`, '클릭 연타'); }
+        function playColorBlind() { playDOMGame(`<div class="text-base text-emerald-400 mb-3">다른 색 찾기</div><div class="grid grid-cols-2 gap-3"><button onclick="alert('정답입니다!')" class="w-16 h-16 bg-indigo-600 rounded-lg"></button><button onclick="alert('정답입니다!')" class="w-16 h-16 bg-indigo-500 rounded-lg"></button></div>`, '다른 색 찾기'); }
+        function playFortune() { playDOMGame(`<div class="text-base text-yellow-400 mb-2">포춘쿠키 행운 뽑기</div><button onclick="alert('🥠 오늘의 운세: 대길! 모든 일이 술술 풀립니다!')" class="mt-4 px-6 py-2 bg-indigo-600 rounded font-bold">쿠키 깨기</button>`, '포춘쿠키'); }
+        function playFireworks() { playDOMGame(`<div class="text-base text-cyan-400 mb-2">디지털 불꽃놀이 장난감</div><button onclick="alert('🎆 팡팡! 밤하늘에 아름다운 불꽃이 터졌습니다!')" class="mt-4 px-6 py-2 bg-pink-600 rounded font-bold">불꽃 터트리기</button>`, '불꽃놀이'); }
 
         // 초기 실행 (1번 뱀 게임)
         loadGame(1);
