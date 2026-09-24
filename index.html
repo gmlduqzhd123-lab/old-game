@@ -215,7 +215,6 @@
                 case 14: playShooter(); break;
                 case 15: playDodge(); break;
 
-                // DOM Interactive Fully Working Games (16 ~ 50)
                 case 16: play2048(); break;
                 case 17: playMinesweeper(); break;
                 case 18: playTicTacToe(); break;
@@ -525,201 +524,54 @@
             if (currentTimer) { clearInterval(currentTimer); currentTimer = null; }
             if (currentTimeout) { clearTimeout(currentTimeout); currentTimeout = null; }
             document.getElementById('game-info').innerText = info;
-            container.innerHTML = `<div class="w-full h-full flex flex-col items-center justify-center p-4 bg-slate-950 text-white overflow-y-auto">${html}</div>`;
+            container.innerHTML = '<div class="w-full h-full flex flex-col items-center justify-center p-4 bg-slate-950 text-white overflow-y-auto">' + html + '</div>';
         }
 
-        // 16. 2048 미니
-        function play2048() {
-            playDOMGame(`
-                <div class="text-lg font-bold text-yellow-400 mb-2">2048 퍼즐 미니</div>
-                <div id="grid-2048" class="grid grid-cols-2 gap-2 bg-slate-800 p-3 rounded-lg text-2xl font-bold">
-                    <div class="w-20 h-20 bg-slate-700 flex items-center justify-center rounded">2</div>
-                    <div class="w-20 h-20 bg-slate-700 flex items-center justify-center rounded">2</div>
-                    <div class="w-20 h-20 bg-slate-700 flex items-center justify-center rounded">4</div>
-                    <div class="w-20 h-20 bg-slate-700 flex items-center justify-center rounded"></div>
-                </div>
-                <button onclick="score+=20; document.getElementById('score-board').innerText='SCORE: '+score; alert('타일이 합쳐졌습니다! (+20점)');" class="mt-4 px-6 py-2 bg-indigo-600 hover:bg-indigo-500 rounded font-bold">타일 합치기</button>
-            `, '버튼을 눌러 타일을 합치고 점수를 올리세요!');
-        }
+        function play2048() { playDOMGame('<div class="text-xl font-bold text-yellow-400 mb-2">2048 퍼즐 미니</div><div class="grid grid-cols-2 gap-2 bg-slate-800 p-3 rounded-lg text-2xl font-bold"><div class="w-20 h-20 bg-slate-700 flex items-center justify-center rounded">2</div><div class="w-20 h-20 bg-slate-700 flex items-center justify-center rounded">2</div><div class="w-20 h-20 bg-slate-700 flex items-center justify-center rounded">4</div><div class="w-20 h-20 bg-slate-700 flex items-center justify-center rounded"></div></div><button onclick="score+=20; document.getElementById(\'score-board\').innerText=\'SCORE: \'+score; alert(\'타일 합치기 성공! (+20점)\');" class="mt-4 px-6 py-2 bg-indigo-600 hover:bg-indigo-500 rounded font-bold">타일 합치기</button>', '타일을 합치고 점수를 올리세요!'); }
+        function playMinesweeper() { playDOMGame('<div class="text-base text-cyan-400 mb-2">지뢰찾기 미니</div><div class="grid grid-cols-3 gap-2"><button onclick="score+=10; document.getElementById(\'score-board\').innerText=\'SCORE: \'+score; this.innerText=\'1\';" class="w-16 h-16 bg-slate-700 font-bold text-xl rounded">?</button><button onclick="alert(\'💣 지뢰 폭발!\'); selectGame(17);" class="w-16 h-16 bg-slate-700 font-bold text-xl rounded">?</button><button onclick="score+=10; document.getElementById(\'score-board\').innerText=\'SCORE: \'+score; this.innerText=\'0\';" class="w-16 h-16 bg-slate-700 font-bold text-xl rounded">?</button></div>', '지뢰를 피하세요!'); }
+        function playTicTacToe() { playDOMGame('<div class="text-base text-emerald-400 mb-2">틱택토 (삼목)</div><div class="grid grid-cols-3 gap-2"><button onclick="if(!this.innerText){this.innerText=\'X\';}" class="w-16 h-16 bg-slate-800 font-bold text-2xl rounded text-yellow-400"></button><button onclick="if(!this.innerText){this.innerText=\'O\';}" class="w-16 h-16 bg-slate-800 font-bold text-2xl rounded text-cyan-400"></button><button onclick="if(!this.innerText){this.innerText=\'X\';}" class="w-16 h-16 bg-slate-800 font-bold text-2xl rounded text-yellow-400"></button></div>', '3목을 만드세요.'); }
+        function playBaseball() { playDOMGame('<div class="text-base text-yellow-400 mb-2">숫자 야구 (정답: 381)</div><input id="bb-input" type="text" class="bg-slate-800 px-4 py-2 rounded text-center text-xl font-bold w-36 mb-2" placeholder="3자리 숫자"><br><button onclick="let v=document.getElementById(\'bb-input\').value; alert(v===\'381\'?\'🎉 홈런! 정답!\':\'볼!\');" class="bg-indigo-600 px-6 py-2 rounded font-bold">확인</button>', '숫자 야구'); }
+        function playCards() { playDOMGame('<div class="text-base text-pink-400 mb-3">카드 짝맞추기</div><div class="grid grid-cols-4 gap-3"><button onclick="this.innerText=\'🍎\'; score+=10; document.getElementById(\'score-board\').innerText=\'SCORE: \'+score;" class="w-14 h-20 bg-slate-800 text-2xl rounded flex items-center justify-center font-bold">?</button><button onclick="this.innerText=\'🍌\'; score+=10; document.getElementById(\'score-board\').innerText=\'SCORE: \'+score;" class="w-14 h-20 bg-slate-800 text-2xl rounded flex items-center justify-center font-bold">?</button></div>', '카드 짝맞추기'); }
+        function playSudoku() { playDOMGame('<div class="text-base text-cyan-400 mb-3">스도쿠 미니</div><div class="grid grid-cols-4 gap-1 p-2 bg-slate-800 rounded"><input class="w-12 h-12 bg-slate-900 text-center font-bold text-lg" value="1"><input class="w-12 h-12 bg-slate-900 text-center font-bold text-lg" placeholder="2"></div><button onclick="score+=50; document.getElementById(\'score-board\').innerText=\'SCORE: \'+score; alert(\'정답 완료! (+50점)\');" class="mt-3 px-6 py-2 bg-indigo-600 rounded font-bold">정답 확인</button>', '스도쿠'); }
+        function playHanoi() { playDOMGame('<div class="text-base text-yellow-400 mb-2">하노이의 탑</div><button onclick="score+=100; document.getElementById(\'score-board\').innerText=\'SCORE: \'+score; alert(\'🎉 클리어!\'); selectGame(22);" class="px-6 py-2 bg-indigo-600 rounded font-bold">원판 이동 완료</button>', '하노이의 탑'); }
+        function playSliding() { playDOMGame('<div class="text-base text-emerald-400 mb-3">슬라이딩 퍼즐</div><div class="grid grid-cols-3 gap-2 bg-slate-800 p-3 rounded"><button onclick="score+=10; document.getElementById(\'score-board\').innerText=\'SCORE: \'+score;" class="w-14 h-14 bg-slate-700 text-xl font-bold rounded">1</button><button onclick="score+=10; document.getElementById(\'score-board\').innerText=\'SCORE: \'+score;" class="w-14 h-14 bg-slate-700 text-xl font-bold rounded">2</button></div>', '슬라이딩 퍼즐'); }
+        function playSokoban() { playDOMGame('<div class="text-base text-indigo-400 mb-2">소코반</div><div class="p-4 bg-slate-800 rounded font-mono text-2xl mb-3">🧱🧑📦🎯</div><button onclick="score+=30; document.getElementById(\'score-board\').innerText=\'SCORE: \'+score; alert(\'상자 밀기 성공!\');" class="px-6 py-2 bg-indigo-600 rounded font-bold">상자 밀기</button>', '창고지기'); }
+        function playPuzzleBoard() { playDOMGame('<div class="text-base text-pink-400 mb-2">퍼즐 조각 맞추기</div><button onclick="score+=40; document.getElementById(\'score-board\').innerText=\'SCORE: \'+score; alert(\'퍼즐 완성!\');" class="px-6 py-2 bg-indigo-600 rounded font-bold">조각 맞추기</button>', '퍼즐 맞추기'); }
+        function playColorMatch() { playDOMGame('<div class="text-base text-cyan-400 mb-2">색상 매칭 퍼즐</div><button onclick="score+=20; document.getElementById(\'score-board\').innerText=\'SCORE: \'+score; alert(\'매칭 성공!\');" class="px-6 py-2 bg-emerald-600 rounded font-bold">색상 매칭</button>', '색상 매칭'); }
+        function playSimon() { playDOMGame('<div class="text-base text-yellow-400 mb-2">기억력 순서 맞추기</div><button onclick="score+=50; document.getElementById(\'score-board\').innerText=\'SCORE: \'+score; alert(\'기억력 테스트 통과!\');" class="px-6 py-2 bg-indigo-600 rounded font-bold">순서 기억 완료</button>', '사이먼 세이'); }
+        function playWordPuzzle() { playDOMGame('<div class="text-base text-pink-400 mb-3">단어 맞추기 퀴즈</div><input id="wp" class="bg-slate-800 px-4 py-2 rounded text-center text-lg mb-2" placeholder="정답"><br><button onclick="alert(document.getElementById(\'wp\').value===\'과학\'?\'정답!\':\'오답!\')" class="bg-indigo-600 px-6 py-2 rounded font-bold">제출</button>', '단어 퍼즐'); }
+        function playMathQuiz() { playDOMGame('<div class="text-base text-emerald-400 mb-2">연산 스피드 퀴즈</div><p class="text-3xl my-3 text-yellow-400 font-bold">25 + 37 = ?</p><div class="flex gap-2"><input id="math-ans" class="bg-slate-800 px-4 py-2 rounded text-center text-xl font-bold w-36" placeholder="정답"><button onclick="let v=document.getElementById(\'math-ans\').value; if(v===\'62\'){ alert(\'🎉 정답!\'); score+=30; document.getElementById(\'score-board\').innerText=\'SCORE: \'+score; selectGame(29); } else { alert(\'❌ 오답!\'); }" class="bg-indigo-600 px-6 py-2 rounded font-bold">제출</button></div>', '연산 퀴즈'); }
+        function playMaze() { playDOMGame('<div class="text-base text-cyan-400 mb-2">미로 찾기 미니</div><div class="p-4 bg-slate-800 rounded font-mono text-2xl mb-3">🚶‍♂️ ➡️ 🏁</div><button onclick="score+=40; document.getElementById(\'score-board\').innerText=\'SCORE: \'+score; alert(\'미로 탈출!\');" class="px-6 py-2 bg-indigo-600 rounded font-bold">미로 탈출</button>', '미로 찾기'); }
+        function playTyping() { playDOMGame('<div class="text-base text-pink-400 mb-2">단어 낙하 타자 연습</div><div class="text-3xl font-bold text-yellow-400 my-3">Apple</div><input id="tp" class="bg-slate-800 px-4 py-2 rounded text-center text-lg" placeholder="입력 후 엔터" onkeydown="if(event.key===\'Enter\'){ alert(\'정답!\'); score+=10; document.getElementById(\'score-board\').innerText=\'SCORE: \'+score; }">', '타자 연습'); }
+        function playLadder() { playDOMGame('<div class="text-base text-cyan-400 mb-2">사다리 타기 행사</div><button onclick="alert(\'🎉 당첨 결과: 아이스크림 쏘기!\')" class="mt-4 px-6 py-2 bg-indigo-600 rounded font-bold">결과 확인</button>', '사다리 타기'); }
+        function playRoulette() { playDOMGame('<div class="text-base text-yellow-400 mb-2">룰렛 돌리기</div><button onclick="alert(\'🎰 룰렛 결과: 숙제 면제!\')" class="mt-4 px-6 py-2 bg-emerald-600 rounded font-bold">룰렛 돌리기</button>', '룰렛'); }
+        function playDiceRace() { playDOMGame('<div class="text-base text-emerald-400 mb-2">주사위 레이스</div><button onclick="alert(\'🎲 주사위 눈: 6 전진!\')" class="mt-4 px-6 py-2 bg-indigo-600 rounded font-bold">주사위 굴리기</button>', '주사위 레이스'); }
+        function playOmok() { playDOMGame('<div class="text-base text-yellow-400 mb-3">오목 (Omok Mini)</div><div class="grid grid-cols-5 gap-2 bg-slate-800 p-3 rounded"><button onclick="this.innerText=\'⚪\'" class="w-12 h-12 bg-slate-700 text-xl rounded flex items-center justify-center"></button><button onclick="this.innerText=\'⚫\'" class="w-12 h-12 bg-slate-700 text-xl rounded flex items-center justify-center"></button></div>', '오목'); }
+        function playRhythm() { playDOMGame('<div class="text-base text-pink-400 mb-2">리듬 박자 맞추기</div><div class="text-4xl font-bold text-cyan-400 my-4">🎵 BEAT!</div><button onclick="alert(\'✨ PERFECT!\'); score+=25; document.getElementById(\'score-board\').innerText=\'SCORE: \'+score;" class="px-8 py-3 bg-indigo-600 rounded-lg font-bold text-lg shadow-lg">SPACE TAP!</button>', '리듬 게임'); }
+        function playBowling() { playDOMGame('<div class="text-base text-yellow-400 mb-2">볼링 미니</div><button onclick="alert(\'🎳 STRIKE!\'); score+=100; document.getElementById(\'score-board\').innerText=\'SCORE: \'+score;" class="mt-4 px-6 py-2 bg-indigo-600 rounded font-bold">공 던지기</button>', '볼링'); }
+        function playPenalty() { playDOMGame('<div class="text-base text-emerald-400 mb-2">페널티킥 축구</div><div class="flex gap-3 mt-4"><button onclick="alert(\'⚽ GOAL!! 골인!\'); score+=50; document.getElementById(\'score-board\').innerText=\'SCORE: \'+score;" class="px-5 py-3 bg-slate-800 rounded-lg font-bold">좌측 슛</button><button onclick="alert(\'⚽ GOAL!! 득점!\')" class="px-5 py-3 bg-slate-800 rounded-lg font-bold">우측 슛</button></div>', '축구'); }
+        function playTycoon() { playDOMGame('<div class="text-base text-yellow-400 mb-2">펫 키우기 타이쿤</div><div class="text-5xl my-3">🐶</div><button onclick="score+=20; document.getElementById(\'score-board\').innerText=\'SCORE: \'+score; alert(\'❤ 펫 친밀도 상승! (+20점)\');" class="mt-2 px-6 py-2 bg-indigo-600 rounded font-bold">밥 주기</button>', '타이쿤'); }
+        function playPixelDraw() { playDOMGame('<div class="text-base mb-3 text-cyan-400">픽셀 드로잉 보드</div><div class="grid grid-cols-5 gap-2 bg-slate-800 p-3 rounded"><button onclick="this.style.backgroundColor=\'#ef4444\'" class="w-12 h-12 bg-slate-900 rounded"></button><button onclick="this.style.backgroundColor=\'#3b82f6\'" class="w-12 h-12 bg-slate-900 rounded"></button></div>', '픽셀 드로잉'); }
+        function playRPS() { playDOMGame('<div class="text-base text-yellow-400 mb-3">가위바위보 연승</div><div class="flex gap-3 mt-2"><button onclick="alert(\'✌ 가위! 승리!\')" class="px-5 py-2 bg-slate-800 rounded font-bold">가위</button><button onclick="alert(\'✊ 바위! 무승부!\')" class="px-5 py-2 bg-slate-800 rounded font-bold">바위</button></div>', '가위바위보'); }
+        function playCoinFlip() { playDOMGame('<div class="text-base text-cyan-400 mb-2">동전 던지기 확률</div><button onclick="let r=Math.random()<0.5?\'앞면\':\'뒷면\'; alert(\'🪙 결과: \'+r);" class="mt-4 px-6 py-2 bg-indigo-600 rounded font-bold">동전 던지기</button>', '동전 던지기'); }
 
-        // 17. 지뢰찾기
-        function playMinesweeper() {
-            playDOMGame(`
-                <div class="text-base text-cyan-400 mb-2">지뢰찾기 미니 (안전한 칸을 고르세요!)</div>
-                <div class="grid grid-cols-3 gap-2">
-                    <button onclick="score+=10; document.getElementById('score-board').innerText='SCORE: '+score; this.innerText='1'; this.className='w-16 h-16 bg-emerald-700 font-bold text-xl rounded';" class="w-16 h-16 bg-slate-700 font-bold text-xl rounded">?</button>
-                    <button onclick="alert('💣 꽝! 지뢰를 밟았습니다!'); selectGame(17);" class="w-16 h-16 bg-slate-700 font-bold text-xl rounded">?</button>
-                    <button onclick="score+=10; document.getElementById('score-board').innerText='SCORE: '+score; this.innerText='0'; this.className='w-16 h-16 bg-emerald-700 font-bold text-xl rounded';" class="w-16 h-16 bg-slate-700 font-bold text-xl rounded">?</button>
-                </div>
-            `, '지뢰(💣)를 피해 안전한 숫자를 찾으세요!');
-        }
-
-        // 18. 틱택토
-        function playTicTacToe() {
-            let turn = 'X';
-            playDOMGame(`
-                <div class="text-base text-emerald-400 mb-2">틱택토 (삼목) - 현재 차례: <span id='t-turn'>X</span></div>
-                <div class="grid grid-cols-3 gap-2">
-                    <button onclick="if(!this.innerText){this.innerText='X'; document.getElementById('t-turn').innerText='O';}" class="w-16 h-16 bg-slate-800 hover:bg-slate-700 font-bold text-2xl rounded text-yellow-400"></button>
-                    <button onclick="if(!this.innerText){this.innerText='O'; document.getElementById('t-turn').innerText='X';}" class="w-16 h-16 bg-slate-800 hover:bg-slate-700 font-bold text-2xl rounded text-cyan-400"></button>
-                    <button onclick="if(!this.innerText){this.innerText='X'; document.getElementById('t-turn').innerText='O';}" class="w-16 h-16 bg-slate-800 hover:bg-slate-700 font-bold text-2xl rounded text-yellow-400"></button>
-                    <button onclick="if(!this.innerText){this.innerText='O'; document.getElementById('t-turn').innerText='X';}" class="w-16 h-16 bg-slate-800 hover:bg-slate-700 font-bold text-2xl rounded text-cyan-400"></button>
-                    <button onclick="if(!this.innerText){this.innerText='X'; document.getElementById('t-turn').innerText='O';}" class="w-16 h-16 bg-slate-800 hover:bg-slate-700 font-bold text-2xl rounded text-yellow-400"></button>
-                    <button onclick="if(!this.innerText){this.innerText='O'; document.getElementById('t-turn').innerText='X';}" class="w-16 h-16 bg-slate-800 hover:bg-slate-700 font-bold text-2xl rounded text-cyan-400"></button>
-                    <button onclick="if(!this.innerText){this.innerText='X'; document.getElementById('t-turn').innerText='O';}" class="w-16 h-16 bg-slate-800 hover:bg-slate-700 font-bold text-2xl rounded text-yellow-400"></button>
-                    <button onclick="if(!this.innerText){this.innerText='O'; document.getElementById('t-turn').innerText='X';}" class="w-16 h-16 bg-slate-800 hover:bg-slate-700 font-bold text-2xl rounded text-cyan-400"></button>
-                    <button onclick="if(!this.innerText){this.innerText='X'; document.getElementById('t-turn').innerText='O';}" class="w-16 h-16 bg-slate-800 hover:bg-slate-700 font-bold text-2xl rounded text-yellow-400"></button>
-                </div>
-            `, '칸을 클릭하여 3목을 완성하세요!');
-        }
-
-        // 19. 숫자 야구
-        function playBaseball() {
-            let secret = "381";
-            playDOMGame(`
-                <div class="text-base text-yellow-400 mb-2">숫자 야구 (서로 다른 3자리 1~9)</div>
-                <p class="text-xs text-slate-400 mb-3">(테스트 정답: 381)</p>
-                <div class="flex gap-2 mb-3">
-                    <input id="bb-input" type="text" maxlength="3" class="bg-slate-800 px-4 py-2 rounded text-center text-xl font-bold w-36" placeholder="예: 123">
-                    <button onclick="
-                        let val = document.getElementById('bb-input').value;
-                        let s=0, b=0;
-                        if(val==='381') { alert('🎉 홈런! 정답입니다!'); score+=100; document.getElementById('score-board').innerText='SCORE: '+score; selectGame(19); return; }
-                        for(let i=0;i<3;i++){ if(val[i]===secret[i]) s++; else if(secret.includes(val[i])) b++; }
-                        document.getElementById('bb-result').innerText = `입력값 ${val} => ${s} 스트라이크, ${b} 볼`;
-                    " class="bg-indigo-600 hover:bg-indigo-500 px-4 py-2 rounded font-bold">확인</button>
-                </div>
-                <div id="bb-result" class="text-sm font-bold text-cyan-400">결과가 여기에 표시됩니다.</div>
-            `, '3자리 숫자를 맞추고 스트라이크와 볼 힌트를 얻으세요!');
-        }
-
-        // 20. 카드 짝맞추기
-        function playCards() {
-            playDOMGame(`
-                <div class="text-base text-pink-400 mb-3">카드 짝맞추기</div>
-                <div class="grid grid-cols-4 gap-3">
-                    <button onclick="this.innerText='🍎'; score+=10; document.getElementById('score-board').innerText='SCORE: '+score;" class="w-14 h-20 bg-slate-800 hover:bg-slate-700 text-2xl rounded flex items-center justify-center font-bold">?</button>
-                    <button onclick="this.innerText='🍌'; score+=10; document.getElementById('score-board').innerText='SCORE: '+score;" class="w-14 h-20 bg-slate-800 hover:bg-slate-700 text-2xl rounded flex items-center justify-center font-bold">?</button>
-                    <button onclick="this.innerText='🍎'; score+=10; document.getElementById('score-board').innerText='SCORE: '+score;" class="w-14 h-20 bg-slate-800 hover:bg-slate-700 text-2xl rounded flex items-center justify-center font-bold">?</button>
-                    <button onclick="this.innerText='🍌'; score+=10; document.getElementById('score-board').innerText='SCORE: '+score;" class="w-14 h-20 bg-slate-800 hover:bg-slate-700 text-2xl rounded flex items-center justify-center font-bold">?</button>
-                </div>
-            `, '카드를 뒤집어 같은 그림을 찾으세요!');
-        }
-
-        // 21. 스도쿠
-        function playSudoku() { playDOMGame(`<div class="text-base text-cyan-400 mb-3">스도쿠 미니 (4x4)</div><div class="grid grid-cols-4 gap-1 p-2 bg-slate-800 rounded"><input class="w-12 h-12 bg-slate-900 text-center font-bold text-lg text-yellow-400" value="1"><input class="w-12 h-12 bg-slate-900 text-center font-bold text-lg" placeholder="2"><input class="w-12 h-12 bg-slate-900 text-center font-bold text-lg" placeholder="3"><input class="w-12 h-12 bg-slate-900 text-center font-bold text-lg text-yellow-400" value="4"></div><button onclick="score+=50; document.getElementById('score-board').innerText='SCORE: '+score; alert('정답입니다! (+50점)');" class="mt-4 px-6 py-2 bg-indigo-600 rounded font-bold">정답 확인</button>`, '빈칸에 알맞은 숫자를 채우세요!'); }
-        // 22. 하노이의 탑
-        function playHanoi() { playDOMGame(`<div class="text-base text-yellow-400 mb-2">하노이의 탑</div><p class="text-xs text-slate-400 mb-4">원판을 오른쪽 기둥으로 옮기세요.</p><button onclick="score+=100; document.getElementById('score-board').innerText='SCORE: '+score; alert('🎉 하노이의 탑 클리어! (+100점)'); selectGame(22);" class="px-6 py-2 bg-indigo-600 hover:bg-indigo-500 rounded font-bold">원판 이동 완료하기</button>`, '원판 이동 퍼즐입니다.'); }
-        // 23. 슬라이딩 퍼즐
-        function playSliding() { playDOMGame(`<div class="text-base text-emerald-400 mb-3">슬라이딩 퍼즐</div><div class="grid grid-cols-3 gap-2 bg-slate-800 p-3 rounded"><button onclick="score+=10; document.getElementById('score-board').innerText='SCORE: '+score;" class="w-14 h-14 bg-slate-700 text-xl font-bold rounded">1</button><button onclick="score+=10; document.getElementById('score-board').innerText='SCORE: '+score;" class="w-14 h-14 bg-slate-700 text-xl font-bold rounded">2</button><button onclick="score+=10; document.getElementById('score-board').innerText='SCORE: '+score;" class="w-14 h-14 bg-slate-700 text-xl font-bold rounded">3</button></div>`, '숫자 순서대로 슬라이드하세요!'); }
-        // 24. 소코반
-        function playSokoban() { playDOMGame(`<div class="text-base text-indigo-400 mb-2">소코반 (창고지기)</div><div class="p-4 bg-slate-800 rounded font-mono text-2xl mb-3">🧱🧑📦🎯</div><button onclick="score+=30; document.getElementById('score-board').innerText='SCORE: '+score; alert('상자 넣기 성공! (+30점)');" class="px-6 py-2 bg-indigo-600 rounded font-bold">상자 밀어넣기</button>`, '상자를 목표 지점으로 밀어넣으세요!'); }
-        // 25. 퍼즐 맞추기
-        function playPuzzleBoard() { playDOMGame(`<div class="text-base text-pink-400 mb-3">퍼즐 조각 맞추기</div><button onclick="score+=40; document.getElementById('score-board').innerText='SCORE: '+score; alert('퍼즐 완성 완료! (+40점)');" class="px-6 py-2 bg-indigo-600 rounded font-bold">퍼즐 조각 맞추기</button>`, '조각을 맞춰 그림을 완성하세요.'); }
-        // 26. 색상 매칭
-        function playColorMatch() { playDOMGame(`<div class="text-base text-cyan-400 mb-3">색상 매칭 퍼즐</div><button onclick="score+=20; document.getElementById('score-board').innerText='SCORE: '+score; alert('색상 매칭 성공! (+20점)');" class="px-6 py-2 bg-emerald-600 rounded font-bold">색상 매칭하기</button>`, '올바른 색상을 매칭하세요.'); }
-        // 27. 기억력 순서
-        function playSimon() { playDOMGame(`<div class="text-base text-yellow-400 mb-3">기억력 순서 맞추기</div><button onclick="score+=50; document.getElementById('score-board').innerText='SCORE: '+score; alert('기억력 테스트 통과! (+50점)');" class="px-6 py-2 bg-indigo-600 rounded font-bold">순서 기억 완료</button>`, '반짝이는 순서를 기억하고 따라하세요.'); }
-        // 28. 단어 퀴즈
-        function playWordPuzzle() { playDOMGame(`<div class="text-base text-pink-400 mb-2">단어 맞추기 퀴즈</div><p class="text-lg text-yellow-400 mb-2">초성: ㄱ ㅎ</p><input id="wp" class="bg-slate-800 px-4 py-2 rounded text-center text-lg mb-2" placeholder="정답 입력"><br><button onclick="alert(document.getElementById('wp').value==='과학'?'정답!':'오답!')" class="bg-indigo-600 px-6 py-2 rounded font-bold">제출</button>`, '단어 퀴즈'); }
-
-        // 29. 연산 스피드 퀴즈
-        function playMathQuiz() {
-            playDOMGame(`
-                <div class="text-base text-emerald-400 mb-2">연산 스피드 퀴즈</div>
-                <p class="text-3xl my-3 text-yellow-400 font-bold">25 + 37 = ?</p>
-                <div class="flex gap-2">
-                    <input id="math-ans" class="bg-slate-800 px-4 py-2 rounded text-center text-xl font-bold w-36" placeholder="정답 입력">
-                    <button onclick="
-                        let v = document.getElementById('math-ans').value;
-                        if(v==='62') { alert('🎉 정답입니다! (+30점)'); score+=30; document.getElementById('score-board').innerText='SCORE: '+score; selectGame(29); }
-                        else { alert('❌ 오답입니다. 다시 도전해보세요!'); }
-                    " class="bg-indigo-600 hover:bg-indigo-500 px-6 py-2 rounded font-bold">제출</button>
-                </div>
-            `, '빠르게 연산 문제를 풀어보세요!');
-        }
-
-        // 30. 미로 찾기
-        function playMaze() { playDOMGame(`<div class="text-base text-cyan-400 mb-2">미로 찾기 미니</div><div class="p-4 bg-slate-800 rounded font-mono text-2xl mb-3">🚶‍♂️ ➡️ 🏁</div><button onclick="score+=40; document.getElementById('score-board').innerText='SCORE: '+score; alert('미로 탈출 성공! (+40점)');" class="px-6 py-2 bg-indigo-600 rounded font-bold">미로 탈출하기</button>`, '출구까지 미로를 통과하세요.'); }
-        // 31. 타자 게임
-        function playTyping() { playDOMGame(`<div class="text-base text-pink-400 mb-2">단어 낙하 타자 연습</div><div class="text-3xl font-bold text-yellow-400 my-3">Apple</div><input id="tp" class="bg-slate-800 px-4 py-2 rounded text-center text-lg" placeholder="입력 후 엔터" onkeydown="if(event.key==='Enter'){ alert('정답!'); score+=10; document.getElementById('score-board').innerText='SCORE: '+score; }">`, '타자 연습'); }
-        // 32. 사다리 타기
-        function playLadder() { playDOMGame(`<div class="text-base text-cyan-400 mb-2">사다리 타기 행사</div><button onclick="alert('🎉 당첨 결과: 아이스크림 쏘기 당첨!')" class="mt-4 px-6 py-2 bg-indigo-600 rounded font-bold">사다리 결과 확인하기</button>`, '사다리 타기'); }
-        // 33. 룰렛
-        function playRoulette() { playDOMGame(`<div class="text-base text-yellow-400 mb-2">룰렛 돌리기</div><button onclick="alert('🎰 룰렛 당첨: 오늘 하루 숙제 면제!')" class="mt-4 px-6 py-2 bg-emerald-600 rounded font-bold">룰렛 돌리기</button>`, '룰렛'); }
-        // 34. 주사위 레이스
-        function playDiceRace() { playDOMGame(`<div class="text-base text-emerald-400 mb-2">주사위 레이스</div><button onclick="alert('🎲 주사위 눈: 6! 환상적인 전진!')" class="mt-4 px-6 py-2 bg-indigo-600 rounded font-bold">주사위 굴리기</button>`, '주사위 레이스'); }
-        // 35. 오목
-        function playOmok() { playDOMGame(`<div class="text-base text-yellow-400 mb-3">오목 (Omok Mini)</div><div class="grid grid-cols-5 gap-2 bg-slate-800 p-3 rounded"><button onclick="this.innerText='⚪'" class="w-12 h-12 bg-slate-700 text-xl rounded hover:bg-slate-600 flex items-center justify-center"></button><button onclick="this.innerText='⚫'" class="w-12 h-12 bg-slate-700 text-xl rounded hover:bg-slate-600 flex items-center justify-center"></button></div>`, '돌을 놓아 5목을 만드세요.'); }
-        // 36. 리듬 게임
-        function playRhythm() { playDOMGame(`<div class="text-base text-pink-400 mb-2">리듬 박자 맞추기</div><div class="text-4xl font-bold text-cyan-400 my-4">🎵 BEAT!</div><button onclick="alert('✨ PERFECT! 완벽한 박자!'); score+=25; document.getElementById('score-board').innerText='SCORE: '+score;" class="px-8 py-3 bg-indigo-600 rounded-lg font-bold text-lg shadow-lg">SPACE TAP!</button>`, '리듬 게임'); }
-        // 37. 볼링
-        function playBowling() { playDOMGame(`<div class="text-base text-yellow-400 mb-2">볼링 미니</div><button onclick="alert('🎳 STRIKE! 300점 만점 스트라이크!'); score+=100; document.getElementById('score-board').innerText='SCORE: '+score;" class="mt-4 px-6 py-2 bg-indigo-600 rounded font-bold">볼링공 던지기</button>`, '볼링'); }
-        // 38. 페널티킥
-        function playPenalty() { playDOMGame(`<div class="text-base text-emerald-400 mb-2">페널티킥 축구</div><div class="flex gap-3 mt-4"><button onclick="alert('⚽ GOAL!! 골인 성공!'); score+=50; document.getElementById('score-board').innerText='SCORE: '+score;" class="px-5 py-3 bg-slate-800 hover:bg-slate-700 rounded-lg font-bold">좌측 슛</button><button onclick="alert('⚽ GOAL!! 골키퍼 허를 찔렀습니다!')" class="px-5 py-3 bg-slate-800 hover:bg-slate-700 rounded-lg font-bold">우측 슛</button></div>`, '축구'); }
-        // 39. 타이쿤
-        function playTycoon() { playDOMGame(`<div class="text-base text-yellow-400 mb-2">펫 키우기 타이쿤</div><div class="text-5xl my-3">🐶</div><button onclick="score+=20; document.getElementById('score-board').innerText='SCORE: '+score; alert('❤ 펫의 친밀도가 쑥쑥 올랐습니다! (+20점)');" class="mt-2 px-6 py-2 bg-indigo-600 rounded font-bold">밥 주기</button>`, '타이쿤'); }
-        // 40. 픽셀 드로잉
-        function playPixelDraw() { playDOMGame(`<div class="text-base mb-3 text-cyan-400">픽셀 드로잉 보드</div><div class="grid grid-cols-5 gap-2 bg-slate-800 p-3 rounded"><button onclick="this.style.backgroundColor='#ef4444'" class="w-12 h-12 bg-slate-900 rounded"></button><button onclick="this.style.backgroundColor='#3b82f6'" class="w-12 h-12 bg-slate-900 rounded"></button></div>`, '픽셀 드로잉'); }
-        // 41. 가위바위보
-        function playRPS() { playDOMGame(`<div class="text-base text-yellow-400 mb-3">가위바위보 연승</div><div class="flex gap-3 mt-2"><button onclick="alert('✌ 가위! 컴퓨터는 보! 승리했습니다!')" class="px-5 py-2 bg-slate-800 rounded font-bold">가위</button><button onclick="alert('✊ 바위! 무승부입니다!')" class="px-5 py-2 bg-slate-800 rounded font-bold">바위</button></div>`, '가위바위보'); }
-        // 42. 동전 던지기
-        function playCoinFlip() { playDOMGame(`<div class="text-base text-cyan-400 mb-2">동전 던지기 확률</div><button onclick="let res=Math.random()<0.5?'앞면':'뒷면'; alert('🪙 동전 결과: ' + res);" class="mt-4 px-6 py-2 bg-indigo-600 rounded font-bold">동전 던지기</button>`, '동전 던지기'); }
-
-        // 43. 스톱워치 1초 맞추기
         function playStopwatch() {
             let startTime = 0;
-            playDOMGame(`
-                <div class="text-base text-emerald-400 mb-2">스톱워치 1초 맞추기</div>
-                <p id="sw-status" class="text-sm text-slate-300 mb-3">시작 버튼을 누르고 정확히 1.000초에 멈추세요!</p>
-                <div class="flex gap-2">
-                    <button onclick="startTime=Date.now(); document.getElementById('sw-status').innerText='측정 중... 1초일 때 스톱을 누르세요!';" class="px-5 py-2 bg-indigo-600 rounded font-bold">시작</button>
-                    <button onclick="
-                        if(!startTime) { alert('먼저 시작을 눌러주세요!'); return; }
-                        let diff = Math.abs((Date.now() - startTime) - 1000);
-                        alert('측정 결과: 차이 ' + diff + 'ms (' + (diff < 100 ? '🎉 퍼펙트 신의 손!' : '조금 아쉬워요!') + ')');
-                        score += Math.max(0, 100 - diff);
-                        document.getElementById('score-board').innerText = 'SCORE: '+score;
-                    " class="px-5 py-2 bg-emerald-600 rounded font-bold">스톱!</button>
-                </div>
-            `, '정확히 1초를 맞추는 스톱워치 게임입니다.');
+            playDOMGame('<div class="text-base text-emerald-400 mb-2">스톱워치 1초 맞추기</div><p id="sw-status" class="text-sm text-slate-300 mb-3">시작을 누르고 정확히 1초에 멈추세요!</p><div class="flex gap-2"><button onclick="startTime=Date.now(); document.getElementById(\'sw-status\').innerText=\'측정 중...\';" class="px-5 py-2 bg-indigo-600 rounded font-bold">시작</button><button onclick="if(!startTime){alert(\'시작을 먼저 누르세요!\'); return;} let diff=Math.abs((Date.now()-startTime)-1000); alert(\'차이: \'+diff+\'ms\'); score+=Math.max(0,100-diff); document.getElementById(\'score-board\').innerText=\'SCORE: \'+score;" class="px-5 py-2 bg-emerald-600 rounded font-bold">스톱!</button></div>', '1초 맞추기');
         }
 
-        // 44. 업다운 숫자 맞추기 (완전 구현)
         function playUpDown() {
             let secretNum = Math.floor(Math.random() * 50) + 1;
             let tries = 0;
-            playDOMGame(`
-                <div class="text-base text-yellow-400 mb-2">업다운 숫자 맞추기 (1~50)</div>
-                <p id="ud-msg" class="text-sm text-cyan-400 mb-3">1부터 50 사이의 숫자를 맞춰보세요!</p>
-                <div class="flex gap-2 mb-3">
-                    <input id="ud-input" type="number" class="bg-slate-800 px-4 py-2 rounded text-center text-xl font-bold w-36" placeholder="숫자 입력">
-                    <button onclick="
-                        let val = parseInt(document.getElementById('ud-input').value);
-                        tries++;
-                        let msgElem = document.getElementById('ud-msg');
-                        if(isNaN(val)) { msgElem.innerText = '올바른 숫자를 입력하세요!'; return; }
-                        if(val === secretNum) {
-                            msgElem.innerText = \`🎉 정답! \${tries}번 만에 맞췄습니다!\`;
-                            score += Math.max(10, 100 - (tries * 10));
-                            document.getElementById('score-board').innerText = 'SCORE: '+score;
-                        } else if(val < secretNum) {
-                            msgElem.innerText = \`📈 UP! (\${val}보다 큽니다)\`;
-                        } else {
-                            msgElem.innerText = \`📉 DOWN! (\${val}보다 작습니다)\`;
-                        }
-                    " class="bg-indigo-600 hover:bg-indigo-500 px-4 py-2 rounded font-bold">추측하기</button>
-                </div>
-                <button onclick="selectGame(44)" class="text-xs text-slate-400 underline">새 게임 시작</button>
-            `, '실시간 업다운 힌트를 받으며 숫자를 맞추세요!');
+            playDOMGame('<div class="text-base text-yellow-400 mb-2">업다운 숫자 맞추기 (1~50)</div><p id="ud-msg" class="text-sm text-cyan-400 mb-3">1~50 사이의 숫자를 맞춰보세요!</p><div class="flex gap-2 mb-3"><input id="ud-input" type="number" class="bg-slate-800 px-4 py-2 rounded text-center text-xl font-bold w-36" placeholder="숫자 입력"><button onclick="let val=parseInt(document.getElementById(\'ud-input\').value); tries++; let msg=document.getElementById(\'ud-msg\'); if(val===' + secretNum + '){ msg.innerText=\'🎉 정답!\'; score+=50; document.getElementById(\'score-board\').innerText=\'SCORE: \'+score; } else if(val<' + secretNum + '){ msg.innerText=\'📈 UP!\'; } else { msg.innerText=\'📉 DOWN!\'; }" class="bg-indigo-600 px-4 py-2 rounded font-bold">추측</button></div>', '업다운 게임');
         }
 
-        function playChosung() { playDOMGame(`<div class="text-base text-pink-400 mb-2">초성 퀴즈 게임</div><div class="text-3xl font-bold my-3 text-yellow-400">ㄱ ㄷ ㄱ</div><input id="cs" class="bg-slate-800 px-4 py-2 rounded text-center text-lg mb-2" placeholder="정답"><br><button onclick="alert(document.getElementById('cs').value==='고구마'?'정답!':'오답!')" class="bg-indigo-600 px-6 py-2 rounded font-bold">제출</button>`, '초성 퀴즈'); }
-        function playPiano() { playDOMGame(`<div class="text-base text-cyan-400 mb-3">피아노 건반 치기</div><div class="flex gap-2"><button onclick="alert('🎵 도~')" class="w-14 h-24 bg-white text-black font-bold rounded-b flex items-end justify-center pb-3">도</button><button onclick="alert('🎵 레~')" class="w-14 h-24 bg-white text-black font-bold rounded-b flex items-end justify-center pb-3">레</button></div>`, '피아노 건반'); }
-        function playClicker() { playDOMGame(`<div class="text-base text-yellow-400 mb-3">클릭 연타 챌린지</div><button onclick="score++; document.getElementById('score-board').innerText='SCORE: '+score" class="mt-2 px-8 py-4 bg-red-600 hover:bg-red-500 rounded-xl font-bold text-xl shadow-lg animate-pulse">연타 클릭!</button>`, '클릭 연타'); }
-        function playColorBlind() { playDOMGame(`<div class="text-base text-emerald-400 mb-3">다른 색 찾기</div><div class="grid grid-cols-2 gap-3"><button onclick="alert('정답입니다! (+10점)'); score+=10; document.getElementById('score-board').innerText='SCORE: '+score;" class="w-16 h-16 bg-indigo-600 rounded-lg"></button><button onclick="alert('정답입니다! (+10점)'); score+=10; document.getElementById('score-board').innerText='SCORE: '+score;" class="w-16 h-16 bg-indigo-500 rounded-lg"></button></div>`, '다른 색 찾기'); }
-        function playFortune() { playDOMGame(`<div class="text-base text-yellow-400 mb-2">포춘쿠키 행운 뽑기</div><button onclick="alert('🥠 오늘의 운세: 대길! 모든 일이 술술 풀립니다!')" class="mt-4 px-6 py-2 bg-indigo-600 rounded font-bold">쿠키 깨기</button>`, '포춘쿠키'); }
-        function playFireworks() { playDOMGame(`<div class="text-base text-cyan-400 mb-2">디지털 불꽃놀이 장난감</div><button onclick="alert('🎆 팡팡! 밤하늘에 아름다운 불꽃이 터졌습니다!')" class="mt-4 px-6 py-2 bg-pink-600 rounded font-bold">불꽃 터트리기</button>`, '불꽃놀이'); }
+        function playChosung() { playDOMGame('<div class="text-base text-pink-400 mb-2">초성 퀴즈 게임</div><div class="text-3xl font-bold my-3 text-yellow-400">ㄱ ㄷ ㄱ</div><input id="cs" class="bg-slate-800 px-4 py-2 rounded text-center text-lg mb-2" placeholder="정답"><br><button onclick="alert(document.getElementById(\'cs\').value===\'고구마\'?\'정답!\':\'오답!\')" class="bg-indigo-600 px-6 py-2 rounded font-bold">제출</button>', '초성 퀴즈'); }
+        function playPiano() { playDOMGame('<div class="text-base text-cyan-400 mb-3">피아노 건반 치기</div><div class="flex gap-2"><button onclick="alert(\'🎵 도~\')" class="w-14 h-24 bg-white text-black font-bold rounded-b flex items-end justify-center pb-3">도</button><button onclick="alert(\'🎵 레~\')" class="w-14 h-24 bg-white text-black font-bold rounded-b flex items-end justify-center pb-3">레</button></div>', '피아노 건반'); }
+        function playClicker() { playDOMGame('<div class="text-base text-yellow-400 mb-3">클릭 연타 챌린지</div><button onclick="score++; document.getElementById(\'score-board\').innerText=\'SCORE: \'+score" class="mt-2 px-8 py-4 bg-red-600 hover:bg-red-500 rounded-xl font-bold text-xl shadow-lg animate-pulse">연타 클릭!</button>', '클릭 연타'); }
+        function playColorBlind() { playDOMGame('<div class="text-base text-emerald-400 mb-3">다른 색 찾기</div><div class="grid grid-cols-2 gap-3"><button onclick="alert(\'정답!\'); score+=10; document.getElementById(\'score-board\').innerText=\'SCORE: \'+score;" class="w-16 h-16 bg-indigo-600 rounded-lg"></button><button onclick="alert(\'정답!\'); score+=10; document.getElementById(\'score-board\').innerText=\'SCORE: \'+score;" class="w-16 h-16 bg-indigo-500 rounded-lg"></button></div>', '다른 색 찾기'); }
+        function playFortune() { playDOMGame('<div class="text-base text-yellow-400 mb-2">포춘쿠키 행운 뽑기</div><button onclick="alert(\'🥠 오늘의 운세: 대길! 만사형통!\')" class="mt-4 px-6 py-2 bg-indigo-600 rounded font-bold">쿠키 깨기</button>', '포춘쿠키'); }
+        function playFireworks() { playDOMGame('<div class="text-base text-cyan-400 mb-2">디지털 불꽃놀이 장난감</div><button onclick="alert(\'🎆 팡팡! 아름다운 불꽃놀이!\')" class="mt-4 px-6 py-2 bg-pink-600 rounded font-bold">불꽃 터트리기</button>', '불꽃놀이'); }
 
         // 처음 페이지를 열 때 무조건 메인 로비 화면이 뜨도록 설정
         window.onload = function() {
