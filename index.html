@@ -97,7 +97,7 @@
                 <button onclick="selectGame(46)" class="w-full text-left px-3 py-2 rounded bg-slate-800 hover:bg-indigo-600 transition">46. 피아노 건반 치기</button>
                 <button onclick="selectGame(47)" class="w-full text-left px-3 py-2 rounded bg-slate-800 hover:bg-indigo-600 transition">47. 클릭 연타 챌린지</button>
                 <button onclick="selectGame(48)" class="w-full text-left px-3 py-2 rounded bg-slate-800 hover:bg-indigo-600 transition">48. 다른 색 찾기</button>
-                <button onclick="selectedGame(49)" class="w-full text-left px-3 py-2 rounded bg-slate-800 hover:bg-indigo-600 transition" onclick="selectGame(49)">49. 포춘쿠키 행운 뽑기</button>
+                <button onclick="selectGame(49)" class="w-full text-left px-3 py-2 rounded bg-slate-800 hover:bg-indigo-600 transition">49. 포춘쿠키 행운 뽑기</button>
                 <button onclick="selectGame(50)" class="w-full text-left px-3 py-2 rounded bg-slate-800 hover:bg-indigo-600 transition">50. 디지털 불꽃놀이</button>
             </div>
         </aside>
@@ -108,7 +108,7 @@
             <div id="game-info" class="text-sm text-slate-300 mb-4">왼쪽 목록에서 원하는 게임을 선택해 주세요.</div>
             
             <div id="game-container" class="bg-black w-[480px] h-[400px] flex items-center justify-center border-2 border-slate-700 relative overflow-hidden rounded-lg shadow-2xl">
-                <!-- 초기 메인 화면 로비 콘텐츠 -->
+                <!-- 메인 로비 화면 -->
                 <div id="lobby-screen" class="text-center p-6 flex flex-col items-center justify-center">
                     <span class="text-6xl mb-4 animate-bounce">🕹️</span>
                     <h2 class="text-xl font-bold text-yellow-400 mb-2">엽쌤스쿨 레트로 게임 아카이브</h2>
@@ -201,14 +201,6 @@
             "밤하늘을 아름답게 수놓는 불꽃놀이입니다."
         ];
 
-        function resetEnvironment() {
-            if (currentTimer) { clearInterval(currentTimer); currentTimer = null; }
-            if (currentTimeout) { clearTimeout(currentTimeout); currentTimeout = null; }
-            document.onkeydown = null;
-            document.onkeyup = null;
-            container.innerHTML = '<canvas id="canvas" width="480" height="400" class="bg-slate-950"></canvas>';
-        }
-
         function loadMainScreen() {
             if (currentTimer) { clearInterval(currentTimer); currentTimer = null; }
             if (currentTimeout) { clearTimeout(currentTimeout); currentTimeout = null; }
@@ -236,7 +228,6 @@
             document.getElementById('game-title').innerText = titles[id - 1];
             document.getElementById('game-info').innerText = descriptions[id - 1];
 
-            // 시작 대기 화면 표시
             container.innerHTML = `
                 <div class="text-center p-6 flex flex-col items-center justify-center">
                     <h3 class="text-2xl font-bold text-cyan-400 mb-3">${titles[id - 1]}</h3>
@@ -456,7 +447,7 @@
                 ctx.fillStyle='#020617'; ctx.fillRect(0,0,480,400);
                 ctx.fillStyle='#22c55e'; ctx.fillRect(px,360,40,20);
                 ctx.fillStyle='#ef4444'; bullets.forEach(b=>ctx.fillRect(b.x,b.y,4,10));
-                ctx.fillStyle='#a855f7'; aliens.forEach(a=>ctx.fillRect(a.x,a.y,30,30));
+                ctx.fillStyle='#a855f7'; aliens.forcech = aliens.forEach(a=>ctx.fillRect(a.x,a.y,30,30));
             }, 1000/60);
         }
 
@@ -611,6 +602,11 @@
         function playColorBlind() { playDOMGame(`<div class="text-base text-emerald-400 mb-3">다른 색 찾기</div><div class="grid grid-cols-2 gap-3"><button onclick="alert('정답입니다!')" class="w-16 h-16 bg-indigo-600 rounded-lg"></button><button onclick="alert('정답입니다!')" class="w-16 h-16 bg-indigo-500 rounded-lg"></button></div>`, '다른 색 찾기'); }
         function playFortune() { playDOMGame(`<div class="text-base text-yellow-400 mb-2">포춘쿠키 행운 뽑기</div><button onclick="alert('🥠 오늘의 운세: 대길! 모든 일이 술술 풀립니다!')" class="mt-4 px-6 py-2 bg-indigo-600 rounded font-bold">쿠키 깨기</button>`, '포춘쿠키'); }
         function playFireworks() { playDOMGame(`<div class="text-base text-cyan-400 mb-2">디지털 불꽃놀이 장난감</div><button onclick="alert('🎆 팡팡! 밤하늘에 아름다운 불꽃이 터졌습니다!')" class="mt-4 px-6 py-2 bg-pink-600 rounded font-bold">불꽃 터트리기</button>`, '불꽃놀이'); }
+
+        // 처음 페이지를 열 때 무조건 메인 로비 화면이 뜨도록 설정
+        window.onload = function() {
+            loadMainScreen();
+        };
     </script>
 </body>
 </html>
