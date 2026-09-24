@@ -10,13 +10,14 @@
     <style>
         body {
             font-family: 'Jua', sans-serif;
+            overflow: hidden; /* 전체 페이지 스크롤 고정 및 게임 조작 분리 */
         }
     </style>
 </head>
-<body class="bg-slate-950 text-white min-h-screen flex flex-col select-none">
+<body class="bg-slate-950 text-white h-screen flex flex-col select-none">
 
     <!-- Header -->
-    <header class="bg-slate-900 border-b border-slate-800 p-4 text-center shadow-lg flex justify-between items-center px-8">
+    <header class="bg-slate-900 border-b border-slate-800 p-4 text-center shadow-lg flex justify-between items-center px-8 shrink-0">
         <div class="flex items-center gap-2 cursor-pointer" onclick="loadMainScreen()">
             <span class="text-2xl">🕹️</span>
             <h1 class="text-2xl font-black text-yellow-400 tracking-wider">엽쌤스쿨 레트로 게임 센터</h1>
@@ -25,11 +26,11 @@
     </header>
 
     <!-- Main Layout -->
-    <main class="flex-1 max-w-7xl w-full mx-auto p-4 grid grid-cols-1 lg:grid-cols-4 gap-6">
+    <main class="flex-1 max-w-7xl w-full mx-auto p-4 grid grid-cols-1 lg:grid-cols-4 gap-6 overflow-hidden">
         
         <!-- Sidebar: 50 Games Directory -->
-        <aside class="bg-slate-900 p-4 rounded-xl border border-slate-800 lg:col-span-1 h-[620px] overflow-y-auto space-y-4 text-sm shadow-inner">
-            <h2 class="text-base font-bold text-cyan-400 uppercase tracking-wider">🎮 게임 디렉토리 (50)</h2>
+        <aside class="bg-slate-900 p-4 rounded-xl border border-slate-800 lg:col-span-1 h-[calc(100vh-130px)] overflow-y-auto space-y-4 text-sm shadow-inner">
+            <h2 class="text-base font-bold text-cyan-400 uppercase tracking-wider sticky top-0 bg-slate-900 py-1 z-10">🎮 게임 디렉토리 (50)</h2>
             
             <!-- Arcade & Action (1~15) -->
             <div class="space-y-1">
@@ -123,7 +124,7 @@
     </main>
 
     <!-- Footer -->
-    <footer class="bg-slate-900 text-center p-4 text-sm text-slate-400 border-t border-slate-800 flex justify-between items-center px-8">
+    <footer class="bg-slate-900 text-center p-4 text-sm text-slate-400 border-t border-slate-800 flex justify-between items-center px-8 shrink-0">
         <span>Retro Game Center - 50 Interactive Games Collection</span>
         <span class="text-yellow-400 font-bold">© 2026. 엽쌤</span>
     </footer>
@@ -134,6 +135,15 @@
         let currentTimeout = null;
         let score = 0;
         let selectedId = null;
+
+        // 방향키 및 스페이스바 입력 시 전체 화면이 스크롤되는 현상 원천 차단
+        window.addEventListener('keydown', function(e) {
+            if(['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', ' '].includes(e.key)) {
+                if(document.activeElement.tagName !== 'INPUT' && document.activeElement.tagName !== 'TEXTAREA') {
+                    e.preventDefault();
+                }
+            }
+        }, false);
 
         const titles = [
             "1. 뱀 게임 (Snake)", "2. 퐁 (Pong)", "3. 벽돌깨기 (Breakout)", "4. 장애물 피하기", "5. 반응속도 테스트",
@@ -152,13 +162,13 @@
             "방향키로 뱀을 조작해 먹이를 드세요.", "W/S 또는 방향키로 패들을 움직이세요.", "좌우 방향키로 벽돌을 깨부수세요.", "좌우 방향키로 떨어지는 장애물을 피하세요.", "초록색으로 바뀔 때 최대한 빨리 클릭하세요!",
             "스페이스바로 장애물을 뛰어넘으세요.", "좌우 이동, 스페이스바로 미사일 발사!", "좌우 방향키로 떨어지는 사과를 받으세요.", "나타나는 두더지(초록 원)를 클릭하세요!", "몰려오는 적을 클릭해 처치하세요.",
             "좌우 방향키로 블록을 이동하세요.", "스페이스바로 새를 날개짓하세요.", "방향키로 팩맨을 이동시키세요.", "좌우 이동, 스페이스바로 미사일 발사!", "좌우 방향키로 떨어지는 장애물을 피하세요.",
-            "방향키로 타일을 슬라이드하세요.", "지뢰를 피하세요.", "3목을 만드세요.", "서로 다른 3자리 숫자를 맞춰보세요.", "같은 그림의 카드를 찾으세요.",
+            "방향키로 타일을 슬라이드하세요.", "지뢰를 피하세요.", "3목을 만드세요.", "서로 다른 3자리 숫자를 맞춰보세요.", "같은 그림의 카드 찾기.",
             "빈칸에 알맞은 숫자를 채우세요.", "원판을 모두 오른쪽 기둥으로 옮기세요.", "숫자 순서대로 슬라이드하세요.", "상자를 목표 지점으로 밀어넣으세요.", "퍼즐 조각을 맞추세요.",
             "색상을 올바르게 매칭하세요.", "순서를 기억하고 따라하세요.", "빈칸에 알맞은 단어를 입력하세요.", "빠르게 연산 문제를 푸세요.", "출구까지 미로를 통과하세요.",
             "내려오는 단어를 빠르게 입력하세요.", "사다리를 타고 결과를 확인하세요.", "운명의 룰렛을 돌려보세요.", "주사위를 굴려 레이스에서 승리하세요.", "돌을 놓아 5목을 완성하세요.",
             "박자에 맞춰 스페이스바를 누르세요.", "볼링공을 굴려 스트라이크를 노리세요.", "골키퍼를 속이고 골을 넣으세요.", "귀여운 펫과 교감하며 키워보세요.", "나만의 픽셀 그림을 그려보세요.",
-            "가위바위보 연승에 도전하세요.", "동전 던지기 확률 테스트입니다.", "정말 1초가 될 때 스톱 버튼을 누르세요.", "숫자 업다운을 맞춰보세요.", "제시된 초성으로 단어를 맞추세요.",
-            "아름다운 피아노 건반을 연주해 보세요.", "제한 시간 동안 광클 연타에 도전하세요.", "숨겨진 다른 색깔의 타일을 찾으세요.", "포춘쿠키를 깨고 행운의 메시지를 받으세요.", "밤하늘을 아름답게 수놓는 불꽃놀이입니다."
+            "가위바위보 연승에 도전하세요.", "동전 던지기 확률 테스트.", "정말 1초가 될 때 스톱 버튼을 누르세요.", "숫자 업다운을 맞춰보세요.", "제시된 초성으로 단어를 맞추세요.",
+            "아름다운 피아노 건반을 연주해 보세요.", "제한 시간 동안 광클 연타에 도전하세요.", "숨겨진 다른 색깔의 타일을 찾으세요.", "포춘쿠키를 깨고 행운 메시지 확인.", "밤하늘을 아름답게 수놓는 불꽃놀이."
         ];
 
         function loadMainScreen() {
@@ -195,6 +205,16 @@
                     <button onclick="startGame(${id})" class="px-8 py-3 bg-emerald-600 hover:bg-emerald-500 rounded-xl font-bold text-lg text-white shadow-lg transition transform hover:scale-105">🚀 게임 시작하기</button>
                 </div>
             `;
+        }
+
+        // 안전한 게임 오버 처리 (타이머 중지 후 alert 실행)
+        function triggerGameOver(gameId, finalScore) {
+            if (currentTimer) { clearInterval(currentTimer); currentTimer = null; }
+            if (currentTimeout) { clearTimeout(currentTimeout); currentTimeout = null; }
+            document.onkeydown = null;
+            document.onkeyup = null;
+            alert('게임 오버! 점수: ' + finalScore);
+            selectGame(gameId);
         }
 
         function startGame(id) {
@@ -273,7 +293,7 @@
             currentTimer = setInterval(() => {
                 let head = {x: snake[0].x+dx, y: snake[0].y+dy};
                 if(head.x<0||head.x>=24||head.y<0||head.y>=20||snake.slice(1).some(s=>s.x===head.x&&s.y===head.y)){
-                    alert('게임 오버! 점수: '+score); selectGame(1); return;
+                    triggerGameOver(1, score); return;
                 }
                 snake.unshift(head);
                 if(head.x===food.x&&head.y===food.y){
@@ -295,7 +315,7 @@
                 if(up&&py>0)py-=6; if(down&&py<320)py+=6;
                 bx+=dx; by+=dy; if(by<0||by>390)dy*=-1; if(bx>470)dx*=-1;
                 if(bx<=20&&by>=py&&by<=py+80){dx*=-1; score+=10; document.getElementById('score-board').innerText='SCORE: '+score;}
-                if(bx<0){alert('게임 오버! 점수: '+score); selectGame(2); return;}
+                if(bx<0){triggerGameOver(2, score); return;}
                 ctx.fillStyle='#020617'; ctx.fillRect(0,0,480,400);
                 ctx.fillStyle='#fff'; ctx.fillRect(10,py,12,80); ctx.fillRect(bx,by,10,10);
             }, 1000/60);
@@ -311,7 +331,7 @@
                 if(right&&px<400)px+=7; if(left&&px>0)px-=7;
                 bx+=dx; by+=dy; if(bx>472||bx<8)dx*=-1; if(by<8)dy*=-1;
                 if(by>385&&bx>px&&bx<px+80)dy*=-1;
-                if(by>400){alert('게임 오버! 점수: '+score); selectGame(3); return;}
+                if(by>400){triggerGameOver(3, score); return;}
                 for(let c=0;c<6;c++){for(let r=0;r<4;r++){
                     let b=bricks[c][r]; if(b.status===1){
                         let bx_pos=c*75+30, by_pos=r*25+30;
@@ -338,7 +358,7 @@
                 for(let i=obs.length-1;i>=0;i--){
                     obs[i].y+=obs[i].speed;
                     if(obs[i].x < px+40 && obs[i].x+obs[i].width > px && obs[i].y+obs[i].height > 380 && obs[i].y < 400){
-                        alert('게임 오버! 점수: '+score); selectGame(4); return;
+                        triggerGameOver(4, score); return;
                     }
                     if(obs[i].y>400){obs.splice(i,1); score+=10; document.getElementById('score-board').innerText='SCORE: '+score;}
                 }
@@ -374,7 +394,7 @@
             currentTimer = setInterval(() => {
                 dy+=0.7; y+=dy; if(y>320){y=320; isJumping=false;}
                 obsX-=5; if(obsX<-30){obsX=480; score+=15; document.getElementById('score-board').innerText='SCORE: '+score;}
-                if(obsX < 50+25 && obsX+25 > 50 && y+30 > 350){alert('게임 오버! 점수: '+score); selectGame(6); return;}
+                if(obsX < 50+25 && obsX+25 > 50 && y+30 > 350){triggerGameOver(6, score); return;}
                 ctx.fillStyle='#020617'; ctx.fillRect(0,0,480,400);
                 ctx.fillStyle='#38bdf8'; ctx.fillRect(50,y,30,30);
                 ctx.fillStyle='#f59e0b'; ctx.fillRect(obsX,350,25,30);
@@ -396,7 +416,7 @@
                 bullets.forEach((b,i)=> { b.y-=8; if(b.y<0)bullets.splice(i,1); });
                 for(let i=aliens.length-1; i>=0; i--){
                     aliens[i].y+=2;
-                    if(aliens[i].y>380){alert('게임 오버! 점수: '+score); selectGame(7); return;}
+                    if(aliens[i].y>380){triggerGameOver(7, score); return;}
                     for(let j=bullets.length-1; j>=0; j--){
                         if(bullets[j]&&aliens[i]&&bullets[j].x>aliens[i].x&&bullets[j].x<aliens[i].x+30&&bullets[j].y>aliens[i].y&&bullets[j].y<aliens[i].y+30){
                             aliens.splice(i,1); bullets.splice(j,1); score+=20;
@@ -467,7 +487,7 @@
                 frame++; if(frame%45===0) enemies.push({x:0, y:Math.random()*350, speed:1.5});
                 for(let i=enemies.length-1; i>=0; i--){
                     enemies[i].x+=enemies[i].speed;
-                    if(enemies[i].x>440){ alert('기지 함락! 점수: '+score); selectGame(10); return; }
+                    if(enemies[i].x>440){ triggerGameOver(10, score); return; }
                 }
                 ctx.fillStyle='#020617'; ctx.fillRect(0,0,480,400);
                 ctx.fillStyle='#3b82f6'; ctx.fillRect(440,0,40,400);
@@ -495,7 +515,7 @@
                 dy+=0.4; y+=dy; pipeX-=3;
                 if(pipeX<-50){pipeX=480; pipeH=80+Math.random()*150; score+=20; document.getElementById('score-board').innerText='SCORE: '+score;}
                 if(y>400 || y<0 || (pipeX<100&&pipeX>40&&(y<pipeH||y>pipeH+120))){
-                    alert('게임 오버! 점수: '+score); selectGame(12); return;
+                    triggerGameOver(12, score); return;
                 }
                 ctx.fillStyle='#020617'; ctx.fillRect(0,0,480,400);
                 ctx.fillStyle='#eab308'; ctx.beginPath(); ctx.arc(70,y,15,0,Math.PI*2); ctx.fill();
@@ -512,14 +532,14 @@
             };
             currentTimer = setInterval(() => {
                 px+=dx; py+=dy;
-                if(px<0||px>480||py<0||py>400){ alert('게임 오버!'); selectGame(13); return; }
+                if(px<0||px>480||py<0||py>400){ triggerGameOver(13, score); return; }
                 score+=1; document.getElementById('score-board').innerText='SCORE: '+score;
                 ctx.fillStyle='#020617'; ctx.fillRect(0,0,480,400);
                 ctx.fillStyle='#eab308'; ctx.beginPath(); ctx.arc(px,py,15,0.2*Math.PI, 1.8*Math.PI); ctx.lineTo(px,py); ctx.fill();
             }, 1000/60);
         }
 
-        // ==================== Fully Functional Interactive DOM Games (16 ~ 50) ====================
+        // ==================== DOM Games & Toys (16 ~ 50) ====================
         function playDOMGame(html, info) {
             if (currentTimer) { clearInterval(currentTimer); currentTimer = null; }
             if (currentTimeout) { clearTimeout(currentTimeout); currentTimeout = null; }
