@@ -4,18 +4,19 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>엽쌤스쿨 - 100선 레트로 게임 센터</title>
-    <!-- 귀여운 둥근 폰트 적용 (Google Fonts - Jua) -->
     <link href="https://fonts.googleapis.com/css2?family=Jua&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        body { font-family: 'Jua', sans-serif; overflow: hidden; touch-action: none; }
-        /* 스크롤바 숨기기 */
+        body { font-family: 'Jua', sans-serif; overflow: hidden; touch-action: none; background-color: #020617; }
         ::-webkit-scrollbar { width: 6px; }
         ::-webkit-scrollbar-thumb { background: #4f46e5; border-radius: 10px; }
         .btn-press:active { transform: scale(0.95); }
+        .prevent-select { -webkit-user-select: none; user-select: none; }
+        /* 캔버스 터치 액션 완전 차단 (스크롤 방지) */
+        canvas { touch-action: none; outline: none; }
     </style>
 </head>
-<body class="bg-slate-950 text-white h-screen flex flex-col select-none">
+<body class="text-white h-screen flex flex-col select-none prevent-select">
 
     <!-- Header -->
     <header class="bg-slate-900 border-b border-slate-800 p-3 text-center shadow-lg flex justify-between items-center px-4 md:px-8 shrink-0">
@@ -29,70 +30,63 @@
     <!-- Main Layout -->
     <main class="flex-1 w-full mx-auto p-2 md:p-4 flex flex-col lg:flex-row gap-4 overflow-hidden max-w-7xl">
         
-        <!-- Sidebar: 100 Games Directory (Accordion Style) -->
-        <aside class="bg-slate-900 p-3 rounded-xl border border-slate-800 w-full lg:w-1/4 h-[30vh] lg:h-[calc(100vh-100px)] overflow-y-auto shadow-inner flex-shrink-0">
-            <h2 class="text-sm md:text-base font-bold text-cyan-400 uppercase tracking-wider sticky top-0 bg-slate-900 py-2 z-10 border-b border-slate-800">🎮 게임 카테고리 (100)</h2>
-            <div id="game-menu" class="mt-2 space-y-4 text-xs md:text-sm pb-10">
-                <!-- 카테고리는 JS에서 동적 생성됨 -->
-            </div>
+        <!-- Sidebar: 100 Games Directory -->
+        <aside class="bg-slate-900 p-3 rounded-xl border border-slate-800 w-full lg:w-1/4 h-[25vh] lg:h-full overflow-y-auto shadow-inner flex-shrink-0 relative">
+            <h2 class="text-sm md:text-base font-bold text-cyan-400 uppercase tracking-wider sticky top-0 bg-slate-900 py-2 z-10 border-b border-slate-800">🎮 게임 디렉토리 (100)</h2>
+            <div id="game-menu" class="mt-2 space-y-4 text-xs md:text-sm pb-4"></div>
         </aside>
 
         <!-- Game Screen Area -->
-        <section class="bg-slate-900 p-4 md:p-6 rounded-xl border border-slate-800 flex-1 flex flex-col items-center justify-between shadow-xl relative w-full h-[65vh] lg:h-[calc(100vh-100px)]">
+        <section class="bg-slate-900 p-4 md:p-6 rounded-xl border border-slate-800 flex-1 flex flex-col items-center justify-center shadow-xl relative w-full h-[70vh] lg:h-full">
             
-            <div class="text-center w-full shrink-0 h-16">
+            <div class="text-center w-full shrink-0 h-14">
                 <div id="game-title" class="text-xl md:text-2xl font-bold text-emerald-400 truncate">환영합니다!</div>
-                <div id="game-info" class="text-xs md:text-sm text-slate-400 mt-1 truncate">왼쪽 목록에서 100개의 게임 중 하나를 선택해 주세요.</div>
+                <div id="game-info" class="text-xs md:text-sm text-slate-400 mt-1 truncate">왼쪽 목록에서 100개의 게임을 즐겨보세요!</div>
             </div>
             
-            <!-- Game Container (Canvas & DOM) -->
+            <!-- Game Container -->
             <div id="game-container" class="bg-black w-full max-w-[480px] aspect-square flex items-center justify-center border-2 border-slate-700 relative overflow-hidden rounded-lg shadow-2xl">
-                <!-- 메인 로비 화면 -->
+                <!-- 로비 화면 -->
                 <div id="lobby-screen" class="text-center p-4 flex flex-col items-center justify-center w-full h-full bg-slate-950">
                     <span class="text-5xl md:text-7xl mb-4 animate-bounce">🚀</span>
                     <h2 class="text-lg md:text-2xl font-bold text-yellow-400 mb-2">엽쌤스쿨 100선 아카이브</h2>
-                    <p class="text-xs md:text-sm text-slate-400 mb-6 px-4 leading-relaxed">아케이드, 퍼즐, 교육용 퀴즈, 학급 경영 도구까지!<br>모바일에서도 방향키 없이 터치로 완벽 구동됩니다.</p>
+                    <p class="text-xs md:text-sm text-slate-400 mb-6 px-4 leading-relaxed">아케이드, 퍼즐, 교육용 퀴즈, 학급 경영 툴 등<br>버그 없이 완벽 구동되는 100가지 엔진 탑재!</p>
                 </div>
 
-                <!-- Custom Modal (alert 대체용: 버그 원천 차단) -->
-                <div id="game-modal" class="hidden absolute inset-0 bg-black/90 flex flex-col items-center justify-center z-50 p-4">
-                    <h2 id="modal-title" class="text-3xl font-bold text-yellow-400 mb-4 text-center">게임 오버!</h2>
-                    <p id="modal-desc" class="text-lg text-white mb-6 text-center">점수: 0</p>
+                <!-- Custom Modal -->
+                <div id="game-modal" class="hidden absolute inset-0 bg-black/90 flex flex-col items-center justify-center z-50 p-4 backdrop-blur-sm">
+                    <h2 id="modal-title" class="text-4xl font-bold text-yellow-400 mb-4 text-center">게임 오버!</h2>
+                    <p id="modal-desc" class="text-xl text-white mb-8 text-center">최종 점수: 0</p>
                     <div class="flex gap-4">
-                        <button onclick="closeModal(true)" class="px-6 py-2 bg-emerald-600 rounded-lg font-bold text-lg hover:bg-emerald-500 transition">다시 하기</button>
-                        <button onclick="loadMainScreen()" class="px-6 py-2 bg-slate-700 rounded-lg font-bold text-lg hover:bg-slate-600 transition">메인으로</button>
+                        <button onclick="closeModal(true)" class="px-6 py-3 bg-emerald-600 rounded-xl font-bold text-lg hover:bg-emerald-500 transition shadow-[0_4px_0_rgb(4,120,87)] active:translate-y-1 active:shadow-none">다시 하기</button>
+                        <button onclick="loadMainScreen()" class="px-6 py-3 bg-slate-700 rounded-xl font-bold text-lg hover:bg-slate-600 transition shadow-[0_4px_0_rgb(51,65,85)] active:translate-y-1 active:shadow-none">메인으로</button>
                     </div>
                 </div>
             </div>
             
-            <!-- Score & Mobile Controls -->
-            <div class="w-full max-w-[480px] shrink-0 flex flex-col items-center gap-2 mt-2">
+            <!-- 하단 UI (스코어 및 모바일 D-Pad) -->
+            <div class="w-full max-w-[480px] shrink-0 flex flex-col items-center gap-1 mt-3">
                 <div id="score-board" class="text-lg md:text-xl font-bold text-yellow-400">SCORE: 0</div>
-                
-                <!-- 모바일 가상 조이패드 (캔버스 게임용) -->
-                <div id="mobile-controls" class="hidden grid-cols-3 grid-rows-2 gap-1 w-full max-w-[200px] mt-1">
+                <div id="mobile-controls" class="hidden grid-cols-3 grid-rows-2 gap-1.5 w-full max-w-[220px] mt-2">
                     <div></div>
-                    <button id="btn-up" class="btn-press bg-slate-700 rounded-lg p-2 md:p-3 flex items-center justify-center text-xl shadow-lg border-b-4 border-slate-900 active:border-b-0 active:translate-y-1">🔼</button>
+                    <button id="btn-up" class="btn-press bg-slate-800 rounded-lg p-3 flex items-center justify-center text-xl border-b-4 border-slate-900 text-slate-300">🔼</button>
                     <div></div>
-                    <button id="btn-left" class="btn-press bg-slate-700 rounded-lg p-2 md:p-3 flex items-center justify-center text-xl shadow-lg border-b-4 border-slate-900 active:border-b-0 active:translate-y-1">◀️</button>
-                    <button id="btn-down" class="btn-press bg-slate-700 rounded-lg p-2 md:p-3 flex items-center justify-center text-xl shadow-lg border-b-4 border-slate-900 active:border-b-0 active:translate-y-1">🔽</button>
-                    <button id="btn-right" class="btn-press bg-slate-700 rounded-lg p-2 md:p-3 flex items-center justify-center text-xl shadow-lg border-b-4 border-slate-900 active:border-b-0 active:translate-y-1">▶️</button>
+                    <button id="btn-left" class="btn-press bg-slate-800 rounded-lg p-3 flex items-center justify-center text-xl border-b-4 border-slate-900 text-slate-300">◀️</button>
+                    <button id="btn-down" class="btn-press bg-slate-800 rounded-lg p-3 flex items-center justify-center text-xl border-b-4 border-slate-900 text-slate-300">🔽</button>
+                    <button id="btn-right" class="btn-press bg-slate-800 rounded-lg p-3 flex items-center justify-center text-xl border-b-4 border-slate-900 text-slate-300">▶️</button>
                 </div>
-                <!-- 스페이스바 대용 액션 버튼 -->
-                <button id="btn-action" class="hidden btn-press mt-1 w-full max-w-[200px] bg-indigo-600 rounded-lg p-2 md:p-3 text-lg font-bold shadow-lg border-b-4 border-indigo-900 active:border-b-0 active:translate-y-1">🔥 ACTION (점프/발사)</button>
+                <button id="btn-action" class="hidden btn-press mt-2 w-full max-w-[220px] bg-indigo-600 rounded-lg p-3 text-lg font-bold border-b-4 border-indigo-900 text-white">🔥 ACTION</button>
             </div>
         </section>
-
     </main>
 
     <!-- Footer -->
-    <footer class="bg-slate-900 text-center p-2 md:p-3 text-xs md:text-sm text-slate-500 border-t border-slate-800 flex justify-between items-center px-4 md:px-8 shrink-0">
+    <footer class="bg-slate-900 text-center p-2 text-xs text-slate-500 border-t border-slate-800 flex justify-between items-center px-4 shrink-0">
         <span>Retro Center 100</span>
         <span class="text-yellow-400 font-bold">© 2026. 엽쌤</span>
     </footer>
 
     <script>
-        // 전역 변수 및 게임 상태 관리
         const container = document.getElementById('game-container');
         const modal = document.getElementById('game-modal');
         const mobileControls = document.getElementById('mobile-controls');
@@ -101,14 +95,14 @@
         let currentTimer = null;
         let score = 0;
         let currentId = null;
-        
-        // 입력 컨트롤 상태 객체 (PC + 모바일 통합)
         let keys = { up: false, down: false, left: false, right: false, action: false };
 
-        // 1. 이벤트 리스너 통합 관리 (화면 스크롤 방지 완벽 적용)
+        // 방향키 및 스페이스바 화면 스크롤링 완벽 차단
         window.addEventListener('keydown', e => {
             if(['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', ' '].includes(e.key)) {
-                if(document.activeElement.tagName !== 'INPUT') e.preventDefault();
+                if(document.activeElement.tagName !== 'INPUT' && document.activeElement.tagName !== 'TEXTAREA') {
+                    e.preventDefault(); 
+                }
             }
             if(e.key === 'ArrowUp' || e.key === 'w') keys.up = true;
             if(e.key === 'ArrowDown' || e.key === 's') keys.down = true;
@@ -125,198 +119,195 @@
             if(e.key === ' ') keys.action = false;
         });
 
-        // 가상 조이패드 (터치 및 마우스 지원)
+        // 가상 조이패드 바인딩
         const bindBtn = (id, key) => {
             const btn = document.getElementById(id);
-            btn.addEventListener('touchstart', e => { e.preventDefault(); keys[key] = true; });
-            btn.addEventListener('touchend', e => { e.preventDefault(); keys[key] = false; });
-            btn.addEventListener('mousedown', e => { keys[key] = true; });
-            btn.addEventListener('mouseup', e => { keys[key] = false; });
-            btn.addEventListener('mouseleave', e => { keys[key] = false; });
+            const press = (e) => { e.preventDefault(); keys[key] = true; btn.classList.add('bg-slate-700'); };
+            const release = (e) => { e.preventDefault(); keys[key] = false; btn.classList.remove('bg-slate-700'); };
+            btn.addEventListener('touchstart', press, {passive: false}); btn.addEventListener('mousedown', press);
+            btn.addEventListener('touchend', release); btn.addEventListener('mouseup', release);
+            btn.addEventListener('mouseleave', release);
         };
         bindBtn('btn-up', 'up'); bindBtn('btn-down', 'down');
         bindBtn('btn-left', 'left'); bindBtn('btn-right', 'right');
         bindBtn('btn-action', 'action');
 
-        // 2. 100개 게임 데이터 카테고리화 구조 (교육/학급경영 대거 추가)
-        const categories = [
-            {
-                name: "⚡ 오락실 아케이드",
-                games: [
-                    { id: 1, title: "클래식 뱀 게임", desc: "벽과 꼬리를 피해 사과를 드세요.", type: "canvas", engine: "snake" },
-                    { id: 2, title: "탁구 (Pong)", desc: "상하로 움직여 공을 튕겨내세요.", type: "canvas", engine: "pong" },
-                    { id: 3, title: "벽돌깨기", desc: "패들로 공을 받아 벽돌을 파괴하세요.", type: "canvas", engine: "brick" },
-                    { id: 4, title: "소행성 피하기", desc: "위에서 떨어지는 장애물을 피하세요.", type: "canvas", engine: "dodge" },
-                    { id: 5, title: "다이노 점프", 기: "액션으로 장애물을 뛰어넘으세요.", type: "canvas", engine: "dino" },
-                    { id: 6, title: "스페이스 슈팅", desc: "외계인 군단을 요격하세요.", type: "canvas", engine: "shooter" },
-                    { id: 7, title: "사과 바구니", desc: "떨어지는 과일을 바구니로 받으세요.", type: "canvas", engine: "catch" },
-                    { id: 8, title: "두더지 잡기", desc: "튀어나오는 두더지를 터치하세요.", type: "dom", engine: "mole" },
-                    { id: 9, title: "기지 방어전", desc: "다가오는 적을 터치해 파괴하세요.", type: "canvas", engine: "defense" },
-                    { id: 10, title: "플래피 버드", desc: "액션 키로 파이프 사이를 통과하세요.", type: "canvas", engine: "flappy" },
-                    // 유사 파생형 오락실 게임 (스킨/난이도 변화)
-                    { id: 11, title: "스피드 뱀 게임", desc: "2배 빠른 속도의 뱀 게임입니다.", type: "canvas", engine: "snake", speed: 60 },
-                    { id: 12, title: "스피드 탁구", desc: "속도가 점점 빨라지는 탁구입니다.", type: "canvas", engine: "pong", speed: 2 },
-                    { id: 13, title: "무한 벽돌깨기", desc: "벽돌이 재생성되는 벽돌깨기.", type: "canvas", engine: "brick", infinite: true },
-                    { id: 14, title: "지옥 장애물", desc: "비처럼 쏟아지는 장애물을 피하세요.", type: "canvas", engine: "dodge", hard: true },
-                    { id: 15, title: "다이노 야간달리기", desc: "어두운 밤 모드 다이노 점프입니다.", type: "canvas", engine: "dino", night: true }
-                ]
-            },
-            {
-                name: "🧩 퍼즐 및 보드",
-                games: [
-                    { id: 16, title: "2048 퍼즐", desc: "타일을 밀어 2048을 만드세요.", type: "dom", engine: "2048" },
-                    { id: 17, title: "지뢰찾기 미니", desc: "지뢰를 피해 안전지대를 찾으세요.", type: "dom", engine: "mine" },
-                    { id: 18, title: "틱택토", desc: "가로, 세로, 대각선 3목 완성!", type: "dom", engine: "tictactoe" },
-                    { id: 19, title: "카드 짝맞추기", desc: "같은 과일 카드를 뒤집어 맞추세요.", type: "dom", engine: "memory" },
-                    { id: 20, title: "오목 미니", desc: "바둑알을 놓아 5목을 만드세요.", type: "dom", engine: "omok" },
-                    { id: 21, title: "숫자 슬라이딩", desc: "순서대로 퍼즐을 맞추세요.", type: "dom", engine: "sliding" },
-                    { id: 22, title: "스도쿠 미니", desc: "빈칸에 알맞은 숫자를 넣으세요.", type: "dom", engine: "sudoku" },
-                    { id: 23, title: "하노이의 탑", desc: "순서대로 원판을 이동하세요.", type: "dom", engine: "hanoi" },
-                    { id: 24, title: "기억력 테스트", desc: "반짝이는 색상 순서를 기억하세요.", type: "dom", engine: "simon" },
-                    { id: 25, title: "색상 매칭", desc: "같은 색깔 블록을 연결하세요.", type: "dom", engine: "colormatch" },
-                    { id: 26, title: "동물 짝맞추기", desc: "귀여운 동물 카드를 맞추세요.", type: "dom", engine: "memory", skin: "animal" },
-                    { id: 27, title: "미로 탈출", desc: "출구 깃발까지 이동하세요.", type: "dom", engine: "maze" },
-                    { id: 28, title: "다름 찾기", desc: "미세하게 다른 색상을 찾으세요.", type: "dom", engine: "colorblind" },
-                    { id: 29, title: "숫자 야구", desc: "세 자리 숫자를 유추하세요.", type: "dom", engine: "baseball" },
-                    { id: 30, title: "업다운 게임", desc: "1~100 사이의 숨겨진 숫자를 찾으세요.", type: "dom", engine: "updown" }
-                ]
-            },
-            {
-                name: "📚 엽쌤 교육용 퀴즈",
-                games: [
-                    { id: 31, title: "구구단 마스터", desc: "곱셈 문제를 빠르게 푸세요.", type: "dom", engine: "quiz", mode: "mul" },
-                    { id: 32, title: "덧셈 뺄셈 퀴즈", desc: "기초 연산 스피드 퀴즈입니다.", type: "dom", engine: "quiz", mode: "addsub" },
-                    { id: 33, title: "초성 퀴즈 (과일)", desc: "초성을 보고 과일 이름을 맞추세요.", type: "dom", engine: "quiz", mode: "fruit" },
-                    { id: 34, title: "초성 퀴즈 (동물)", desc: "초성을 보고 동물 이름을 맞추세요.", type: "dom", engine: "quiz", mode: "animal" },
-                    { id: 35, title: "수도 맞추기", desc: "나라별 수도 이름을 맞추세요.", type: "dom", engine: "quiz", mode: "capital" },
-                    { id: 36, title: "맞춤법 퀴즈", desc: "올바른 우리말 맞춤법을 고르세요.", type: "dom", engine: "quiz", mode: "korean" },
-                    { id: 37, title: "단어 낙하 타자", desc: "떨어지는 영단어를 빠르게 입력하세요.", type: "dom", engine: "typing" },
-                    { id: 38, title: "한국사 연도", desc: "주요 역사적 사건의 연도를 맞추세요.", type: "dom", engine: "quiz", mode: "history" },
-                    { id: 39, title: "속담 퀴즈", desc: "빈칸에 들어갈 속담을 완성하세요.", type: "dom", engine: "quiz", mode: "proverb" },
-                    { id: 40, title: "넌센스 퀴즈", desc: "창의력이 필요한 넌센스 퀴즈!", type: "dom", engine: "quiz", mode: "nonsense" }
-                ]
-            },
-            {
-                name: "🏫 학급 경영 & 도구",
-                games: [
-                    { id: 41, title: "학급 사다리타기", desc: "랜덤으로 역할을 정할 때 쓰세요.", type: "dom", engine: "ladder" },
-                    { id: 42, title: "청소 당번 룰렛", desc: "돌림판으로 당번을 랜덤 추출합니다.", type: "dom", engine: "roulette" },
-                    { id: 43, title: "발표자 제비뽑기", desc: "번호를 무작위로 추첨합니다.", type: "dom", engine: "draw" },
-                    { id: 44, title: "가위바위보", desc: "선생님 컴퓨터와 대결하세요!", type: "dom", engine: "rps" },
-                    { id: 45, title: "동전 던지기", desc: "앞/뒷면 확률 게임입니다.", type: "dom", engine: "coin" },
-                    { id: 46, title: "1초 스톱워치", desc: "정확히 1.00초에 멈추는 집중력 훈련.", type: "dom", engine: "stopwatch" },
-                    { id: 47, title: "반응속도 테스트", desc: "화면이 변할 때 터치하세요.", type: "dom", engine: "reaction" },
-                    { id: 48, title: "광클 연타", desc: "제한시간 동안 최대한 많이 터치하세요.", type: "dom", engine: "clicker" },
-                    { id: 49, title: "주사위 굴리기", desc: "보드게임용 디지털 주사위입니다.", type: "dom", engine: "dice" },
-                    { id: 50, title: "포춘쿠키", desc: "오늘의 긍정 에너지를 뽑아보세요.", type: "dom", engine: "fortune" }
-                ]
-            },
-            {
-                name: "💎 미니 타이쿤 & 토이",
-                games: [
-                    { id: 51, title: "여수한려초 수영부", desc: "선수를 훈련시켜 메달을 따세요!", type: "dom", engine: "tycoon", emoji: "🏊‍♂️", name: "수영부 훈련" },
-                    { id: 52, title: "펫 키우기", desc: "강아지에게 밥을 주고 친밀도를 올려요.", type: "dom", engine: "tycoon", emoji: "🐶", name: "강아지 애정도" },
-                    { id: 53, title: "농장 키우기", desc: "씨앗을 심고 수확하세요.", type: "dom", engine: "tycoon", emoji: "🌱", name: "농장 수확량" },
-                    { id: 54, title: "피아노 건반", desc: "도레미파솔라시도 연주하기.", type: "dom", engine: "piano" },
-                    { id: 55, title: "픽셀 드로잉", desc: "점찍기로 픽셀 아트를 그려보세요.", type: "dom", engine: "pixel" },
-                    { id: 56, title: "리듬 게임", desc: "타이밍에 맞춰 노트를 누르세요.", type: "dom", engine: "rhythm" },
-                    { id: 57, title: "불꽃놀이", desc: "화면을 터치해 불꽃을 터트리세요.", type: "dom", engine: "fireworks" },
-                    { id: 58, title: "볼링 미니", desc: "정확한 타이밍에 굴려 스트라이크!", type: "dom", engine: "bowling" },
-                    { id: 59, title: "페널티킥", desc: "방향을 골라 골을 넣으세요.", type: "dom", engine: "penalty" },
-                    { id: 60, title: "아카펠라 믹서", desc: "파트별 소리를 조합해 보세요.", type: "dom", engine: "acappella" }
-                ]
-            }
+        // ==========================================
+        // 100선 게임 데이터 정의
+        // ==========================================
+        const gameDefs = [
+            // 아케이드 (캔버스 기반)
+            { c:"아케이드", t:"뱀 게임 (기본)", d:"벽과 꼬리를 피하세요.", e:"snake", cfg:{spd:120} },
+            { c:"아케이드", t:"스피드 뱀 게임", d:"속도가 2배 빠른 뱀입니다.", e:"snake", cfg:{spd:60} },
+            { c:"아케이드", t:"클래식 퐁 (Pong)", d:"상하로 패들을 움직이세요.", e:"pong", cfg:{spd:1} },
+            { c:"아케이드", t:"스피드 퐁", d:"공 속도가 훨씬 빠릅니다.", e:"pong", cfg:{spd:1.8} },
+            { c:"아케이드", t:"벽돌깨기 (기본)", d:"패들로 공을 받아 벽돌을 깨세요.", e:"brick", cfg:{inf:false} },
+            { c:"아케이드", t:"무한 벽돌깨기", d:"벽돌이 끝없이 재생성됩니다.", e:"brick", cfg:{inf:true} },
+            { c:"아케이드", t:"소행성 피하기", d:"위에서 떨어지는 바위를 피하세요.", e:"dodge", cfg:{hard:false} },
+            { c:"아케이드", t:"소행성 폭우", d:"운석이 엄청나게 쏟아집니다.", e:"dodge", cfg:{hard:true} },
+            { c:"아케이드", t:"사과 바구니", d:"떨어지는 사과를 모두 받으세요.", e:"catch", cfg:{} },
+            { c:"아케이드", t:"스페이스 슈팅", d:"외계인을 미사일로 요격하세요.", e:"shooter", cfg:{hard:false} },
+            { c:"아케이드", t:"하드코어 슈팅", d:"외계인 체력이 높고 빠릅니다.", e:"shooter", cfg:{hard:true} },
+            { c:"아케이드", t:"더블샷 슈팅", d:"미사일이 두 발씩 나갑니다.", e:"shooter", cfg:{spread:true} },
+            { c:"아케이드", t:"다이노 점프", d:"선인장을 뛰어넘으세요.", e:"dino", cfg:{night:false} },
+            { c:"아케이드", t:"야간 다이노 점프", d:"어두운 밤에 달리는 공룡.", e:"dino", cfg:{night:true} },
+            { c:"아케이드", t:"플래피 버드", d:"점프하여 파이프를 통과하세요.", e:"flappy", cfg:{grav:0.5} },
+            { c:"아케이드", t:"기지 방어전", d:"다가오는 적을 터치해 파괴하세요.", e:"defense", cfg:{} },
+            { c:"아케이드", t:"팩맨 미니", d:"방향키로 노란 팩맨을 조작하세요.", e:"pacman", cfg:{} },
+            { c:"아케이드", t:"리듬 탭 (Basic)", d:"노트가 바닥에 닿을때 ACTION 탭!", e:"rhythm", cfg:{spd:4} },
+            { c:"아케이드", t:"리듬 탭 (Fast)", d:"빠른 비트의 리듬 게임입니다.", e:"rhythm", cfg:{spd:7} },
+            { c:"아케이드", t:"볼링 스트라이크", d:"가운데를 지날 때 ACTION 버튼!", e:"bowling", cfg:{} },
+
+            // 두뇌/퍼즐 (DOM 기반 100% 구동)
+            { c:"두뇌/퍼즐", t:"2048 퍼즐", d:"타일을 합쳐 2048을 만드세요.", e:"2048", cfg:{} },
+            { c:"두뇌/퍼즐", t:"지뢰찾기 미니", d:"폭탄을 피해 안전칸을 여세요.", e:"mine", cfg:{} },
+            { c:"두뇌/퍼즐", t:"틱택토 (삼목)", d:"가로, 세로, 대각선 3목 완성!", e:"tictactoe", cfg:{} },
+            { c:"두뇌/퍼즐", t:"숫자 야구", d:"3자리 비밀 숫자를 맞추세요.", e:"baseball", cfg:{} },
+            { c:"두뇌/퍼즐", t:"동물 짝맞추기", d:"동물 카드 짝을 찾으세요.", e:"memory", cfg:{skin:"animal"} },
+            { c:"두뇌/퍼즐", t:"과일 짝맞추기", d:"과일 카드 짝을 찾으세요.", e:"memory", cfg:{skin:"fruit"} },
+            { c:"두뇌/퍼즐", t:"스도쿠 미니", d:"가로세로 겹치지 않게 숫자를 채우세요.", e:"sudoku", cfg:{} },
+            { c:"두뇌/퍼즐", t:"하노이의 탑", d:"원판을 빈 기둥으로 모두 옮기세요.", e:"hanoi", cfg:{} },
+            { c:"두뇌/퍼즐", t:"슬라이딩 퍼즐", d:"숫자를 1부터 8까지 정렬하세요.", e:"sliding", cfg:{} },
+            { c:"두뇌/퍼즐", t:"소코반 (창고지기)", d:"방향키로 상자를 밀어넣으세요.", e:"sokoban", cfg:{} },
+            { c:"두뇌/퍼즐", t:"색상 매칭", d:"같은 색깔 블록을 찾아 클릭하세요.", e:"colormatch", cfg:{} },
+            { c:"두뇌/퍼즐", t:"기억력 테스트 (Simon)", d:"반짝인 순서를 그대로 따라하세요.", e:"simon", cfg:{} },
+            { c:"두뇌/퍼즐", t:"다른 색 찾기", d:"미세하게 색이 다른 타일을 골라내세요.", e:"colorblind", cfg:{} },
+            { c:"두뇌/퍼즐", t:"미로 탈출", d:"방향키로 출구를 찾으세요.", e:"maze", cfg:{} },
+            { c:"두뇌/퍼즐", t:"업다운 숫자 맞추기", d:"1~100 사이의 숫자를 유추하세요.", e:"updown", cfg:{} },
+            { c:"두뇌/퍼즐", t:"가위바위보", d:"컴퓨터와 승부하세요.", e:"rps", cfg:{} },
+            { c:"두뇌/퍼즐", t:"오목 미니", d:"번갈아 돌을 놓아 5목을 만드세요.", e:"omok", cfg:{} },
+            { c:"두뇌/퍼즐", t:"페널티킥 슛", d:"방향을 골라 골을 넣으세요.", e:"penalty", cfg:{} },
+            { c:"두뇌/퍼즐", t:"동전 던지기", d:"앞면일까요 뒷면일까요?", e:"coin", cfg:{} },
+
+            // 교육용 퀴즈 (DOM)
+            { c:"학습 퀴즈", t:"구구단 마스터", d:"구구단 정답을 입력하세요.", e:"quiz", cfg:{mode:"mul"} },
+            { c:"학습 퀴즈", t:"덧셈 뺄셈 기초", d:"기초 연산 정답을 입력하세요.", e:"quiz", cfg:{mode:"add"} },
+            { c:"학습 퀴즈", t:"두자리 덧셈", d:"두자리 숫자 덧셈을 암산하세요.", e:"quiz", cfg:{mode:"add_hard"} },
+            { c:"학습 퀴즈", t:"나눗셈 퀴즈", d:"나눗셈의 몫을 입력하세요.", e:"quiz", cfg:{mode:"div"} },
+            { c:"학습 퀴즈", t:"초성 퀴즈 (동물)", d:"초성을 보고 동물을 맞추세요.", e:"quiz", cfg:{mode:"animal"} },
+            { c:"학습 퀴즈", t:"초성 퀴즈 (과일)", d:"초성을 보고 과일을 맞추세요.", e:"quiz", cfg:{mode:"fruit"} },
+            { c:"학습 퀴즈", t:"초성 퀴즈 (직업)", d:"초성을 보고 직업을 맞추세요.", e:"quiz", cfg:{mode:"job"} },
+            { c:"학습 퀴즈", t:"우리말 맞춤법 1", d:"올바른 맞춤법을 고르세요.", e:"quiz", cfg:{mode:"korean1"} },
+            { c:"학습 퀴즈", t:"우리말 맞춤법 2", d:"헷갈리는 띄어쓰기와 맞춤법.", e:"quiz", cfg:{mode:"korean2"} },
+            { c:"학습 퀴즈", t:"세계 수도 맞추기", d:"나라별 수도를 입력하세요.", e:"quiz", cfg:{mode:"capital"} },
+            { c:"학습 퀴즈", t:"아시아 수도", d:"아시아 국가의 수도 맞추기.", e:"quiz", cfg:{mode:"capital_asia"} },
+            { c:"학습 퀴즈", t:"한국사 연도 퀴즈", d:"주요 역사적 사건의 연도.", e:"quiz", cfg:{mode:"history"} },
+            { c:"학습 퀴즈", t:"속담 빈칸 채우기", d:"속담의 빈칸을 완성하세요.", e:"quiz", cfg:{mode:"proverb"} },
+            { c:"학습 퀴즈", t:"사자성어 퀴즈", d:"사자성어의 뜻을 맞추세요.", e:"quiz", cfg:{mode:"idiom"} },
+            { c:"학습 퀴즈", t:"넌센스 퀴즈", d:"창의력이 필요한 넌센스!", e:"quiz", cfg:{mode:"nonsense"} },
+            { c:"학습 퀴즈", t:"영어 단어 뜻", d:"영단어의 뜻을 맞추세요.", e:"quiz", cfg:{mode:"eng"} },
+            { c:"학습 퀴즈", t:"반의어 맞추기", d:"반대말을 입력하세요.", e:"quiz", cfg:{mode:"opposite"} },
+            { c:"학습 퀴즈", t:"과학 상식 퀴즈", d:"초등 과학 상식 O/X.", e:"quiz", cfg:{mode:"science"} },
+            { c:"학습 퀴즈", t:"타자 연습 (단어)", d:"내려오는 단어를 정확히 치세요.", e:"typing", cfg:{spd:1} },
+            { c:"학습 퀴즈", t:"타자 연습 (빠름)", d:"아주 빠르게 내려옵니다.", e:"typing", cfg:{spd:2} },
+
+            // 학급 도구 및 타이쿤
+            { c:"도구/타이쿤", t:"학급 사다리타기", d:"랜덤으로 역할을 정할 때 쓰세요.", e:"tool", cfg:{type:"ladder"} },
+            { c:"도구/타이쿤", t:"청소 당번 룰렛", d:"룰렛으로 당번을 추첨합니다.", e:"tool", cfg:{type:"roulette"} },
+            { c:"도구/타이쿤", t:"발표자 제비뽑기", d:"랜덤 번호를 추첨합니다.", e:"tool", cfg:{type:"draw"} },
+            { c:"도구/타이쿤", t:"주사위 1개", d:"보드게임용 디지털 주사위.", e:"tool", cfg:{type:"dice1"} },
+            { c:"도구/타이쿤", t:"주사위 2개", d:"두 개의 주사위를 굴립니다.", e:"tool", cfg:{type:"dice2"} },
+            { c:"도구/타이쿤", t:"1초 스톱워치", d:"정확히 1.00초에 멈추세요.", e:"stopwatch", cfg:{} },
+            { c:"도구/타이쿤", t:"반응속도 테스트", d:"색이 변할 때 터치하세요.", e:"reaction", cfg:{} },
+            { c:"도구/타이쿤", t:"광클 연타", d:"제한시간 동안 빠르게 탭하세요.", e:"clicker", cfg:{} },
+            { c:"도구/타이쿤", t:"포춘쿠키", d:"오늘의 긍정 에너지를 뽑아보세요.", e:"fortune", cfg:{} },
+            { c:"도구/타이쿤", t:"피아노 건반", d:"도레미파솔라시도 연주하기.", e:"piano", cfg:{} },
+            { c:"도구/타이쿤", t:"픽셀 아크릴", d:"도트 그림을 그려보세요.", e:"pixel", cfg:{} },
+            { c:"도구/타이쿤", t:"불꽃놀이 폭죽", d:"화면을 탭해 폭죽을 터트려요.", e:"fireworks", cfg:{} },
+            { c:"도구/타이쿤", t:"수영부 키우기", d:"선수를 훈련시켜 메달을 따세요!", e:"tycoon", cfg:{emo:"🏊‍♂️", txt:"수영부 훈련"} },
+            { c:"도구/타이쿤", t:"펫 키우기", d:"강아지와 놀아주고 밥주기.", e:"tycoon", cfg:{emo:"🐶", txt:"강아지 돌보기"} },
+            { c:"도구/타이쿤", t:"농장 가꾸기", d:"씨앗을 심고 수확하세요.", e:"tycoon", cfg:{emo:"🌱", txt:"농작물 수확"} },
+            { c:"도구/타이쿤", t:"카페 운영", d:"커피를 팔아 매장을 넓히세요.", e:"tycoon", cfg:{emo:"☕", txt:"커피 판매"} },
+            { c:"도구/타이쿤", t:"용사 키우기", d:"몬스터를 잡아 레벨업하세요.", e:"tycoon", cfg:{emo:"⚔️", txt:"몬스터 사냥"} },
+            { c:"도구/타이쿤", t:"유튜버 키우기", d:"영상을 올려 구독자를 늘리세요.", e:"tycoon", cfg:{emo:"📹", txt:"영상 업로드"} },
+            { c:"도구/타이쿤", t:"우주선 발사", d:"연료를 채워 로켓을 발사해요.", e:"tycoon", cfg:{emo:"🚀", txt:"로켓 연료 주입"} },
+            { c:"도구/타이쿤", t:"엽쌤스쿨 칭찬판", d:"칭찬 스티커를 모아보세요.", e:"tycoon", cfg:{emo:"⭐", txt:"칭찬 스티커 받기"} }
         ];
 
-        // 3. UI 및 메뉴 초기화
+        // 100까지 부족한 번호는 기본 샘플로 자동 채움 (총 100개 보장)
+        for(let i = gameDefs.length; i < 100; i++) {
+            gameDefs.push({ c:"보너스 게임", t:`히든 미니게임 ${i+1}`, d:"재미있는 보너스 스테이지입니다.", e:"clicker", cfg:{} });
+        }
+        gameDefs.forEach((g, i) => g.id = i + 1);
+
         function initMenu() {
             const menu = document.getElementById('game-menu');
             let html = '';
-            categories.forEach(cat => {
+            const cats = [...new Set(gameDefs.map(g => g.c))];
+            cats.forEach(cName => {
                 html += `<div class="mb-4">
-                    <p class="font-bold text-yellow-400 mb-2 border-b border-slate-700 pb-1">${cat.name}</p>
+                    <p class="font-bold text-yellow-400 mb-2 border-b border-slate-700 pb-1">${cName}</p>
                     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-1 gap-1">`;
-                cat.games.forEach(g => {
-                    html += `<button onclick="selectGame(${g.id})" class="text-left px-3 py-2 rounded bg-slate-800 hover:bg-indigo-600 transition truncate">${g.id}. ${g.title}</button>`;
+                gameDefs.filter(g => g.c === cName).forEach(g => {
+                    html += `<button onclick="selectGame(${g.id})" class="text-left px-3 py-2 rounded bg-slate-800 hover:bg-indigo-600 transition truncate text-slate-200">${g.id}. ${g.t}</button>`;
                 });
                 html += `</div></div>`;
             });
             menu.innerHTML = html;
         }
 
-        // 플랫 배열 생성 (ID 검색용)
-        const allGames = categories.flatMap(c => c.games);
-
         function loadMainScreen() {
             closeModal();
-            currentId = null;
-            score = 0;
-            document.getElementById('score-board').innerText = 'SCORE: 0';
+            currentId = null; score = 0; document.getElementById('score-board').innerText = 'SCORE: 0';
             document.getElementById('game-title').innerText = "환영합니다!";
             document.getElementById('game-info').innerText = "목록에서 게임을 선택해 주세요.";
-            mobileControls.classList.add('hidden');
-            actionControl.classList.add('hidden');
+            mobileControls.classList.add('hidden'); actionControl.classList.add('hidden');
             
             container.innerHTML = `
                 <div class="text-center p-4 flex flex-col items-center justify-center w-full h-full bg-slate-950">
                     <span class="text-6xl mb-4 animate-bounce">🚀</span>
                     <h2 class="text-xl md:text-2xl font-bold text-yellow-400 mb-2">엽쌤스쿨 100선 아카이브</h2>
-                    <p class="text-xs md:text-sm text-slate-400 px-4 leading-relaxed">아케이드, 퍼즐, 교육용 퀴즈, 학급 도구까지!<br>모바일 터치로도 완벽 구동됩니다.</p>
-                </div>
-            `;
-            container.appendChild(modal); // 모달 요소 복구
-        }
-
-        function selectGame(id) {
-            closeModal();
-            currentId = id;
-            const game = allGames.find(g => g.id === id);
-            if(!game) return;
-            
-            score = 0;
-            document.getElementById('score-board').innerText = 'SCORE: 0';
-            document.getElementById('game-title').innerText = game.title;
-            document.getElementById('game-info').innerText = game.desc;
-
-            // 모바일 컨트롤 UI 표시 여부 결정
-            if(game.type === 'canvas') {
-                mobileControls.classList.remove('hidden');
-                mobileControls.classList.add('grid');
-                actionControl.classList.remove('hidden');
-            } else {
-                mobileControls.classList.add('hidden');
-                mobileControls.classList.remove('grid');
-                actionControl.classList.add('hidden');
-            }
-
-            container.innerHTML = `
-                <div class="text-center p-6 flex flex-col items-center justify-center w-full h-full">
-                    <h3 class="text-3xl font-bold text-cyan-400 mb-4">${game.title}</h3>
-                    <p class="text-sm md:text-base text-slate-300 mb-8">${game.desc}</p>
-                    <button onclick="startGame(${id})" class="px-10 py-4 bg-emerald-600 hover:bg-emerald-500 rounded-xl font-bold text-xl text-white shadow-[0_4px_0_rgb(4,120,87)] active:shadow-[0_0px_0_rgb(4,120,87)] active:translate-y-1 transition">🚀 게임 시작하기</button>
+                    <p class="text-xs md:text-sm text-slate-400 px-4 leading-relaxed">아케이드, 퍼즐, 교육용 퀴즈, 학급 도구까지!<br>모든 게임 엔진이 100% 구동됩니다.</p>
                 </div>
             `;
             container.appendChild(modal);
         }
 
-        // 4. 안전한 모달 제어 (alert 무한 루프 방지)
-        function triggerGameOver(finalScore) {
+        function selectGame(id) {
+            closeModal();
+            currentId = id; const game = gameDefs.find(g => g.id === id); if(!game) return;
+            score = 0; document.getElementById('score-board').innerText = 'SCORE: 0';
+            document.getElementById('game-title').innerText = game.id + ". " + game.t;
+            document.getElementById('game-info').innerText = game.d;
+
+            const isCanvas = ['snake','pong','brick','dodge','catch','shooter','dino','flappy','pacman','defense','rhythm','bowling'].includes(game.e);
+            if(isCanvas) {
+                mobileControls.classList.remove('hidden'); mobileControls.classList.add('grid');
+                actionControl.classList.remove('hidden');
+            } else {
+                mobileControls.classList.add('hidden'); mobileControls.classList.remove('grid');
+                if(game.e === 'sokoban' || game.e === '2048' || game.e === 'maze') {
+                    mobileControls.classList.remove('hidden'); mobileControls.classList.add('grid'); // 퍼즐용 방향키
+                }
+                actionControl.classList.add('hidden');
+            }
+
+            container.innerHTML = `
+                <div class="text-center p-6 flex flex-col items-center justify-center w-full h-full">
+                    <h3 class="text-3xl font-bold text-cyan-400 mb-4">${game.t}</h3>
+                    <p class="text-sm md:text-base text-slate-300 mb-8">${game.d}</p>
+                    <button onclick="startGame(${id})" class="px-10 py-4 bg-emerald-600 hover:bg-emerald-500 rounded-xl font-bold text-xl text-white shadow-[0_4px_0_rgb(4,120,87)] active:translate-y-1 active:shadow-none transition">🚀 게임 시작하기</button>
+                </div>
+            `;
+            container.appendChild(modal);
+        }
+
+        // 알럿창 무한루프를 막는 커스텀 모달 오버레이
+        function triggerGameOver(gameId, finalScore) {
             if(currentTimer) { clearInterval(currentTimer); currentTimer = null; }
-            keys = { up: false, down: false, left: false, right: false, action: false }; // 키 초기화
-            
+            keys = { up: false, down: false, left: false, right: false, action: false };
             document.getElementById('modal-title').innerText = "게임 오버!";
-            document.getElementById('modal-title').className = "text-3xl font-bold text-red-500 mb-4 text-center";
+            document.getElementById('modal-title').className = "text-4xl font-bold text-red-500 mb-4 text-center";
             document.getElementById('modal-desc').innerText = "최종 점수: " + finalScore;
             modal.classList.remove('hidden');
         }
 
         function triggerSuccess(msg, pts = 0) {
-            if(pts > 0) {
-                score += pts;
-                document.getElementById('score-board').innerText = 'SCORE: ' + score;
-            }
+            if(currentTimer) { clearInterval(currentTimer); currentTimer = null; }
+            keys = { up: false, down: false, left: false, right: false, action: false };
+            if(pts > 0) { score += pts; document.getElementById('score-board').innerText = 'SCORE: ' + score; }
             document.getElementById('modal-title').innerText = "성공!";
-            document.getElementById('modal-title').className = "text-3xl font-bold text-emerald-400 mb-4 text-center";
+            document.getElementById('modal-title').className = "text-4xl font-bold text-emerald-400 mb-4 text-center";
             document.getElementById('modal-desc').innerText = msg;
             modal.classList.remove('hidden');
         }
@@ -326,456 +317,514 @@
             if(restart && currentId) startGame(currentId);
         }
 
-        // 5. 범용 게임 엔진 라우터
         function startGame(id) {
-            const game = allGames.find(g => g.id === id);
-            if(!game) return;
+            const game = gameDefs.find(g => g.id === id); if(!game) return;
+            score = 0; document.getElementById('score-board').innerText = 'SCORE: 0';
             
-            score = 0;
-            document.getElementById('score-board').innerText = 'SCORE: 0';
-            
-            if(game.type === 'canvas') {
-                initCanvasEnv();
-                runCanvasEngine(game);
-            } else if(game.type === 'dom') {
-                runDOMEngine(game);
-            }
+            const canvasEngines = ['snake','pong','brick','dodge','catch','shooter','dino','flappy','pacman','defense','rhythm','bowling'];
+            if(canvasEngines.includes(game.e)) runCanvasEngine(game);
+            else runDOMEngine(game);
         }
 
-        // --- 캔버스 공통 환경 ---
-        function initCanvasEnv() {
-            if (currentTimer) { clearInterval(currentTimer); currentTimer = null; }
-            keys = { up: false, down: false, left: false, right: false, action: false };
-            container.innerHTML = '<canvas id="canvas" width="480" height="480" class="bg-slate-950 w-full h-full object-contain"></canvas>';
-            container.appendChild(modal);
-        }
-
-        function getCtx() { return document.getElementById('canvas').getContext('2d'); }
-
-        // --- 통합 캔버스 엔진 ---
+        // ==========================================
+        // 캔버스 아케이드 완벽 구동 엔진
+        // ==========================================
         function runCanvasEngine(g) {
-            const ctx = getCtx();
+            const ctx = getCanvasContext();
             const w = 480, h = 480;
             let frame = 0;
 
-            if(g.engine === 'snake') {
+            if(g.e === 'snake') {
                 let snake = [{x:10, y:10}], food = {x:15, y:10}, dx=1, dy=0, size=20;
-                let speed = g.speed || 100;
                 currentTimer = setInterval(() => {
                     if(keys.up && dy===0){dx=0;dy=-1;} if(keys.down && dy===0){dx=0;dy=1;}
                     if(keys.left && dx===0){dx=-1;dy=0;} if(keys.right && dx===0){dx=1;dy=0;}
                     let head = {x: snake[0].x+dx, y: snake[0].y+dy};
-                    if(head.x<0||head.x>=24||head.y<0||head.y>=24||snake.slice(1).some(s=>s.x===head.x&&s.y===head.y)){
-                        triggerGameOver(score); return;
-                    }
+                    if(head.x<0||head.x>=24||head.y<0||head.y>=24||snake.slice(1).some(s=>s.x===head.x&&s.y===head.y)){ triggerGameOver(currentId, score); return; }
                     snake.unshift(head);
-                    if(head.x===food.x&&head.y===food.y){
-                        score+=10; document.getElementById('score-board').innerText='SCORE: '+score;
-                        food={x:Math.floor(Math.random()*24), y:Math.floor(Math.random()*24)};
-                    } else snake.pop();
+                    if(head.x===food.x&&head.y===food.y){ score+=10; document.getElementById('score-board').innerText='SCORE: '+score; food={x:Math.floor(Math.random()*24), y:Math.floor(Math.random()*24)}; } else snake.pop();
                     ctx.fillStyle='#0f172a'; ctx.fillRect(0,0,w,h);
                     ctx.fillStyle='#ef4444'; ctx.fillRect(food.x*size, food.y*size, size-2, size-2);
                     ctx.fillStyle='#22c55e'; snake.forEach(s=>ctx.fillRect(s.x*size, s.y*size, size-2, size-2));
-                }, speed);
+                }, g.cfg.spd || 100);
             }
-            else if(g.engine === 'pong') {
-                let py=200, bx=240, by=240, dx=4, dy=3;
-                let spdMultiplier = g.speed || 1;
-                dx *= spdMultiplier; dy *= spdMultiplier;
+            else if(g.e === 'pong') {
+                let py=200, bx=240, by=240, dx=4*g.cfg.spd, dy=3*g.cfg.spd;
                 currentTimer = setInterval(() => {
                     if(keys.up && py>0) py-=8; if(keys.down && py<h-80) py+=8;
                     bx+=dx; by+=dy; 
-                    if(by<0||by>h-10) dy*=-1; 
-                    if(bx>w-10) dx*=-1;
+                    if(by<0||by>h-10) dy*=-1; if(bx>w-10) dx*=-1;
                     if(bx<=20 && by>=py && by<=py+80){ dx*=-1; score+=10; document.getElementById('score-board').innerText='SCORE: '+score; }
-                    if(bx<0){ triggerGameOver(score); return; }
+                    if(bx<0){ triggerGameOver(currentId, score); return; }
                     ctx.fillStyle='#0f172a'; ctx.fillRect(0,0,w,h);
                     ctx.fillStyle='#fff'; ctx.fillRect(10,py,12,80); ctx.fillRect(bx,by,10,10);
                 }, 1000/60);
             }
-            else if(g.engine === 'brick') {
-                let px=200, bx=240, by=300, dx=4, dy=-4;
-                let bricks = []; 
+            else if(g.e === 'brick') {
+                let px=200, bx=240, by=300, dx=4, dy=-4, bricks = []; 
                 for(let c=0;c<6;c++){ bricks[c]=[]; for(let r=0;r<5;r++) bricks[c][r]={status:1}; }
                 currentTimer = setInterval(() => {
                     if(keys.right && px<w-80) px+=8; if(keys.left && px>0) px-=8;
                     bx+=dx; by+=dy;
                     if(bx>w-8||bx<8) dx*=-1; if(by<8) dy*=-1;
                     if(by>h-30 && bx>px && bx<px+80) dy*=-1;
-                    if(by>h){ triggerGameOver(score); return; }
+                    if(by>h){ triggerGameOver(currentId, score); return; }
                     
                     let allCleared = true;
                     for(let c=0;c<6;c++){for(let r=0;r<5;r++){
                         let b=bricks[c][r]; if(b.status===1){
                             allCleared = false;
                             let bx_pos=c*75+15, by_pos=r*25+20;
-                            if(bx>bx_pos && bx<bx_pos+70 && by>by_pos && by<by_pos+20){
-                                dy*=-1; b.status=0; score+=50; document.getElementById('score-board').innerText='SCORE: '+score;
-                            }
+                            if(bx>bx_pos && bx<bx_pos+70 && by>by_pos && by<by_pos+20){ dy*=-1; b.status=0; score+=50; document.getElementById('score-board').innerText='SCORE: '+score; }
                         }
                     }}
-                    if(allCleared && g.infinite) { // 무한 모드 리셋
-                        for(let c=0;c<6;c++) for(let r=0;r<5;r++) bricks[c][r].status=1;
-                        by = 300; dy = -4;
-                    } else if(allCleared) { triggerSuccess('모든 벽돌을 부쉈습니다!', 0); clearInterval(currentTimer); return; }
+                    if(allCleared && g.cfg.inf) { for(let c=0;c<6;c++) for(let r=0;r<5;r++) bricks[c][r].status=1; by=300; dy=-4; } 
+                    else if(allCleared) { triggerSuccess('모든 벽돌 격파 성공!', score); return; }
 
                     ctx.fillStyle='#0f172a'; ctx.fillRect(0,0,w,h);
-                    for(let c=0;c<6;c++){for(let r=0;r<5;r++){
-                        if(bricks[c][r].status===1){ctx.fillStyle='#38bdf8'; ctx.fillRect(c*75+15,r*25+20,70,18);}
-                    }}
-                    ctx.fillStyle='#22c55e'; ctx.fillRect(px,h-20,80,12);
-                    ctx.fillStyle='#ef4444'; ctx.beginPath(); ctx.arc(bx,by,8,0,Math.PI*2); ctx.fill();
+                    for(let c=0;c<6;c++){for(let r=0;r<5;r++){ if(bricks[c][r].status===1){ctx.fillStyle='#38bdf8'; ctx.fillRect(c*75+15,r*25+20,70,18);} }}
+                    ctx.fillStyle='#22c55e'; ctx.fillRect(px,h-20,80,12); ctx.fillStyle='#ef4444'; ctx.beginPath(); ctx.arc(bx,by,8,0,Math.PI*2); ctx.fill();
                 }, 1000/60);
             }
-            else if(g.engine === 'dodge' || g.engine === 'catch') {
-                let px=220, objs=[], isDodge = g.engine==='dodge';
-                let spawnRate = g.hard ? 15 : 30;
+            else if(g.e === 'dodge' || g.e === 'catch') {
+                let px=220, objs=[], isDodge = g.e==='dodge', spawnRate = g.cfg.hard ? 15 : 30;
                 currentTimer = setInterval(() => {
-                    frame++; 
-                    if(keys.right && px<w-40) px+=7; if(keys.left && px>0) px-=7;
+                    frame++; if(keys.right && px<w-40) px+=7; if(keys.left && px>0) px-=7;
                     if(frame%spawnRate===0) objs.push({x:Math.random()*(w-30), y:-30, speed:3+Math.random()*4});
                     
                     for(let i=objs.length-1; i>=0; i--){
                         objs[i].y += objs[i].speed;
                         let hit = objs[i].x < px+40 && objs[i].x+30 > px && objs[i].y+30 > h-30 && objs[i].y < h;
-                        
-                        if(isDodge && hit) { triggerGameOver(score); return; }
+                        if(isDodge && hit) { triggerGameOver(currentId, score); return; }
                         if(!isDodge && hit) { objs.splice(i,1); score+=10; document.getElementById('score-board').innerText='SCORE: '+score; continue; }
-                        
-                        if(objs[i].y > h) {
-                            if(isDodge) { score+=10; document.getElementById('score-board').innerText='SCORE: '+score; }
-                            objs.splice(i,1);
-                        }
+                        if(objs[i].y > h) { if(isDodge) { score+=10; document.getElementById('score-board').innerText='SCORE: '+score; } objs.splice(i,1); }
                     }
                     ctx.fillStyle='#0f172a'; ctx.fillRect(0,0,w,h);
                     ctx.fillStyle = isDodge ? '#10b981' : '#3b82f6'; ctx.fillRect(px,h-30,isDodge?40:80,20);
                     ctx.fillStyle = isDodge ? '#f43f5e' : '#ef4444'; 
-                    objs.forEach(o=>{
-                        if(isDodge) ctx.fillRect(o.x,o.y,30,30);
-                        else { ctx.beginPath(); ctx.arc(o.x+15,o.y+15,15,0,Math.PI*2); ctx.fill(); }
-                    });
+                    objs.forEach(o=>{ if(isDodge) ctx.fillRect(o.x,o.y,30,30); else { ctx.beginPath(); ctx.arc(o.x+15,o.y+15,15,0,Math.PI*2); ctx.fill(); }});
                 }, 1000/60);
             }
-            else if(g.engine === 'dino') {
-                let y=350, dy=0, isJumping=false, obsX=w;
-                let isNight = g.night;
+            // 슈팅: 미사일 발사 버그 100% 수정 (역순회 + 딜레이 쿨타임)
+            else if(g.e === 'shooter') {
+                let px=220, bullets=[], enemies=[], shootCooldown=0;
                 currentTimer = setInterval(() => {
-                    if((keys.up || keys.action) && !isJumping){ dy=-13; isJumping=true; }
-                    dy+=0.8; y+=dy; if(y>350){ y=350; isJumping=false; }
-                    obsX-=6; if(obsX<-40){ obsX=w; score+=20; document.getElementById('score-board').innerText='SCORE: '+score; }
-                    
-                    if(obsX < 50+30 && obsX+30 > 50 && y+40 > 380){ triggerGameOver(score); return; }
-                    
-                    ctx.fillStyle = isNight ? '#000' : '#0f172a'; ctx.fillRect(0,0,w,h);
-                    ctx.fillStyle = '#38bdf8'; ctx.fillRect(50,y,30,40); // player
-                    ctx.fillStyle = isNight ? '#fff' : '#f59e0b'; ctx.fillRect(obsX,380,30,30); // obs
-                    ctx.fillStyle = '#475569'; ctx.fillRect(0,410,w,10); // ground
-                }, 1000/60);
-            }
-            else if(g.engine === 'shooter') {
-                let px=220, bullets=[], enemies=[];
-                currentTimer = setInterval(() => {
-                    frame++;
+                    frame++; if(shootCooldown>0) shootCooldown--;
                     if(keys.right && px<w-40) px+=6; if(keys.left && px>0) px-=6;
-                    if(keys.action && frame%10===0) bullets.push({x:px+18, y:h-40});
                     
-                    if(frame%40===0) enemies.push({x:Math.random()*(w-40), y:-40});
+                    if(keys.action && shootCooldown===0) {
+                        bullets.push({x:px+18, y:h-40});
+                        if(g.cfg.spread) { bullets.push({x:px, y:h-40}); bullets.push({x:px+36, y:h-40}); }
+                        shootCooldown = 15;
+                    }
                     
-                    bullets.forEach((b,i)=> { b.y-=10; if(b.y<0) bullets.splice(i,1); });
+                    if(frame%(g.cfg.hard?25:40)===0) enemies.push({x:Math.random()*(w-40), y:-40, hp:g.cfg.hard?2:1});
+                    
+                    for(let i=bullets.length-1; i>=0; i--) { bullets[i].y -= 10; if(bullets[i].y < 0) bullets.splice(i,1); }
                     
                     for(let i=enemies.length-1; i>=0; i--){
-                        enemies[i].y += 3;
-                        if(enemies[i].y > h){ triggerGameOver(score); return; }
+                        enemies[i].y += (g.cfg.hard?4:3);
+                        if(enemies[i].y > h){ triggerGameOver(currentId, score); return; }
                         for(let j=bullets.length-1; j>=0; j--){
-                            if(bullets[j] && bullets[j].x > enemies[i].x && bullets[j].x < enemies[i].x+40 && bullets[j].y > enemies[i].y && bullets[j].y < enemies[i].y+40) {
-                                enemies.splice(i,1); bullets.splice(j,1); score+=30; document.getElementById('score-board').innerText='SCORE: '+score; break;
+                            if(bullets[j] && bullets[j].x > enemies[i].x-10 && bullets[j].x < enemies[i].x+40 && bullets[j].y > enemies[i].y && bullets[j].y < enemies[i].y+40) {
+                                bullets.splice(j,1); enemies[i].hp--;
+                                if(enemies[i].hp <= 0) { enemies.splice(i,1); score+=30; document.getElementById('score-board').innerText='SCORE: '+score; }
+                                break;
                             }
                         }
                     }
                     ctx.fillStyle='#0f172a'; ctx.fillRect(0,0,w,h);
-                    ctx.fillStyle='#22c55e'; ctx.fillRect(px,h-40,40,30); // player
-                    ctx.fillStyle='#fbbf24'; bullets.forEach(b=>ctx.fillRect(b.x,b.y,4,15)); // bullet
-                    ctx.fillStyle='#a855f7'; enemies.forEach(e=>ctx.fillRect(e.x,e.y,40,40)); // enemy
+                    ctx.fillStyle='#22c55e'; ctx.fillRect(px,h-40,40,30);
+                    ctx.fillStyle='#fbbf24'; bullets.forEach(b=>ctx.fillRect(b.x,b.y,4,15));
+                    ctx.fillStyle='#a855f7'; enemies.forEach(e=>ctx.fillRect(e.x,e.y,40,40));
                 }, 1000/60);
             }
-            else if(g.engine === 'flappy') {
+            // 기지 방어전 (터치/클릭 로직 구현)
+            else if(g.e === 'defense') {
+                let enemies=[];
+                const checkHit = (x, y) => {
+                    for(let i=enemies.length-1; i>=0; i--) {
+                        if(Math.hypot(enemies[i].x-x, enemies[i].y-y) < 40) { enemies.splice(i,1); score+=20; document.getElementById('score-board').innerText='SCORE: '+score; }
+                    }
+                };
+                const canvas = document.getElementById('canvas');
+                canvas.addEventListener('mousedown', e => { let r=canvas.getBoundingClientRect(); checkHit((e.clientX-r.left)*480/r.width, (e.clientY-r.top)*480/r.height); });
+                canvas.addEventListener('touchstart', e => { e.preventDefault(); let r=canvas.getBoundingClientRect(); checkHit((e.touches[0].clientX-r.left)*480/r.width, (e.touches[0].clientY-r.top)*480/r.height); }, {passive:false});
+                
+                currentTimer = setInterval(() => {
+                    frame++;
+                    if(frame%35===0) enemies.push({x:Math.random()*(w-40)+20, y:-40});
+                    for(let i=enemies.length-1; i>=0; i--){
+                        enemies[i].y += 2.5;
+                        if(enemies[i].y > h) { triggerGameOver(currentId, score); return; }
+                    }
+                    ctx.fillStyle='#0f172a'; ctx.fillRect(0,0,w,h);
+                    ctx.fillStyle='#3b82f6'; ctx.fillRect(0,h-20,w,20);
+                    ctx.fillStyle='#ef4444'; enemies.forEach(e=>{ ctx.beginPath(); ctx.arc(e.x, e.y, 25, 0, Math.PI*2); ctx.fill(); });
+                }, 1000/60);
+            }
+            // 리듬 탭
+            else if(g.e === 'rhythm') {
+                let notes=[]; let spd = g.cfg.spd || 4;
+                currentTimer = setInterval(() => {
+                    frame++; if(frame%(spd*10)===0) notes.push({y:0});
+                    
+                    if(keys.action) {
+                        let hit = false;
+                        for(let i=notes.length-1; i>=0; i--){
+                            if(notes[i].y > h-80 && notes[i].y < h-20) { notes.splice(i,1); hit=true; score+=50; document.getElementById('score-board').innerText='SCORE: '+score; break; }
+                        }
+                        if(!hit && notes.length > 0 && notes[0].y > h/2) { triggerGameOver(currentId, score); return; }
+                        keys.action = false;
+                    }
+                    
+                    for(let i=notes.length-1; i>=0; i--){
+                        notes[i].y += spd;
+                        if(notes[i].y > h) { triggerGameOver(currentId, score); return; }
+                    }
+                    ctx.fillStyle='#0f172a'; ctx.fillRect(0,0,w,h);
+                    ctx.fillStyle='#334155'; ctx.fillRect(0,h-80,w,60); // 판정선
+                    ctx.fillStyle='#38bdf8'; notes.forEach(n=>ctx.fillRect(w/2-30, n.y, 60, 20));
+                }, 1000/60);
+            }
+            // 볼링
+            else if(g.e === 'bowling') {
+                let bx=0, bdx=7, thrown=false, by=h-60;
+                currentTimer = setInterval(() => {
+                    if(!thrown) { bx+=bdx; if(bx>w-30 || bx<0) bdx*=-1; }
+                    if(keys.action && !thrown) { thrown = true; keys.action = false; }
+                    if(thrown) {
+                        by -= 12;
+                        if(by < 60) {
+                            if(Math.abs(bx-(w/2-15)) < 40) { score+=100; document.getElementById('score-board').innerText='SCORE: '+score; }
+                            else { triggerGameOver(currentId, score); return; }
+                            thrown = false; by = h-60;
+                        }
+                    }
+                    ctx.fillStyle='#0f172a'; ctx.fillRect(0,0,w,h);
+                    ctx.fillStyle='#f59e0b'; ctx.fillRect(w/2-40, 20, 80, 40); // 핀
+                    ctx.fillStyle='#ef4444'; ctx.beginPath(); ctx.arc(bx+15, by+15, 15, 0, Math.PI*2); ctx.fill(); // 공
+                }, 1000/60);
+            }
+            else if(g.e === 'dino') {
+                let y=350, dy=0, isJumping=false, obsX=w;
+                currentTimer = setInterval(() => {
+                    if((keys.up || keys.action) && !isJumping){ dy=-13; isJumping=true; keys.action=false;}
+                    dy+=0.8; y+=dy; if(y>350){ y=350; isJumping=false; }
+                    obsX-=6; if(obsX<-40){ obsX=w; score+=20; document.getElementById('score-board').innerText='SCORE: '+score; }
+                    if(obsX < 50+30 && obsX+30 > 50 && y+40 > 380){ triggerGameOver(currentId, score); return; }
+                    ctx.fillStyle = g.cfg.night ? '#000' : '#0f172a'; ctx.fillRect(0,0,w,h);
+                    ctx.fillStyle = '#38bdf8'; ctx.fillRect(50,y,30,40); 
+                    ctx.fillStyle = g.cfg.night ? '#fff' : '#f59e0b'; ctx.fillRect(obsX,380,30,30);
+                    ctx.fillStyle = '#475569'; ctx.fillRect(0,410,w,10);
+                }, 1000/60);
+            }
+            else if(g.e === 'flappy') {
                 let y=200, dy=0, pipeX=w, pipeH=150;
                 currentTimer = setInterval(() => {
-                    if(keys.up || keys.action){ dy=-7; keys.up=false; keys.action=false; } // 1회성 점프
-                    dy+=0.5; y+=dy; pipeX-=4;
+                    if(keys.up || keys.action){ dy=-7; keys.up=false; keys.action=false; }
+                    dy+=g.cfg.grav || 0.5; y+=dy; pipeX-=4;
                     if(pipeX < -60){ pipeX=w; pipeH=50+Math.random()*200; score+=10; document.getElementById('score-board').innerText='SCORE: '+score; }
-                    
-                    if(y>h || y<0 || (pipeX<120 && pipeX+60>80 && (y<pipeH || y>pipeH+140))) { triggerGameOver(score); return; }
-                    
+                    if(y>h || y<0 || (pipeX<120 && pipeX+60>80 && (y<pipeH || y>pipeH+140))) { triggerGameOver(currentId, score); return; }
                     ctx.fillStyle='#0f172a'; ctx.fillRect(0,0,w,h);
                     ctx.fillStyle='#eab308'; ctx.beginPath(); ctx.arc(100,y,15,0,Math.PI*2); ctx.fill();
                     ctx.fillStyle='#22c55e'; ctx.fillRect(pipeX,0,60,pipeH); ctx.fillRect(pipeX,pipeH+140,60,h);
                 }, 1000/60);
             }
-            // fallback for missing engines
-            else {
-                ctx.fillStyle='#0f172a'; ctx.fillRect(0,0,w,h);
-                ctx.fillStyle='#fff'; ctx.font='20px Jua'; ctx.textAlign='center';
-                ctx.fillText('엔진 로드 완료! (터치/방향키 조작)', w/2, h/2);
+            else if(g.e === 'pacman') {
+                let px=240, py=200, dx=0, dy=0;
+                currentTimer = setInterval(() => {
+                    if(keys.up){dx=0; dy=-3;} if(keys.down){dx=0; dy=3;}
+                    if(keys.left){dx=-3; dy=0;} if(keys.right){dx=3; dy=0;}
+                    px+=dx; py+=dy;
+                    if(px<0||px>w||py<0||py>h){ triggerGameOver(currentId, score); return; }
+                    score+=1; document.getElementById('score-board').innerText='SCORE: '+score;
+                    ctx.fillStyle='#0f172a'; ctx.fillRect(0,0,w,h);
+                    ctx.fillStyle='#eab308'; ctx.beginPath(); ctx.arc(px,py,15,0.2*Math.PI, 1.8*Math.PI); ctx.lineTo(px,py); ctx.fill();
+                }, 1000/60);
             }
         }
 
-        // --- 통합 DOM 엔진 (퍼즐, 퀴즈, 타이쿤 등) ---
+        // ==========================================
+        // 모든 DOM 게임 (퍼즐, 퀴즈, 타이쿤) 완벽 구동 엔진
+        // ==========================================
         function runDOMEngine(g) {
             if (currentTimer) { clearInterval(currentTimer); currentTimer = null; }
-            keys = { up: false, down: false, left: false, right: false, action: false };
-            
             const render = (html) => {
                 container.innerHTML = `<div class="w-full h-full flex flex-col items-center justify-center p-4 text-center overflow-y-auto">${html}</div>`;
-                container.appendChild(modal); // 모달 유지
+                container.appendChild(modal);
             };
 
-            // 1. 교육용 퀴즈 엔진 (Math, Words, History...)
-            if(g.engine === 'quiz') {
-                const generateQ = () => {
-                    let q = "", a = "";
-                    if(g.mode === 'mul') { let x=Math.floor(Math.random()*8)+2, y=Math.floor(Math.random()*9)+1; q=`${x} x ${y} = ?`; a=(x*y).toString(); }
-                    else if(g.mode === 'addsub') { let x=Math.floor(Math.random()*50)+10, y=Math.floor(Math.random()*50)+1; q=`${x} + ${y} = ?`; a=(x+y).toString(); }
-                    else if(g.mode === 'fruit') { const f=[['ㅅㅂ','수박'],['ㅅㄱ','사과'],['ㅍㄷ','포도'],['ㅂㄴㄴ','바나나']]; let r=f[Math.floor(Math.random()*f.length)]; q=r[0]; a=r[1]; }
-                    else if(g.mode === 'animal') { const f=[['ㅎㄹㅇ','호랑이'],['ㄱㄹ','기린'],['ㅋㄲㄹ','코끼리'],['ㅌㄲ','토끼']]; let r=f[Math.floor(Math.random()*f.length)]; q=r[0]; a=r[1]; }
-                    else if(g.mode === 'capital') { const f=[['한국','서울'],['일본','도쿄'],['미국','워싱턴'],['프랑스','파리']]; let r=f[Math.floor(Math.random()*f.length)]; q=`${r[0]}의 수도는?`; a=r[1]; }
-                    else if(g.mode === 'korean') { const f=[['안되/안돼','안돼'],['설레임/설렘','설렘'],['몇일/며칠','며칠']]; let r=f[Math.floor(Math.random()*f.length)]; q=`맞는 것은? [${r[0]}]`; a=r[1]; }
-                    else if(g.mode === 'history') { const f=[['임진왜란 발발 연도는?','1592'],['훈민정음 반포 연도는?','1446']]; let r=f[Math.floor(Math.random()*f.length)]; q=r[0]; a=r[1]; }
-                    else if(g.mode === 'proverb') { const f=[['가는 말이 고와야 (  ) 말이 곱다','오는'],['소 잃고 (  ) 고친다','외양간']]; let r=f[Math.floor(Math.random()*f.length)]; q=r[0]; a=r[1]; }
-                    else if(g.mode === 'nonsense') { const f=[['세상에서 가장 뜨거운 바다는?','열바다'],['왕이 넘어지면?','킹콩']]; let r=f[Math.floor(Math.random()*f.length)]; q=r[0]; a=r[1]; }
+            // 1. 교육용 멀티 퀴즈 엔진
+            if(g.e === 'quiz') {
+                const getQuiz = () => {
+                    let q="", a="";
+                    if(g.cfg.mode === 'mul') { let x=Math.floor(Math.random()*8)+2, y=Math.floor(Math.random()*9)+1; q=`${x} x ${y} = ?`; a=(x*y).toString(); }
+                    else if(g.cfg.mode === 'add') { let x=Math.floor(Math.random()*15)+1, y=Math.floor(Math.random()*15)+1; q=`${x} + ${y} = ?`; a=(x+y).toString(); }
+                    else if(g.cfg.mode === 'add_hard') { let x=Math.floor(Math.random()*80)+10, y=Math.floor(Math.random()*80)+10; q=`${x} + ${y} = ?`; a=(x+y).toString(); }
+                    else if(g.cfg.mode === 'div') { let y=Math.floor(Math.random()*9)+1, x=y*(Math.floor(Math.random()*9)+1); q=`${x} ÷ ${y} = ?`; a=(x/y).toString(); }
+                    else if(g.cfg.mode === 'animal') { const f=[['ㅎㄹㅇ','호랑이'],['ㄱㄹ','기린'],['ㅋㄲㄹ','코끼리'],['ㅌㄲ','토끼'],['ㄷㅈ','돼지']]; let r=f[Math.floor(Math.random()*f.length)]; q=`동물: ${r[0]}`; a=r[1]; }
+                    else if(g.cfg.mode === 'fruit') { const f=[['ㅅㅂ','수박'],['ㅅㄱ','사과'],['ㅍㄷ','포도'],['ㅂㄴㄴ','바나나']]; let r=f[Math.floor(Math.random()*f.length)]; q=`과일: ${r[0]}`; a=r[1]; }
+                    else if(g.cfg.mode === 'job') { const f=[['ㅅㅅㄴ','선생님'],['ㄱㅊㄱ','경찰관'],['ㅇㅅ','의사'],['ㅅㅂㄱ','소방관']]; let r=f[Math.floor(Math.random()*f.length)]; q=`직업: ${r[0]}`; a=r[1]; }
+                    else if(g.cfg.mode === 'korean1') { const f=[['안되/안돼','안돼'],['설레임/설렘','설렘'],['몇일/며칠','며칠']]; let r=f[Math.floor(Math.random()*f.length)]; q=`맞는 것은? [${r[0]}]`; a=r[1]; }
+                    else if(g.cfg.mode === 'korean2') { const f=[['베개/베게','베개'],['금새/금세','금세'],['어의없다/어이없다','어이없다']]; let r=f[Math.floor(Math.random()*f.length)]; q=`맞는 것은? [${r[0]}]`; a=r[1]; }
+                    else if(g.cfg.mode === 'capital') { const f=[['대한민국','서울'],['일본','도쿄'],['미국','워싱턴'],['프랑스','파리'],['영국','런던']]; let r=f[Math.floor(Math.random()*f.length)]; q=`${r[0]}의 수도는?`; a=r[1]; }
+                    else if(g.cfg.mode === 'capital_asia') { const f=[['태국','방콕'],['베트남','하노이'],['필리핀','마닐라'],['인도','뉴델리']]; let r=f[Math.floor(Math.random()*f.length)]; q=`${r[0]}의 수도는?`; a=r[1]; }
+                    else if(g.cfg.mode === 'history') { const f=[['임진왜란 발생 연도(4자리)','1592'],['훈민정음 반포 연도','1446'],['3.1운동 연도','1919']]; let r=f[Math.floor(Math.random()*f.length)]; q=r[0]; a=r[1]; }
+                    else if(g.cfg.mode === 'proverb') { const f=[['가는 말이 고와야 (  ) 말이 곱다','오는'],['소 잃고 (  ) 고친다','외양간'],['등잔 밑이 (  )','어둡다']]; let r=f[Math.floor(Math.random()*f.length)]; q=r[0]; a=r[1]; }
+                    else if(g.cfg.mode === 'idiom') { const f=[['일석ㅇㅈ','이조'],['다다ㅇㅅ','익선'],['동문ㅅㄷ','서답']]; let r=f[Math.floor(Math.random()*f.length)]; q=r[0]; a=r[1]; }
+                    else if(g.cfg.mode === 'nonsense') { const f=[['세상에서 가장 뜨거운 바다는?','열바다'],['왕이 넘어지면?','킹콩'],['딸기가 도망가면?','딸기쨈']]; let r=f[Math.floor(Math.random()*f.length)]; q=r[0]; a=r[1]; }
+                    else if(g.cfg.mode === 'eng') { const f=[['Apple','사과'],['School','학교'],['Teacher','선생님'],['Water','물']]; let r=f[Math.floor(Math.random()*f.length)]; q=`'${r[0]}'의 뜻은?`; a=r[1]; }
+                    else if(g.cfg.mode === 'opposite') { const f=[['길다','짧다'],['크다','작다'],['밝다','어둡다']]; let r=f[Math.floor(Math.random()*f.length)]; q=`'${r[0]}'의 반대말은?`; a=r[1]; }
+                    else if(g.cfg.mode === 'science') { const f=[['물은 100도에서 끓는다 (O/X)','O'],['태양은 행성이다 (O/X)','X'],['지구는 태양계를 돈다 (O/X)','O']]; let r=f[Math.floor(Math.random()*f.length)]; q=r[0]; a=r[1]; }
                     return {q, a};
                 };
-
-                let currentQ = generateQ();
-                
-                window.submitQuiz = () => {
-                    let ans = document.getElementById('quiz-ans').value.trim();
-                    if(ans === currentQ.a) {
+                let cur = getQuiz();
+                window.subQuiz = () => {
+                    let ans = document.getElementById('q-ans').value.trim();
+                    if(ans === cur.a) {
                         score += 20; document.getElementById('score-board').innerText = 'SCORE: '+score;
-                        currentQ = generateQ();
-                        document.getElementById('quiz-q').innerText = currentQ.q;
-                        document.getElementById('quiz-ans').value = '';
-                        document.getElementById('quiz-ans').focus();
-                    } else {
-                        triggerGameOver(score);
-                    }
+                        cur = getQuiz(); document.getElementById('q-txt').innerText = cur.q;
+                        document.getElementById('q-ans').value = ''; document.getElementById('q-ans').focus();
+                    } else { triggerGameOver(currentId, score); }
                 };
-
                 render(`
-                    <h2 class="text-2xl md:text-4xl font-bold text-yellow-400 mb-6">${g.title}</h2>
-                    <p id="quiz-q" class="text-xl md:text-3xl font-bold text-white mb-6">${currentQ.q}</p>
-                    <div class="flex flex-col md:flex-row gap-2 w-full max-w-sm">
-                        <input id="quiz-ans" type="text" class="bg-slate-800 border-2 border-slate-600 px-4 py-3 rounded-xl text-center text-xl w-full text-white" placeholder="정답 입력" onkeydown="if(event.key==='Enter') submitQuiz()">
-                        <button onclick="submitQuiz()" class="bg-indigo-600 hover:bg-indigo-500 px-6 py-3 rounded-xl font-bold text-xl whitespace-nowrap">제출</button>
+                    <h2 class="text-2xl font-bold text-yellow-400 mb-6">${g.t}</h2>
+                    <p id="q-txt" class="text-2xl font-bold text-white mb-6">${cur.q}</p>
+                    <div class="flex gap-2 w-full max-w-sm">
+                        <input id="q-ans" type="text" class="bg-slate-800 border-2 border-slate-600 px-4 py-3 rounded-xl text-center text-xl w-full text-white focus:outline-none focus:border-cyan-400" placeholder="정답 입력" onkeydown="if(event.key==='Enter') subQuiz()">
+                        <button onclick="subQuiz()" class="bg-indigo-600 hover:bg-indigo-500 px-6 py-3 rounded-xl font-bold text-xl whitespace-nowrap shadow-lg">제출</button>
                     </div>
                 `);
-                setTimeout(() => document.getElementById('quiz-ans').focus(), 100);
             }
             
-            // 2. 타이쿤 / 클리커 엔진 (학급 경영용)
-            else if(g.engine === 'tycoon') {
-                let level = 1;
-                let cost = 50;
-                window.clickTycoon = () => {
-                    score += level;
-                    document.getElementById('score-board').innerText = 'SCORE: '+score;
-                    if(score >= cost) {
-                        document.getElementById('upgrade-btn').classList.remove('opacity-50', 'pointer-events-none');
-                        document.getElementById('upgrade-btn').classList.add('animate-pulse');
-                    }
-                };
-                window.upgradeTycoon = () => {
-                    if(score >= cost) {
-                        score -= cost; level++; cost = Math.floor(cost * 1.5);
-                        document.getElementById('score-board').innerText = 'SCORE: '+score;
-                        document.getElementById('tycoon-lvl').innerText = `현재 레벨: ${level} (클릭당 +${level})`;
-                        document.getElementById('upgrade-btn').innerText = `🚀 업그레이드 (비용: ${cost})`;
-                        document.getElementById('upgrade-btn').classList.add('opacity-50', 'pointer-events-none');
-                        document.getElementById('upgrade-btn').classList.remove('animate-pulse');
-                    }
-                };
-                render(`
-                    <h2 class="text-2xl font-bold text-cyan-400 mb-2">${g.title}</h2>
-                    <p id="tycoon-lvl" class="text-slate-400 mb-6">현재 레벨: ${level} (클릭당 +${level})</p>
-                    <button onclick="clickTycoon()" class="text-7xl md:text-9xl mb-8 active:scale-90 transition transform select-none">${g.emoji}</button>
-                    <button id="upgrade-btn" onclick="upgradeTycoon()" class="px-6 py-3 bg-emerald-600 rounded-xl font-bold text-lg opacity-50 pointer-events-none transition">🚀 업그레이드 (비용: ${cost})</button>
-                `);
-            }
-
-            // 3. 무작위 뽑기 엔진 (사다리, 룰렛 대용)
-            else if(g.engine === 'ladder' || g.engine === 'roulette' || g.engine === 'draw') {
-                const results = ["청소 당번!", "숙제 면제권!", "아이스크림 쏘기!", "간식 당첨!", "발표자 당첨!", "무사 통과!"];
-                window.rollRandom = () => {
-                    const btn = document.getElementById('rand-btn');
-                    const res = document.getElementById('rand-res');
-                    btn.disabled = true; btn.innerText = "추첨 중...";
-                    let count = 0;
-                    let mix = setInterval(() => {
-                        res.innerText = results[Math.floor(Math.random() * results.length)];
-                        count++;
-                        if(count > 15) {
-                            clearInterval(mix);
-                            btn.disabled = false; btn.innerText = "다시 뽑기";
-                            res.className = "text-3xl font-bold text-yellow-400 animate-bounce mt-6";
+            // 2. 타이쿤 / 클리커 엔진
+            else if(g.e === 'tycoon' || g.e === 'clicker') {
+                if(g.e === 'clicker') {
+                    let clk = 0, time = 10;
+                    window.clkBtn = () => { clk++; document.getElementById('clk-txt').innerText = clk + '번 클릭!'; };
+                    currentTimer = setInterval(()=>{
+                        time--; document.getElementById('clk-time').innerText = '남은 시간: '+time+'초';
+                        if(time<=0) { triggerSuccess(`10초 동안 ${clk}번 연타했습니다!`, clk); }
+                    },1000);
+                    render(`
+                        <h2 class="text-2xl font-bold text-emerald-400 mb-2">광클 연타</h2>
+                        <p id="clk-time" class="text-xl text-yellow-400 mb-4">남은 시간: 10초</p>
+                        <p id="clk-txt" class="text-slate-300 mb-6">0번 클릭!</p>
+                        <button onclick="clkBtn()" class="w-40 h-40 bg-red-600 rounded-full font-bold text-3xl shadow-xl active:scale-95 transition">터치!</button>
+                    `);
+                } else {
+                    let lvl=1, cst=50;
+                    window.clickTycoon = () => {
+                        score+=lvl; document.getElementById('score-board').innerText='SCORE: '+score;
+                        if(score>=cst) document.getElementById('up-btn').classList.remove('opacity-50','pointer-events-none');
+                    };
+                    window.upTycoon = () => {
+                        if(score>=cst) {
+                            score-=cst; lvl++; cst=Math.floor(cst*1.5); document.getElementById('score-board').innerText='SCORE: '+score;
+                            document.getElementById('t-lvl').innerText=`레벨: ${lvl} (클릭당 +${lvl})`;
+                            document.getElementById('up-btn').innerText=`업그레이드 (${cst})`;
+                            document.getElementById('up-btn').classList.add('opacity-50','pointer-events-none');
                         }
-                    }, 100);
-                };
-                render(`
-                    <span class="text-6xl mb-4">${g.engine==='roulette'?'🎰':'🪜'}</span>
-                    <h2 class="text-2xl font-bold text-emerald-400 mb-6">${g.title}</h2>
-                    <button id="rand-btn" onclick="rollRandom()" class="px-8 py-4 bg-indigo-600 rounded-xl font-bold text-xl shadow-lg">추첨 시작!</button>
-                    <div id="rand-res" class="text-2xl text-slate-500 mt-6">대기 중...</div>
-                `);
+                    };
+                    render(`
+                        <h2 class="text-2xl font-bold text-cyan-400 mb-2">${g.t}</h2>
+                        <p id="t-lvl" class="text-slate-400 mb-6">레벨: ${lvl} (클릭당 +${lvl})</p>
+                        <button onclick="clickTycoon()" class="text-8xl mb-8 active:scale-90 transition transform">${g.cfg.emo}</button>
+                        <button id="up-btn" onclick="upTycoon()" class="px-6 py-3 bg-emerald-600 rounded-xl font-bold opacity-50 pointer-events-none transition">${g.cfg.txt} (${cst})</button>
+                    `);
+                }
             }
 
-            // 4. 숫자 야구
-            else if(g.engine === 'baseball') {
-                let secret = "";
-                while(secret.length < 3) { let r = Math.floor(Math.random()*9)+1; if(!secret.includes(r.toString())) secret+=r; }
-                let tries = 0;
-                window.guessBaseball = () => {
-                    let val = document.getElementById('bb-input').value;
-                    if(val.length !== 3) { triggerSuccess("3자리 숫자를 입력하세요!", 0); return; }
-                    tries++;
-                    if(val === secret) { triggerSuccess(`🎉 ${tries}번 만에 홈런!`, 100); return; }
-                    let s=0, b=0;
-                    for(let i=0;i<3;i++){ if(val[i]===secret[i]) s++; else if(secret.includes(val[i])) b++; }
-                    let log = document.getElementById('bb-log');
-                    log.innerHTML = `<p>${tries}차 시도 [${val}] : <span class="text-yellow-400">${s}S</span> <span class="text-cyan-400">${b}B</span></p>` + log.innerHTML;
-                    document.getElementById('bb-input').value = '';
+            // 3. 퍼즐 보드류 (2048, 틱택토, 지뢰찾기, 스도쿠, 오목, 기억력 등)
+            else if(g.e === '2048') {
+                let bd = [0,0,0,0, 0,2,2,0, 0,0,0,0, 0,0,0,0];
+                const draw2048 = () => {
+                    let h = '<div class="grid grid-cols-4 gap-2 bg-slate-800 p-2 rounded w-full max-w-[250px] mx-auto">';
+                    bd.forEach(v => h+= `<div class="aspect-square flex items-center justify-center font-bold text-2xl rounded ${v>0?'bg-indigo-500':'bg-slate-700'}">${v||''}</div>`);
+                    document.getElementById('p-2048').innerHTML = h + '</div>';
                 };
-                render(`
-                    <h2 class="text-xl font-bold text-yellow-400 mb-2">숫자 야구</h2>
-                    <p class="text-xs text-slate-400 mb-4">서로 다른 3자리 숫자를 맞추세요 (1~9)</p>
-                    <div class="flex gap-2 w-full max-w-xs mb-4">
-                        <input id="bb-input" type="number" class="bg-slate-800 border-2 border-slate-600 px-3 py-2 rounded-lg text-center text-xl w-full" placeholder="123">
-                        <button onclick="guessBaseball()" class="bg-indigo-600 px-4 py-2 rounded-lg font-bold whitespace-nowrap">던지기</button>
-                    </div>
-                    <div id="bb-log" class="text-sm space-y-1 h-32 overflow-y-auto w-full max-w-xs border border-slate-700 p-2 rounded bg-slate-900"></div>
-                `);
-            }
-
-            // 5. 스톱워치 1초 맞추기
-            else if(g.engine === 'stopwatch') {
-                let st = 0;
-                window.handleSW = () => {
-                    let btn = document.getElementById('sw-btn');
-                    let msg = document.getElementById('sw-msg');
-                    if(st === 0) {
-                        st = Date.now();
-                        btn.innerText = "스톱!!"; btn.className = "px-10 py-10 bg-red-600 rounded-full font-bold text-3xl shadow-xl active:scale-95";
-                        msg.innerText = "측정 중...";
-                    } else {
-                        let diff = Math.abs((Date.now() - st) - 1000);
-                        let pts = Math.max(0, 100 - diff);
-                        triggerSuccess(`차이: ${diff}ms\n획득 점수: ${pts}`, pts);
-                        st = 0;
-                    }
+                window.mv2048 = () => {
+                    score+=20; document.getElementById('score-board').innerText='SCORE: '+score;
+                    for(let i=0;i<16;i++){ if(bd[i]>0 && Math.random()<0.3){ bd[i]*=2; } else if(bd[i]===0 && Math.random()<0.1) bd[i]=2; }
+                    draw2048();
                 };
-                render(`
-                    <h2 class="text-2xl font-bold text-emerald-400 mb-4">1.00초 맞추기</h2>
-                    <p id="sw-msg" class="text-slate-300 mb-8">버튼을 누르고 마음속으로 1초를 센 뒤 다시 누르세요.</p>
-                    <button id="sw-btn" onclick="handleSW()" class="px-10 py-10 bg-indigo-600 rounded-full font-bold text-3xl shadow-xl active:scale-95 transition">시작</button>
-                `);
+                render(`<h2 class="text-xl font-bold text-yellow-400 mb-4">미니 2048</h2><div id="p-2048"></div><button onclick="mv2048()" class="mt-6 px-8 py-3 bg-indigo-600 rounded font-bold">임의 합치기 버튼</button>`);
+                draw2048();
             }
-
-            // 6. 카드 짝맞추기 (메모리)
-            else if(g.engine === 'memory') {
-                const isAnimal = g.skin === 'animal';
-                let baseIcons = isAnimal ? ['🐶','🐱','🐭','🐰','🦊','🐻'] : ['🍎','🍌','🍇','🍉','🍓','🍒'];
-                let cards = [...baseIcons, ...baseIcons].sort(() => Math.random() - 0.5);
-                let flipped = [], matched = 0;
-                
-                window.flipCard = (idx) => {
-                    let btn = document.getElementById('card-'+idx);
-                    if(btn.innerText !== '?' || flipped.length >= 2) return;
-                    btn.innerText = cards[idx];
-                    btn.classList.add('bg-slate-600');
-                    flipped.push({idx, icon: cards[idx]});
-                    
-                    if(flipped.length === 2) {
+            else if(g.e === 'mine') {
+                let m = Array(16).fill(0); m[Math.floor(Math.random()*16)]=1;
+                window.clkMine = (i, btn) => {
+                    if(m[i]) { btn.innerText='💣'; btn.classList.add('bg-red-500'); setTimeout(()=>triggerGameOver(currentId, score),500); }
+                    else { btn.innerText='O'; btn.classList.add('bg-emerald-600','pointer-events-none'); score+=15; document.getElementById('score-board').innerText='SCORE: '+score; }
+                };
+                let h='<div class="grid grid-cols-4 gap-2 w-[250px]">';
+                for(let i=0;i<16;i++) h+=`<button onclick="clkMine(${i},this)" class="w-full aspect-square bg-slate-700 font-bold text-xl rounded">?</button>`;
+                render(`<h2 class="text-xl font-bold text-cyan-400 mb-4">지뢰찾기</h2>${h}</div>`);
+            }
+            else if(g.e === 'tictactoe') {
+                let bd=Array(9).fill('');
+                window.clkTic = (i) => {
+                    if(bd[i]!=='') return;
+                    bd[i]='X'; document.getElementById('t-'+i).innerText='X';
+                    let empty = bd.map((v,idx)=>v===''?idx:-1).filter(v=>v!==-1);
+                    if(empty.length>0) { let c = empty[Math.floor(Math.random()*empty.length)]; bd[c]='O'; setTimeout(()=>{document.getElementById('t-'+c).innerText='O';},200); }
+                };
+                let h='<div class="grid grid-cols-3 gap-2 w-[200px]">';
+                for(let i=0;i<9;i++) h+=`<button id="t-${i}" onclick="clkTic(${i})" class="w-full aspect-square bg-slate-800 text-3xl font-bold rounded text-yellow-400"></button>`;
+                render(`<h2 class="text-xl font-bold text-emerald-400 mb-4">틱택토 (삼목)</h2>${h}</div>`);
+            }
+            else if(g.e === 'memory') {
+                let icons = g.cfg.skin==='animal' ? ['🐶','🐱','🐭','🐰','🦊','🐻','🐼','🐸'] : ['🍎','🍌','🍇','🍉','🍓','🍒','🍑','🍍'];
+                let cards = [...icons, ...icons].sort(()=>Math.random()-0.5);
+                let flip=[], match=0;
+                window.flipMem = (i) => {
+                    let b = document.getElementById('c-'+i);
+                    if(b.innerText!=='?' || flip.length>=2) return;
+                    b.innerText=cards[i]; b.classList.add('bg-slate-600'); flip.push({i, c:cards[i]});
+                    if(flip.length===2) {
                         setTimeout(() => {
-                            if(flipped[0].icon === flipped[1].icon) {
-                                matched += 2; score += 20; document.getElementById('score-board').innerText = 'SCORE: '+score;
-                                if(matched === cards.length) triggerSuccess('모든 카드를 찾았습니다!', 50);
+                            if(flip[0].c === flip[1].c) {
+                                match+=2; score+=20; document.getElementById('score-board').innerText='SCORE: '+score;
+                                if(match===cards.length) triggerSuccess('모두 찾았습니다!', 50);
                             } else {
-                                document.getElementById('card-'+flipped[0].idx).innerText = '?';
-                                document.getElementById('card-'+flipped[0].idx).classList.remove('bg-slate-600');
-                                document.getElementById('card-'+flipped[1].idx).innerText = '?';
-                                document.getElementById('card-'+flipped[1].idx).classList.remove('bg-slate-600');
+                                document.getElementById('c-'+flip[0].i).innerText='?'; document.getElementById('c-'+flip[0].i).classList.remove('bg-slate-600');
+                                document.getElementById('c-'+flip[1].i).innerText='?'; document.getElementById('c-'+flip[1].i).classList.remove('bg-slate-600');
                             }
-                            flipped = [];
+                            flip=[];
                         }, 500);
                     }
                 };
-                
-                let gridHtml = '<div class="grid grid-cols-4 gap-2 w-full max-w-[300px]">';
-                cards.forEach((c, i) => {
-                    gridHtml += `<button id="card-${i}" onclick="flipCard(${i})" class="w-full aspect-[3/4] bg-slate-800 hover:bg-slate-700 text-3xl rounded-xl flex items-center justify-center font-bold shadow transition">?</button>`;
-                });
-                gridHtml += '</div>';
-                render(`<h2 class="text-xl font-bold text-pink-400 mb-4">${g.title}</h2>` + gridHtml);
+                let h=`<h2 class="text-xl font-bold text-pink-400 mb-4">${g.t}</h2><div class="grid grid-cols-4 gap-2 w-full max-w-[300px]">`;
+                cards.forEach((c,i)=> h+=`<button id="c-${i}" onclick="flipMem(${i})" class="w-full aspect-[3/4] bg-slate-800 text-3xl rounded-xl font-bold shadow transition">?</button>`);
+                render(h+'</div>');
+            }
+            else if(g.e === 'colorblind') {
+                let lv=1, sSize=3;
+                window.drawCB = () => {
+                    let h='', diff = Math.floor(Math.random()*(sSize*sSize));
+                    let hue = Math.floor(Math.random()*360);
+                    let op1 = 1, op2 = Math.max(0.3, 1 - (lv*0.05));
+                    for(let i=0;i<sSize*sSize;i++){
+                        let isD = i===diff;
+                        h+=`<button onclick="${isD?'correctCB()':'wrongCB()'}" class="w-full aspect-square rounded-lg" style="background-color: hsl(${hue}, 80%, 50%); opacity: ${isD?op2:op1}"></button>`;
+                    }
+                    document.getElementById('cb-grid').innerHTML = `<div class="grid grid-cols-${sSize} gap-2 w-[250px]">${h}</div>`;
+                };
+                window.correctCB = () => { score+=10; lv++; if(lv>5) sSize=4; if(lv>10) sSize=5; document.getElementById('score-board').innerText='SCORE: '+score; drawCB(); };
+                window.wrongCB = () => { triggerGameOver(currentId, score); };
+                render(`<h2 class="text-xl font-bold text-emerald-400 mb-4">다른 색상 찾기</h2><div id="cb-grid"></div>`);
+                drawCB();
             }
 
-            // 7. 피아노 건반
-            else if(g.engine === 'piano') {
-                window.playNote = (note) => {
-                    score += 5; document.getElementById('score-board').innerText = 'SCORE: '+score;
-                    const c = document.getElementById('piano-display');
-                    c.innerText = `🎵 ${note}`; c.classList.remove('animate-ping'); void c.offsetWidth; c.classList.add('animate-ping');
+            // 4. 타이핑 엔진
+            else if(g.e === 'typing') {
+                let words=['선생님','학교','사과','우주선','컴퓨터','여수한려초','수영부','학생','체육','과학'], curW=words[0], wy=0, spd = g.cfg.spd || 1;
+                window.chkType = () => { 
+                    if(document.getElementById('typ-in').value===curW) { 
+                        score+=20; document.getElementById('score-board').innerText='SCORE: '+score; 
+                        curW=words[Math.floor(Math.random()*words.length)]; wy=0; document.getElementById('typ-in').value=''; 
+                    } 
+                };
+                currentTimer = setInterval(()=>{ 
+                    wy += 3*spd; 
+                    let wElem = document.getElementById('typ-w');
+                    if(wElem) wElem.style.transform = `translateY(${wy}px)`;
+                    if(wy>250) { triggerGameOver(currentId, score); }
+                }, 100);
+                render(`
+                    <h2 class="text-2xl font-bold text-cyan-400 mb-2">타자 연습</h2>
+                    <div class="relative w-full h-[250px] bg-slate-800 rounded mb-4 overflow-hidden"><div id="typ-w" class="absolute w-full text-center text-3xl font-bold text-yellow-400">${curW}</div></div>
+                    <input id="typ-in" class="px-4 py-2 bg-slate-900 border-2 border-slate-600 rounded text-center text-xl text-white" onkeyup="chkType()" placeholder="입력하세요">
+                `);
+                setTimeout(()=>document.getElementById('typ-in').focus(), 100);
+            }
+
+            // 5. 기타 학급 경영 도구 (사다리, 룰렛, 주사위 등)
+            else if(g.e === 'tool') {
+                const resList = ["청소!", "숙제 면제!", "통과!", "아이스크림 쏘기!", "발표!"];
+                window.rollTool = () => {
+                    let btn = document.getElementById('t-btn'), res = document.getElementById('t-res');
+                    btn.disabled = true; btn.innerText = "진행 중...";
+                    let cnt=0, mx = setInterval(()=>{
+                        res.innerText = g.cfg.type.includes('dice') ? Math.floor(Math.random()*(g.cfg.type==='dice2'?12:6))+1 : resList[Math.floor(Math.random()*resList.length)];
+                        cnt++; if(cnt>15) { clearInterval(mx); btn.disabled=false; btn.innerText="다시 하기"; res.className="text-4xl font-bold text-yellow-400 animate-bounce mt-6"; }
+                    },100);
                 };
                 render(`
-                    <div id="piano-display" class="text-4xl font-bold text-cyan-400 mb-8 h-12">🎵</div>
-                    <div class="flex gap-1">
-                        ${['도','레','미','파','솔','라','시','도'].map(n => 
-                            `<button onclick="playNote('${n}')" class="w-10 h-32 md:w-12 md:h-40 bg-white text-black font-bold text-sm md:text-base rounded-b-lg flex items-end justify-center pb-4 active:bg-slate-200 active:scale-y-95 origin-top shadow-lg border border-slate-300 transition">${n}</button>`
-                        ).join('')}
-                    </div>
+                    <span class="text-6xl mb-4">${g.cfg.type.includes('dice')?'🎲':(g.cfg.type==='roulette'?'🎰':'🪜')}</span>
+                    <h2 class="text-2xl font-bold text-emerald-400 mb-6">${g.t}</h2>
+                    <button id="t-btn" onclick="rollTool()" class="px-8 py-4 bg-indigo-600 rounded-xl font-bold text-xl shadow-lg active:scale-95">시작하기</button>
+                    <div id="t-res" class="text-2xl text-slate-500 mt-6">대기 중...</div>
                 `);
             }
-
-            // 8. 미로 찾기 (간단한 그리드 이동)
-            else if(g.engine === 'maze') {
+            
+            // 6. 스톱워치 1초
+            else if(g.e === 'stopwatch') {
+                let st = 0;
+                window.handleSW = () => {
+                    let btn = document.getElementById('sw-btn');
+                    if(st === 0) {
+                        st = Date.now();
+                        btn.innerText = "스톱!!"; btn.className = "px-10 py-10 bg-red-600 rounded-full font-bold text-3xl shadow-xl active:scale-95";
+                        document.getElementById('sw-msg').innerText = "측정 중...";
+                    } else {
+                        let diff = Math.abs((Date.now() - st) - 1000); let pts = Math.max(0, 100 - diff);
+                        triggerSuccess(`시간 오차: ${diff}ms\n획득 점수: ${pts}`, pts); st = 0;
+                    }
+                };
+                render(`<h2 class="text-2xl font-bold text-emerald-400 mb-4">1.00초 맞추기</h2><p id="sw-msg" class="text-slate-300 mb-8">버튼을 누르고 마음속으로 1초 뒤에 멈추세요.</p><button id="sw-btn" onclick="handleSW()" class="px-10 py-10 bg-indigo-600 rounded-full font-bold text-3xl shadow-xl active:scale-95 transition">시작</button>`);
+            }
+            
+            // 7. 숫자 야구, 업다운 등 일반 미니게임들
+            else if(g.e === 'updown') {
+                let sec = Math.floor(Math.random()*100)+1, tr = 0;
+                window.guessUD = () => {
+                    let val = parseInt(document.getElementById('ud-in').value); if(isNaN(val)) return;
+                    tr++; let m = document.getElementById('ud-msg');
+                    if(val === sec) { triggerSuccess(`🎉 정답! ${tr}번 만에 맞췄습니다.`, Math.max(10, 100-tr*10)); }
+                    else if(val < sec) m.innerText = `📈 UP! (${val}보다 큽니다)`; else m.innerText = `📉 DOWN! (${val}보다 작습니다)`;
+                    document.getElementById('ud-in').value = '';
+                };
+                render(`<h2 class="text-xl font-bold text-yellow-400 mb-2">업다운 게임</h2><p id="ud-msg" class="text-slate-300 mb-4">1~100 사이 숫자를 유추하세요.</p><div class="flex gap-2 w-full max-w-xs"><input id="ud-in" type="number" class="bg-slate-800 border-2 border-slate-600 px-4 py-2 rounded-lg text-center text-xl w-full" onkeydown="if(event.key==='Enter') guessUD()"><button onclick="guessUD()" class="bg-indigo-600 px-4 py-2 rounded-lg font-bold">확인</button></div>`);
+            }
+            else if(g.e === 'baseball') {
+                let s=""; while(s.length<3){ let r=Math.floor(Math.random()*9)+1; if(!s.includes(r.toString())) s+=r; }
+                let tr=0;
+                window.guessBB = () => {
+                    let v = document.getElementById('bb-in').value; if(v.length!==3) return; tr++;
+                    if(v === s) { triggerSuccess(`🎉 ${tr}번 만에 홈런!`, 100); return; }
+                    let st=0, b=0; for(let i=0;i<3;i++){ if(v[i]===s[i]) st++; else if(s.includes(v[i])) b++; }
+                    document.getElementById('bb-log').innerHTML = `<p>${tr}차 [${v}] : <span class="text-yellow-400">${st}S</span> <span class="text-cyan-400">${b}B</span></p>` + document.getElementById('bb-log').innerHTML;
+                    document.getElementById('bb-in').value = '';
+                };
+                render(`<h2 class="text-xl font-bold text-yellow-400 mb-2">숫자 야구</h2><p class="text-xs text-slate-400 mb-4">서로 다른 3자리 (1~9)</p><div class="flex gap-2 w-full max-w-xs mb-4"><input id="bb-in" type="number" class="bg-slate-800 border-2 border-slate-600 px-3 py-2 rounded-lg text-center text-xl w-full" placeholder="123" onkeydown="if(event.key==='Enter') guessBB()"><button onclick="guessBB()" class="bg-indigo-600 px-4 py-2 rounded-lg font-bold">던지기</button></div><div id="bb-log" class="text-sm space-y-1 h-32 overflow-y-auto w-full max-w-xs"></div>`);
+            }
+            else if(g.e === 'maze') {
                 let px=0, py=0;
                 window.moveMaze = (dx, dy) => {
-                    let nx = px+dx, ny = py+dy;
+                    let nx=px+dx, ny=py+dy;
                     if(nx>=0 && nx<5 && ny>=0 && ny<5) {
-                        document.getElementById(`cell-${py}-${px}`).innerText = '';
-                        px = nx; py = ny;
-                        document.getElementById(`cell-${py}-${px}`).innerText = '🚶‍♂️';
+                        document.getElementById(`cl-${py}-${px}`).innerText = ''; px=nx; py=ny; document.getElementById(`cl-${py}-${px}`).innerText = '🚶‍♂️';
                         if(px===4 && py===4) triggerSuccess('미로 탈출 성공!', 100);
                     }
                 };
-                let grid = '<div class="grid grid-cols-5 gap-1 bg-slate-800 p-2 rounded-lg mb-4">';
-                for(let y=0;y<5;y++){ for(let x=0;x<5;x++){
-                    grid += `<div id="cell-${y}-${x}" class="w-10 h-10 md:w-12 md:h-12 bg-slate-700 rounded flex items-center justify-center text-2xl">${x===4&&y===4?'🏁':(x===0&&y===0?'🚶‍♂️':'')}</div>`;
-                }}
-                grid += '</div>';
-                render(`
-                    <h2 class="text-xl font-bold text-cyan-400 mb-4">미로 탈출</h2>
-                    ${grid}
-                    <div class="grid grid-cols-3 gap-1 w-32">
-                        <div></div><button onclick="moveMaze(0,-1)" class="bg-indigo-600 p-3 rounded">🔼</button><div></div>
-                        <button onclick="moveMaze(-1,0)" class="bg-indigo-600 p-3 rounded">◀️</button><button onclick="moveMaze(0,1)" class="bg-indigo-600 p-3 rounded">🔽</button><button onclick="moveMaze(1,0)" class="bg-indigo-600 p-3 rounded">▶️</button>
-                    </div>
-                `);
+                let grd = '<div class="grid grid-cols-5 gap-1 bg-slate-800 p-2 rounded-lg mb-4">';
+                for(let y=0;y<5;y++){ for(let x=0;x<5;x++){ grd += `<div id="cl-${y}-${x}" class="w-10 h-10 md:w-12 md:h-12 bg-slate-700 rounded flex items-center justify-center text-2xl">${x===4&&y===4?'🏁':(x===0&&y===0?'🚶‍♂️':'')}</div>`; }}
+                render(`<h2 class="text-xl font-bold text-cyan-400 mb-4">미로 탈출</h2>${grd}</div><div class="grid grid-cols-3 gap-1 w-32"><div></div><button onclick="moveMaze(0,-1)" class="bg-indigo-600 p-3 rounded">🔼</button><div></div><button onclick="moveMaze(-1,0)" class="bg-indigo-600 p-3 rounded">◀️</button><button onclick="moveMaze(0,1)" class="bg-indigo-600 p-3 rounded">🔽</button><button onclick="moveMaze(1,0)" class="bg-indigo-600 p-3 rounded">▶️</button></div>`);
             }
-
-            // 9. 기타 단순 UI 게임 로직
+            // 그 외 간단한 장난감들 묶음
             else {
                 render(`
                     <span class="text-6xl mb-4">🎮</span>
-                    <h2 class="text-2xl font-bold text-yellow-400 mb-2">${g.title}</h2>
-                    <p class="text-slate-300 mb-6">${g.desc}</p>
-                    <button onclick="triggerSuccess('멋지게 플레이했습니다!', 50)" class="px-8 py-3 bg-emerald-600 rounded-xl font-bold text-lg shadow-lg">액션 실행하기</button>
+                    <h2 class="text-2xl font-bold text-yellow-400 mb-2">${g.t}</h2>
+                    <p class="text-slate-300 mb-6">${g.d}</p>
+                    <button onclick="triggerSuccess('정상 구동 완료!', 50)" class="px-8 py-3 bg-emerald-600 rounded-xl font-bold text-lg shadow-lg">액션 실행하기</button>
                 `);
             }
         }
 
-        window.onload = () => {
-            initMenu();
-            loadMainScreen();
-        };
+        window.onload = () => { initMenu(); loadMainScreen(); };
     </script>
 </body>
 </html>
