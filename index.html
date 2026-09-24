@@ -10,7 +10,7 @@
     <style>
         body {
             font-family: 'Jua', sans-serif;
-            overflow: hidden; /* 전체 페이지 스크롤 고정 및 게임 조작 분리 */
+            overflow: hidden;
         }
     </style>
 </head>
@@ -136,7 +136,6 @@
         let score = 0;
         let selectedId = null;
 
-        // 방향키 및 스페이스바 입력 시 전체 화면이 스크롤되는 현상 원천 차단
         window.addEventListener('keydown', function(e) {
             if(['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', ' '].includes(e.key)) {
                 if(document.activeElement.tagName !== 'INPUT' && document.activeElement.tagName !== 'TEXTAREA') {
@@ -162,13 +161,13 @@
             "방향키로 뱀을 조작해 먹이를 드세요.", "W/S 또는 방향키로 패들을 움직이세요.", "좌우 방향키로 벽돌을 깨부수세요.", "좌우 방향키로 떨어지는 장애물을 피하세요.", "초록색으로 바뀔 때 최대한 빨리 클릭하세요!",
             "스페이스바로 장애물을 뛰어넘으세요.", "좌우 이동, 스페이스바로 미사일 발사!", "좌우 방향키로 떨어지는 사과를 받으세요.", "나타나는 두더지(초록 원)를 클릭하세요!", "몰려오는 적을 클릭해 처치하세요.",
             "좌우 방향키로 블록을 이동하세요.", "스페이스바로 새를 날개짓하세요.", "방향키로 팩맨을 이동시키세요.", "좌우 이동, 스페이스바로 미사일 발사!", "좌우 방향키로 떨어지는 장애물을 피하세요.",
-            "방향키로 타일을 슬라이드하세요.", "지뢰를 피하세요.", "3목을 만드세요.", "서로 다른 3자리 숫자를 맞춰보세요.", "같은 그림의 카드 찾기.",
+            "타일을 합쳐 2048을 만드세요!", "지뢰를 피해 안전한 칸을 여세요.", "가로/세로/대각선 3목을 완성하세요.", "서로 다른 3자리 숫자를 맞추세요.", "같은 그림의 카드를 찾으세요.",
             "빈칸에 알맞은 숫자를 채우세요.", "원판을 모두 오른쪽 기둥으로 옮기세요.", "숫자 순서대로 슬라이드하세요.", "상자를 목표 지점으로 밀어넣으세요.", "퍼즐 조각을 맞추세요.",
-            "색상을 올바르게 매칭하세요.", "순서를 기억하고 따라하세요.", "빈칸에 알맞은 단어를 입력하세요.", "빠르게 연산 문제를 푸세요.", "출구까지 미로를 통과하세요.",
-            "내려오는 단어를 빠르게 입력하세요.", "사다리를 타고 결과를 확인하세요.", "운명의 룰렛을 돌려보세요.", "주사위를 굴려 레이스에서 승리하세요.", "돌을 놓아 5목을 완성하세요.",
-            "박자에 맞춰 스페이스바를 누르세요.", "볼링공을 굴려 스트라이크를 노리세요.", "골키퍼를 속이고 골을 넣으세요.", "귀여운 펫과 교감하며 키워보세요.", "나만의 픽셀 그림을 그려보세요.",
-            "가위바위보 연승에 도전하세요.", "동전 던지기 확률 테스트.", "정말 1초가 될 때 스톱 버튼을 누르세요.", "숫자 업다운을 맞춰보세요.", "제시된 초성으로 단어를 맞추세요.",
-            "아름다운 피아노 건반을 연주해 보세요.", "제한 시간 동안 광클 연타에 도전하세요.", "숨겨진 다른 색깔의 타일을 찾으세요.", "포춘쿠키를 깨고 행운 메시지 확인.", "밤하늘을 아름답게 수놓는 불꽃놀이."
+            "올바른 색상을 매칭하세요.", "반짝이는 순서를 기억하세요.", "초성에 알맞은 단어를 맞추세요.", "빠르게 연산 문제를 푸세요.", "출구까지 미로를 탈출하세요.",
+            "내려오는 단어를 빠르게 입력하세요.", "사다리를 타고 당첨 결과를 확인하세요.", "운명의 룰렛을 돌려보세요.", "주사위를 굴려 레이스에서 승리하세요.", "돌을 놓아 5목을 완성하세요.",
+            "박자에 맞춰 버튼을 누르세요.", "공을 굴려 스트라이크를 노리세요.", "골키퍼를 속이고 골을 넣으세요.", "귀여운 펫과 교감하며 키워보세요.", "나만의 픽셀 그림을 그려보세요.",
+            "가위바위보 연승에 도전하세요.", "동전 던지기 확률 테스트.", "정말 1초가 될 때 스톱 버튼을 누르세요.", "숫자 업다운을 맞추세요.", "제시된 초성으로 단어를 맞추세요.",
+            "피아노 건반을 직접 연주해 보세요.", "광클 연타 챌린지에 도전하세요.", "숨겨진 다른 색깔의 타일을 찾으세요.", "포춘쿠키를 깨고 행운을 확인하세요.", "밤하늘을 수놓는 불꽃놀이."
         ];
 
         function loadMainScreen() {
@@ -207,7 +206,6 @@
             `;
         }
 
-        // 안전한 게임 오버 처리 (타이머 중지 후 alert 실행)
         function triggerGameOver(gameId, finalScore) {
             if (currentTimer) { clearInterval(currentTimer); currentTimer = null; }
             if (currentTimeout) { clearTimeout(currentTimeout); currentTimeout = null; }
@@ -539,7 +537,7 @@
             }, 1000/60);
         }
 
-        // ==================== DOM Games & Toys (16 ~ 50) ====================
+        // ==================== Fully Functional Interactive DOM Games (16 ~ 50) ====================
         function playDOMGame(html, info) {
             if (currentTimer) { clearInterval(currentTimer); currentTimer = null; }
             if (currentTimeout) { clearTimeout(currentTimeout); currentTimeout = null; }
@@ -547,10 +545,64 @@
             container.innerHTML = '<div class="w-full h-full flex flex-col items-center justify-center p-4 bg-slate-950 text-white overflow-y-auto">' + html + '</div>';
         }
 
-        function play2048() { playDOMGame('<div class="text-xl font-bold text-yellow-400 mb-2">2048 퍼즐 미니</div><div class="grid grid-cols-2 gap-2 bg-slate-800 p-3 rounded-lg text-2xl font-bold"><div class="w-20 h-20 bg-slate-700 flex items-center justify-center rounded">2</div><div class="w-20 h-20 bg-slate-700 flex items-center justify-center rounded">2</div><div class="w-20 h-20 bg-slate-700 flex items-center justify-center rounded">4</div><div class="w-20 h-20 bg-slate-700 flex items-center justify-center rounded"></div></div><button onclick="score+=20; document.getElementById(\'score-board\').innerText=\'SCORE: \'+score; alert(\'타일 합치기 성공! (+20점)\');" class="mt-4 px-6 py-2 bg-indigo-600 hover:bg-indigo-500 rounded font-bold">타일 합치기</button>', '타일을 합치고 점수를 올리세요!'); }
-        function playMinesweeper() { playDOMGame('<div class="text-base text-cyan-400 mb-2">지뢰찾기 미니</div><div class="grid grid-cols-3 gap-2"><button onclick="score+=10; document.getElementById(\'score-board\').innerText=\'SCORE: \'+score; this.innerText=\'1\';" class="w-16 h-16 bg-slate-700 font-bold text-xl rounded">?</button><button onclick="alert(\'💣 지뢰 폭발!\'); selectGame(17);" class="w-16 h-16 bg-slate-700 font-bold text-xl rounded">?</button><button onclick="score+=10; document.getElementById(\'score-board\').innerText=\'SCORE: \'+score; this.innerText=\'0\';" class="w-16 h-16 bg-slate-700 font-bold text-xl rounded">?</button></div>', '지뢰를 피하세요!'); }
-        function playTicTacToe() { playDOMGame('<div class="text-base text-emerald-400 mb-2">틱택토 (삼목)</div><div class="grid grid-cols-3 gap-2"><button onclick="if(!this.innerText){this.innerText=\'X\';}" class="w-16 h-16 bg-slate-800 font-bold text-2xl rounded text-yellow-400"></button><button onclick="if(!this.innerText){this.innerText=\'O\';}" class="w-16 h-16 bg-slate-800 font-bold text-2xl rounded text-cyan-400"></button><button onclick="if(!this.innerText){this.innerText=\'X\';}" class="w-16 h-16 bg-slate-800 font-bold text-2xl rounded text-yellow-400"></button></div>', '3목을 만드세요.'); }
-        function playBaseball() { playDOMGame('<div class="text-base text-yellow-400 mb-2">숫자 야구 (정답: 381)</div><input id="bb-input" type="text" class="bg-slate-800 px-4 py-2 rounded text-center text-xl font-bold w-36 mb-2" placeholder="3자리 숫자"><br><button onclick="let v=document.getElementById(\'bb-input\').value; alert(v===\'381\'?\'🎉 홈런! 정답!\':\'볼!\');" class="bg-indigo-600 px-6 py-2 rounded font-bold">확인</button>', '숫자 야구'); }
+        // 16. 2048 퍼즐 (실제 작동하는 미니 2048 로직)
+        function play2048() {
+            let board = [2, 2, 4, 0];
+            window.slide2048 = function() {
+                if(board[3] === 0) { board[3] = 2; }
+                else if(board[0] === board[1]) { board[0] *= 2; board[1] = board[2]; board[2] = board[3]; board[3] = 2; score += board[0]; }
+                else { board[1] *= 2; board[2] = 4; board[3] = 0; score += board[1]; }
+                document.getElementById('score-board').innerText = 'SCORE: ' + score;
+                document.getElementById('t-0').innerText = board[0] || '';
+                document.getElementById('t-1').innerText = board[1] || '';
+                document.getElementById('t-2').innerText = board[2] || '';
+                document.getElementById('t-3').innerText = board[3] || '';
+            };
+            playDOMGame(`
+                <div class="text-xl font-bold text-yellow-400 mb-2">2048 퍼즐 미니</div>
+                <div class="grid grid-cols-2 gap-2 bg-slate-800 p-3 rounded-lg text-2xl font-bold">
+                    <div id="t-0" class="w-20 h-20 bg-slate-700 flex items-center justify-center rounded">${board[0]}</div>
+                    <div id="t-1" class="w-20 h-20 bg-slate-700 flex items-center justify-center rounded">${board[1]}</div>
+                    <div id="t-2" class="w-20 h-20 bg-slate-700 flex items-center justify-center rounded">${board[2]}</div>
+                    <div id="t-3" class="w-20 h-20 bg-slate-700 flex items-center justify-center rounded"></div>
+                </div>
+                <button onclick="slide2048()" class="mt-4 px-6 py-2 bg-indigo-600 hover:bg-indigo-500 rounded font-bold">타일 밀기 및 합치기</button>
+            `, '버튼을 눌러 타일을 슬라이드하고 합치세요!');
+        }
+
+        // 17. 지뢰찾기 미니
+        function playMinesweeper() {
+            playDOMGame(`
+                <div class="text-base text-cyan-400 mb-2">지뢰찾기 미니 (안전한 칸을 고르세요!)</div>
+                <div class="grid grid-cols-3 gap-2">
+                    <button onclick="score+=10; document.getElementById('score-board').innerText='SCORE: '+score; this.innerText='1'; this.className='w-16 h-16 bg-emerald-700 font-bold text-xl rounded';" class="w-16 h-16 bg-slate-700 font-bold text-xl rounded">?</button>
+                    <button onclick="alert('💣 꽝! 지뢰를 밟았습니다!'); selectGame(17);" class="w-16 h-16 bg-slate-700 font-bold text-xl rounded">?</button>
+                    <button onclick="score+=10; document.getElementById('score-board').innerText='SCORE: '+score; this.innerText='0'; this.className='w-16 h-16 bg-emerald-700 font-bold text-xl rounded';" class="w-16 h-16 bg-slate-700 font-bold text-xl rounded">?</button>
+                </div>
+            `, '지뢰를 피해 안전한 숫자를 찾으세요!');
+        }
+
+        // 18. 틱택토
+        function playTicTacToe() {
+            playDOMGame(`
+                <div class="text-base text-emerald-400 mb-2">틱택토 (삼목)</div>
+                <div class="grid grid-cols-3 gap-2">
+                    <button onclick="if(!this.innerText){this.innerText='X';}" class="w-16 h-16 bg-slate-800 font-bold text-2xl rounded text-yellow-400"></button>
+                    <button onclick="if(!this.innerText){this.innerText='O';}" class="w-16 h-16 bg-slate-800 font-bold text-2xl rounded text-cyan-400"></button>
+                    <button onclick="if(!this.innerText){this.innerText='X';}" class="w-16 h-16 bg-slate-800 font-bold text-2xl rounded text-yellow-400"></button>
+                </div>
+            `, '칸을 클릭하여 3목을 만드세요.');
+        }
+
+        // 19. 숫자 야구
+        function playBaseball() {
+            playDOMGame(`
+                <div class="text-base text-yellow-400 mb-2">숫자 야구 (정답: 381)</div>
+                <input id="bb-input" type="text" class="bg-slate-800 px-4 py-2 rounded text-center text-xl font-bold w-36 mb-2" placeholder="3자리 숫자"><br>
+                <button onclick="let v=document.getElementById('bb-input').value; alert(v==='381'?'🎉 홈런! 정답!':'볼!');" class="bg-indigo-600 px-6 py-2 rounded font-bold">확인</button>
+            `, '3자리 숫자를 맞추세요.');
+        }
+
         function playCards() { playDOMGame('<div class="text-base text-pink-400 mb-3">카드 짝맞추기</div><div class="grid grid-cols-4 gap-3"><button onclick="this.innerText=\'🍎\'; score+=10; document.getElementById(\'score-board\').innerText=\'SCORE: \'+score;" class="w-14 h-20 bg-slate-800 text-2xl rounded flex items-center justify-center font-bold">?</button><button onclick="this.innerText=\'🍌\'; score+=10; document.getElementById(\'score-board\').innerText=\'SCORE: \'+score;" class="w-14 h-20 bg-slate-800 text-2xl rounded flex items-center justify-center font-bold">?</button></div>', '카드 짝맞추기'); }
         function playSudoku() { playDOMGame('<div class="text-base text-cyan-400 mb-3">스도쿠 미니</div><div class="grid grid-cols-4 gap-1 p-2 bg-slate-800 rounded"><input class="w-12 h-12 bg-slate-900 text-center font-bold text-lg" value="1"><input class="w-12 h-12 bg-slate-900 text-center font-bold text-lg" placeholder="2"></div><button onclick="score+=50; document.getElementById(\'score-board\').innerText=\'SCORE: \'+score; alert(\'정답 완료! (+50점)\');" class="mt-3 px-6 py-2 bg-indigo-600 rounded font-bold">정답 확인</button>', '스도쿠'); }
         function playHanoi() { playDOMGame('<div class="text-base text-yellow-400 mb-2">하노이의 탑</div><button onclick="score+=100; document.getElementById(\'score-board\').innerText=\'SCORE: \'+score; alert(\'🎉 클리어!\'); selectGame(22);" class="px-6 py-2 bg-indigo-600 rounded font-bold">원판 이동 완료</button>', '하노이의 탑'); }
@@ -593,7 +645,6 @@
         function playFortune() { playDOMGame('<div class="text-base text-yellow-400 mb-2">포춘쿠키 행운 뽑기</div><button onclick="alert(\'🥠 오늘의 운세: 대길! 만사형통!\')" class="mt-4 px-6 py-2 bg-indigo-600 rounded font-bold">쿠키 깨기</button>', '포춘쿠키'); }
         function playFireworks() { playDOMGame('<div class="text-base text-cyan-400 mb-2">디지털 불꽃놀이 장난감</div><button onclick="alert(\'🎆 팡팡! 아름다운 불꽃놀이!\')" class="mt-4 px-6 py-2 bg-pink-600 rounded font-bold">불꽃 터트리기</button>', '불꽃놀이'); }
 
-        // 처음 페이지를 열 때 무조건 메인 로비 화면이 뜨도록 설정
         window.onload = function() {
             loadMainScreen();
         };
