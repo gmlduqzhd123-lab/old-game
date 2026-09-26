@@ -802,7 +802,7 @@
         // --- 벽돌깨기: 생명 3, 내구도 벽돌, 아이템(넓은 패들/멀티볼/생명), 스테이지 ---
         E.brick = { canvas: true, ctl: 'both', run(g){
             const { ctx, w, h, cv } = makeCanvas(); const COLS = 8, BW = 54, BH = 18, GAP = 4, OX = (w - (COLS * BW + (COLS - 1) * GAP)) / 2, PY = h - 30;
-            let level = 1, lives = 3, pw = 90, px = w / 2 - 45, wideT = 0, balls = [], bricks = [], drops = [], parts = [], msgT = 90;
+            let level = 1, lives = 3, pw = 90, px = w / 2 - 45, wide = false, balls = [], bricks = [], drops = [], parts = [], msgT = 90, fx = [];
             const COLORS = ['#38bdf8', '#a78bfa', '#f472b6', '#9ca3af'];
             const speed = () => Math.min(4.8 + level * 0.5, 9);
             const build = () => {
@@ -837,7 +837,6 @@
             loop(() => {
                 if(msgT > 0) msgT--;
                 if(keys.left) px -= 8; if(keys.right) px += 8;
-                if(wideT > 0 && --wideT === 0) pw = 90;
                 px = clamp(px, 0, w - pw);
                 if(tap('action') || tap('up')) launch();
                 for(const b of balls){
@@ -853,20 +852,22 @@
                 if(!balls.length){
                     lives--; sfx.bad();
                     if(lives <= 0) return gameOver(`스테이지 ${level} · 점수 ${score}`);
-                    pw = 90; wideT = 0; newBall(); msgT = 60;
+                    pw = 90; wide = false; newBall(); msgT = 60; fx.push({ x: w / 2, y: h / 2 + 70, s: '공을 놓쳤어요! (넓은 패들 해제)', t: 70, c: '#e11d48' });
                 }
                 drops.forEach(d => d.y += 3);
                 drops = drops.filter(d => {
                     if(d.y > PY - 10 && d.y < PY + 14 && d.x > px && d.x < px + pw){
                         sfx.coin(); addScore(30);
-                        if(d.type === 'W'){ pw = 140; wideT = 600; }
-                        if(d.type === 'L') lives = Math.min(5, lives + 1);
+                        if(d.type === 'W'){ if(!wide) px -= 25; wide = true; pw = 140; fx.push({ x: d.x, y: PY - 20, s: '↔ 넓은 패들! (공을 놓칠 때까지)', t: 70, c: '#16a34a' }); }
+                        if(d.type === 'L'){ lives = Math.min(5, lives + 1); fx.push({ x: d.x, y: PY - 20, s: '❤️ 생명 +1', t: 60, c: '#e11d48' }); }
+                        if(d.type === 'M') fx.push({ x: d.x, y: PY - 20, s: '✦ 공 분열!', t: 60, c: '#d97706' });
                         if(d.type === 'M'){ const extra = []; balls.filter(b => !b.stuck).slice(0, 3).forEach(b => { [-0.5, 0.5].forEach(o => { const sp = speed(), a = Math.atan2(b.vx, -b.vy) + o; extra.push({ x: b.x, y: b.y, vx: Math.sin(a) * sp, vy: -Math.cos(a) * sp }); }); }); balls.push(...extra); }
                         return false;
                     }
                     return d.y < h;
                 });
                 parts.forEach(p => { p.x += p.vx; p.y += p.vy; p.t--; }); parts = parts.filter(p => p.t > 0);
+                fx.forEach(f => { f.y -= .5; f.t--; }); fx = fx.filter(f => f.t > 0);
                 if(!bricks.length){
                     addScore(200 * level);
                     if(!g.cfg.inf && level >= 3) return win(`3개 스테이지 클리어! 점수 ${score}`);
@@ -877,9 +878,10 @@
                 bricks.forEach(br => { ctx.fillStyle = COLORS[br.hp - 1]; rrect(ctx, br.x, br.y, BW, BH, 4); ctx.fill(); if(br.max > 1){ ctx.fillStyle = 'rgba(255,255,255,.25)'; ctx.fillRect(br.x + 3, br.y + 3, BW - 6, 3); } });
                 parts.forEach(p => { ctx.globalAlpha = p.t / 30; ctx.fillStyle = p.c; ctx.fillRect(p.x, p.y, 4, 4); }); ctx.globalAlpha = 1;
                 drops.forEach(d => { ctx.fillStyle = { W: '#22c55e', M: '#f59e0b', L: '#ef4444' }[d.type]; ctx.beginPath(); ctx.arc(d.x, d.y, 11, 0, 7); ctx.fill(); txt(ctx, { W: '↔', M: '✦', L: '♥' }[d.type], d.x, d.y + 1, '#fff', 15, 'center', 'middle'); });
-                ctx.fillStyle = wideT > 0 ? '#4ade80' : '#22c55e'; rrect(ctx, px, PY, pw, 12, 6); ctx.fill();
+                ctx.fillStyle = wide ? '#4ade80' : '#22c55e'; rrect(ctx, px, PY, pw, 12, 6); ctx.fill();
+                fx.forEach(f => { ctx.globalAlpha = Math.min(1, f.t / 25); txt(ctx, f.s, clamp(f.x, 120, w - 120), f.y, f.c, 16, 'center'); }); ctx.globalAlpha = 1;
                 ctx.fillStyle = '#6a5ae0'; balls.forEach(b => { ctx.beginPath(); ctx.arc(b.x, b.y, 7, 0, 7); ctx.fill(); });
-                txt(ctx, `STAGE ${level}${g.cfg.inf ? '' : '/3'}`, 10, 12, '#7c7597', 16); txt(ctx, hearts(lives), w - 10, 10, '#fff', 16, 'right');
+                txt(ctx, `STAGE ${level}${g.cfg.inf ? '' : '/3'}${wide ? '  ↔ 넓은 패들' : ''}${balls.length > 1 ? `  ✦ 공 ${balls.length}개` : ''}`, 10, 12, '#7c7597', 16); txt(ctx, hearts(lives), w - 10, 10, '#fff', 16, 'right');
                 if(msgT > 0 && balls[0] && balls[0].stuck) banner(ctx, w, h, `STAGE ${level}`, 'ACTION(스페이스) 또는 화면 터치로 발사!');
             });
         }};
@@ -888,7 +890,7 @@
         E.dodge = { canvas: true, ctl: 'dpad', run(g){
             const { ctx, w, h, cv } = makeCanvas(); const hard = !!g.cfg.hard;
             let px = w / 2, py = h - 50, lives = 3, inv = 0, rocks = [], items = [], t = 0, stars = Array.from({length: 50}, () => ({ x: Math.random() * w, y: Math.random() * h, s: Math.random() * 2 + .5 }));
-            let drag = null;
+            let drag = null, shieldT = 0;
             listen(cv, 'pointerdown', e => { drag = canvasPos(cv, e); });
             listen(cv, 'pointermove', e => { if(drag){ const p = canvasPos(cv, e); px += p.x - drag.x; py += p.y - drag.y; drag = p; } });
             listen(window, 'pointerup', () => drag = null);
@@ -903,17 +905,17 @@
                 rocks.forEach(r => { r.y += r.vy; r.x += r.vx; r.rot += .05; });
                 rocks = rocks.filter(r => { if(r.y > h + 40){ addScore(2); return false; } return true; });
                 items.forEach(i => i.y += 2.5);
-                items = items.filter(i => { if(Math.hypot(i.x - px, i.y - py) < 30){ sfx.coin(); if(i.type === '⭐') addScore(50); else inv = 300; return false; } return i.y < h + 20; });
+                items = items.filter(i => { if(Math.hypot(i.x - px, i.y - py) < 30){ sfx.coin(); if(i.type === '⭐') addScore(50); else { inv = 300; shieldT = 300; } return false; } return i.y < h + 20; });
                 stars.forEach(s => { s.y += s.s * 2; if(s.y > h) { s.y = 0; s.x = Math.random() * w; } });
-                if(inv > 0) inv--;
-                else for(const r of rocks){ if(Math.hypot(r.x - px, r.y - py) < r.r * .8 + 12){ lives--; inv = 100; sfx.boom(); rocks.splice(rocks.indexOf(r), 1); if(lives <= 0) return gameOver(`${Math.floor(t / 60)}초 생존 · 점수 ${score}`); break; } }
+                if(inv > 0) inv--; if(shieldT > 0) shieldT--;
+                else if(inv === 0) for(const r of rocks){ if(Math.hypot(r.x - px, r.y - py) < r.r * .8 + 12){ lives--; inv = 100; sfx.boom(); rocks.splice(rocks.indexOf(r), 1); if(lives <= 0) return gameOver(`${Math.floor(t / 60)}초 생존 · 점수 ${score}`); break; } }
             }, () => {
                 ctx.fillStyle = '#020617'; ctx.fillRect(0, 0, w, h);
                 ctx.fillStyle = '#cbd5e1'; stars.forEach(s => ctx.fillRect(s.x, s.y, s.s, s.s));
                 rocks.forEach(r => emo(ctx, hard ? '☄️' : '🪨', r.x, r.y, r.r * 2, r.rot));
                 items.forEach(i => emo(ctx, i.type, i.x, i.y, 28));
-                if(inv % 10 < 6){ emo(ctx, '🚀', px, py, 34, -Math.PI / 4); if(inv > 100){ ctx.strokeStyle = '#38bdf8'; ctx.lineWidth = 3; ctx.beginPath(); ctx.arc(px, py, 26, 0, 7); ctx.stroke(); } }
-                txt(ctx, hearts(lives), 10, 10, '#fff', 18); txt(ctx, `${Math.floor(t / 60)}초`, w - 10, 10, '#94a3b8', 18, 'right');
+                if(inv % 10 < 6 || shieldT > 0){ emo(ctx, '🚀', px, py, 34, -Math.PI / 4); if(shieldT > 0 && (shieldT > 90 || shieldT % 16 < 10)){ ctx.strokeStyle = '#38bdf8'; ctx.lineWidth = 3; ctx.beginPath(); ctx.arc(px, py, 26, 0, 7); ctx.stroke(); } }
+                txt(ctx, hearts(lives) + (shieldT > 0 ? `  🛡️ ${Math.ceil(shieldT / 60)}초` : ''), 10, 10, '#7dd3fc', 18); txt(ctx, `${Math.floor(t / 60)}초`, w - 10, 10, '#94a3b8', 18, 'right');
                 if(t < 120) banner(ctx, w, h, '피해라!', '방향키 또는 드래그로 이동 · ⭐ +50 · 🛡️ 보호막');
             });
         }};
@@ -958,7 +960,10 @@
             const { ctx, w, h, cv } = makeCanvas(); const hard = !!g.cfg.hard, ice = !!g.cfg.ice;
             const SK = ice ? { me: '🧒', foes: ['☃️', '⛄'], boss: '🏔️', shot: '#f8fafc', foeShot: '❄️', bg: ['#0c4a6e', '#e0f2fe'] }
                            : { me: '🚀', foes: hard ? ['👾', '👹', '🛸'] : ['👾', '👽', '🛸'], boss: '🐙', shot: '#fbbf24', foeShot: '🔴', bg: ['#020617', '#1e1b4b'] };
-            let px = w / 2, lives = 3, inv = 0, cd = 0, bullets = [], foes = [], fbul = [], items = [], parts = [], wave = 0, waveT = 0, power = g.cfg.spread ? 9999999 : 0, t = 0, touching = false;
+            let px = w / 2, lives = 3, inv = 0, cd = 0, bullets = [], foes = [], fbul = [], items = [], parts = [], wave = 0, waveT = 0, power = g.cfg.spread ? 1 : 0, t = 0, touching = false, fx = [];
+            const minPow = g.cfg.spread ? 1 : 0;
+            // 피격: 생명 -1, 파워 1단계 감소 (시간이 지나서 사라지지 않음)
+            const hurt = () => { lives--; inv = 90; sfx.boom(); boom(px, h - 45, '#f87171', 16); if(power > minPow){ power--; fx.push({ x: px, y: h - 90, s: '⚡ 파워 감소', t: 50, c: '#f87171' }); } };
             const stars = Array.from({length: 40}, () => ({ x: Math.random() * w, y: Math.random() * h, s: Math.random() * 2 + .5 }));
             listen(cv, 'pointerdown', e => { touching = true; px = canvasPos(cv, e).x; });
             listen(cv, 'pointermove', e => { if(e.pointerType === 'mouse' && !e.buttons) { px = canvasPos(cv, e).x; return; } if(touching) px = canvasPos(cv, e).x; });
@@ -975,11 +980,12 @@
             const boom = (x, y, c, n = 10) => { for(let i = 0; i < n; i++) parts.push({ x, y, vx: Math.random() * 6 - 3, vy: Math.random() * 6 - 3, t: 28, c }); };
             nextWave();
             loop(() => {
-                t++; if(cd > 0) cd--; if(inv > 0) inv--; if(power > 0) power--;
+                t++; if(cd > 0) cd--; if(inv > 0) inv--;
                 if(keys.left) px -= 6.5; if(keys.right) px += 6.5; px = clamp(px, 20, w - 20);
                 if((keys.action || keys.up || touching) && cd === 0){
                     const y = h - 55; bullets.push({ x: px, y, vx: 0 });
-                    if(power > 0){ bullets.push({ x: px - 8, y, vx: -2 }); bullets.push({ x: px + 8, y, vx: 2 }); }
+                    if(power >= 1){ bullets.push({ x: px - 8, y, vx: -2 }); bullets.push({ x: px + 8, y, vx: 2 }); }
+                    if(power >= 2){ bullets.push({ x: px - 14, y: y + 6, vx: -4 }); bullets.push({ x: px + 14, y: y + 6, vx: 4 }); }
                     cd = hard ? 9 : 11; sfx.tick();
                 }
                 bullets.forEach(b => { b.y -= 10; b.x += b.vx; }); bullets = bullets.filter(b => b.y > -10 && b.x > -10 && b.x < w + 10);
@@ -1000,14 +1006,15 @@
                             break;
                         }
                     }
-                    if(!f.dead && !f.boss && f.y > h - 20){ f.dead = true; if(!inv){ lives--; inv = 90; sfx.bad(); } }
-                    if(!f.dead && inv === 0 && Math.abs(f.x - px) < f.r + 12 && Math.abs(f.y - (h - 45)) < f.r + 12){ f.dead = !f.boss; lives--; inv = 90; sfx.boom(); boom(px, h - 45, '#f87171', 16); }
+                    if(!f.dead && !f.boss && f.y > h - 20){ f.dead = true; if(!inv){ lives--; inv = 90; sfx.bad(); fx.push({ x: f.x, y: h - 70, s: '방어선 돌파! -❤️', t: 50, c: '#f87171' }); } }
+                    if(!f.dead && inv === 0 && Math.abs(f.x - px) < f.r + 12 && Math.abs(f.y - (h - 45)) < f.r + 12){ f.dead = !f.boss; hurt(); }
                 }
                 foes = foes.filter(f => !f.dead);
                 fbul.forEach(b => { b.x += b.vx; b.y += b.vy; });
-                fbul = fbul.filter(b => { if(inv === 0 && Math.abs(b.x - px) < 16 && Math.abs(b.y - (h - 45)) < 18){ lives--; inv = 90; sfx.boom(); boom(px, h - 45, '#f87171', 16); return false; } return b.y < h + 10 && b.x > -10 && b.x < w + 10; });
+                fbul = fbul.filter(b => { if(inv === 0 && Math.abs(b.x - px) < 16 && Math.abs(b.y - (h - 45)) < 18){ hurt(); return false; } return b.y < h + 10 && b.x > -10 && b.x < w + 10; });
                 items.forEach(i => i.y += 2.2);
-                items = items.filter(i => { if(Math.abs(i.x - px) < 26 && Math.abs(i.y - (h - 45)) < 26){ sfx.coin(); if(i.type === '⚡') power = Math.max(power, 600); else lives = Math.min(5, lives + 1); return false; } return i.y < h + 10; });
+                items = items.filter(i => { if(Math.abs(i.x - px) < 26 && Math.abs(i.y - (h - 45)) < 26){ sfx.coin(); if(i.type === '⚡'){ if(power < 2){ power++; fx.push({ x: px, y: h - 90, s: `⚡ ${power === 1 ? '3' : '5'}방향 발사!`, t: 60, c: '#fbbf24' }); } else { addScore(100); fx.push({ x: px, y: h - 90, s: '⚡ 최대 파워! +100', t: 60, c: '#fbbf24' }); } } else { lives = Math.min(5, lives + 1); fx.push({ x: px, y: h - 90, s: '❤️ 생명 +1', t: 60, c: '#f87171' }); } return false; } return i.y < h + 10; });
+                fx.forEach(f => { f.y -= .6; f.t--; }); fx = fx.filter(f => f.t > 0);
                 parts.forEach(p => { p.x += p.vx; p.y += p.vy; p.t--; }); parts = parts.filter(p => p.t > 0);
                 if(lives <= 0) return gameOver(`웨이브 ${wave} · 점수 ${score}`);
                 if(!foes.length){ addScore(wave * 20); nextWave(); }
@@ -1020,7 +1027,8 @@
                 items.forEach(i => emo(ctx, i.type, i.x, i.y, 26));
                 parts.forEach(p => { ctx.globalAlpha = p.t / 28; ctx.fillStyle = p.c; ctx.fillRect(p.x, p.y, 4, 4); }); ctx.globalAlpha = 1;
                 if(inv % 10 < 6) emo(ctx, SK.me, px, h - 45, 38, ice ? 0 : -Math.PI / 4);
-                txt(ctx, hearts(lives), 10, 10, '#fff', 16); txt(ctx, `WAVE ${wave}${power > 0 && !g.cfg.spread ? ' ⚡' : ''}`, w - 10, 10, '#e2e8f0', 16, 'right');
+                txt(ctx, hearts(lives), 10, 10, '#fff', 16); txt(ctx, `WAVE ${wave}${power > 0 ? `  ⚡${power === 1 ? '3' : '5'}방향` : ''}`, w - 10, 10, '#e2e8f0', 16, 'right');
+                fx.forEach(f => { ctx.globalAlpha = Math.min(1, f.t / 20); txt(ctx, f.s, clamp(f.x, 90, w - 90), f.y, f.c, 17, 'center'); }); ctx.globalAlpha = 1;
                 if(waveT > 0) banner(ctx, w, h, wave % 5 === 0 ? `⚠️ BOSS WAVE ${wave}` : `WAVE ${wave}`, t < 100 ? '←→ 이동 · 스페이스(누르고 있기) 발사 · 화면 드래그도 가능' : '');
             });
         }};
@@ -1046,7 +1054,7 @@
                     const bird = dist > 1500 && Math.random() < .3;
                     if(bird) obs.push({ x: w + 20, type: 'bird', y: pick([GY - 2, GY - 30, GY - 30]), wd: 40, ht: 30 });
                     else { const n = Math.random() < .3 ? 2 : 1; obs.push({ x: w + 20, type: 'cactus', y: GY + 4, wd: 28 * n, ht: 44, n }); }
-                    nextObs = rnd(55, 110) * 6 / spd * (1.2 - Math.min(.3, dist / 40000));
+                    nextObs = Math.max(44, rnd(50, 100) * (1 - Math.min(.2, dist / 60000)));   // 프레임 단위: 빨라져도 넘을 수 있는 간격 유지
                 }
                 obs.forEach(o => o.x -= spd * (o.type === 'bird' ? 1.1 : 1));
                 obs = obs.filter(o => { if(o.x < -60){ addScore(10); return false; } return true; });
@@ -1076,7 +1084,7 @@
             let y = h / 2, vy = 0, pipes = [], started = false, passed = 0, gx = 0, t = 0;
             const flap = () => { if(!G || G.over) return; started = true; vy = -7.2; sfx.jump(); };
             listen(cv, 'pointerdown', flap);
-            G.onPress = k => { if(k === 'action' || k === 'up') flap(); };
+            G.onPress = (k, e) => { if(e && e.repeat) return; if(k === 'action' || k === 'up') flap(); };
             const addPipe = x => { const gap = Math.max(120, 165 - passed * 2); pipes.push({ x, top: rnd(50, h - 90 - gap), gap, done: false }); };
             addPipe(w + 40); addPipe(w + 40 + 230);
             loop(() => {
@@ -1217,15 +1225,15 @@
                 if(!pac.moving){ pacChoose(pac); if(!wall(pac.x + DV[pac.dir][0], pac.y + DV[pac.dir][1])) pac.moving = true; }
                 if(pac.moving) step(pac, .13, pacChoose);
                 if(frightT > 0 && --frightT === 0) ghosts.forEach(gh => gh.fright = false);
-                ghosts.forEach(gh => {
-                    if(gh.wait > 0){ gh.wait--; if(!gh.wait){ gh.x = 9; gh.y = 7; gh.p = 0; gh.dir = pick(['left', 'right']); } return; }
+                for(const gh of ghosts){
+                    if(gh.wait > 0){ gh.wait--; if(!gh.wait){ gh.x = 9; gh.y = 7; gh.p = 0; gh.dir = pick(['left', 'right']); } continue; }
                     step(gh, gh.fright ? .06 : Math.min(.125, .095 + level * .01), ghostChoose);
                     const a = pos(gh), b = pos(pac);
                     if(Math.hypot(a.x - b.x, a.y - b.y) < T * .7){
                         if(gh.fright){ eatChain++; const pts = 200 * Math.pow(2, eatChain - 1); addScore(pts); sfx.good(); gh.fright = false; gh.wait = 150; }
-                        else { lives--; sfx.bad(); if(lives <= 0) return gameOver(`레벨 ${level} · 점수 ${score}`); resetActors(); msg = '앗! 다시 준비...'; }
+                        else { lives--; sfx.bad(); if(lives <= 0) return gameOver(`레벨 ${level} · 점수 ${score}`); resetActors(); msg = '앗! 다시 준비...'; break; }
                     }
-                });
+                }
                 if(countDots() === 0){ addScore(500 * level); sfx.win(); level++; resetDots(); resetActors(); msg = `LEVEL ${level}!`; }
             }, () => {
                 ctx.fillStyle = '#000'; ctx.fillRect(0, 0, w, h);
@@ -1424,7 +1432,7 @@
                 items.forEach(i => emo(ctx, i.type, i.x, i.y, 28));
                 if(inv % 10 < 6){ ctx.fillStyle = `rgba(251,146,60,${.5 + Math.random() * .5})`; ctx.beginPath(); ctx.moveTo(px - 6, py + 16); ctx.lineTo(px + 6, py + 16); ctx.lineTo(px, py + 30 + Math.random() * 10); ctx.fill(); emo(ctx, '🚀', px, py, 36, -Math.PI / 4); }
                 if(shield > 0){ ctx.strokeStyle = `rgba(56,189,248,${shield < 90 && shield % 20 < 10 ? .3 : .9})`; ctx.lineWidth = 3; ctx.beginPath(); ctx.arc(px, py, 28, 0, 7); ctx.stroke(); }
-                txt(ctx, hearts(lives), 10, 10, '#fff', 16);
+                txt(ctx, hearts(lives) + (shield > 0 ? `  🛡️ ${Math.ceil(shield / 60)}초` : ''), 10, 10, '#7dd3fc', 16);
                 ctx.fillStyle = '#1e293b'; ctx.fillRect(w - 140, 12, 120, 12); ctx.fillStyle = fuel > 30 ? '#f59e0b' : '#ef4444'; ctx.fillRect(w - 140, 12, 120 * Math.max(0, fuel) / 100, 12); txt(ctx, '⛽', w - 150, 18, '#fff', 14, 'right', 'middle');
                 txt(ctx, `${Math.floor(dist / 6)}km`, w / 2, 10, '#94a3b8', 16, 'center');
                 if(t < 150) banner(ctx, w, h, '우주 탐험 출발!', '⛽ 연료 보충 · 💎 +100 · 🛡️ 보호막 · 드래그 이동 가능');
@@ -1557,7 +1565,8 @@
                 const lose = i => { mines.forEach((m, j) => { if(m) open[j] = true; }); render(); sfx.boom(); shakeEl(grid); after(() => gameOver(`지뢰를 밟았어요! (${sec}초)`), 700); };
                 const clickCell = (i, asFlag) => {
                     if(G.over) return;
-                    if(!started){ started = true; place(i); every(() => { sec++; setTxt('mn-time', `⏱️ ${sec}초`); }, 1000); }
+                    if(asFlag && !started){ if(!open[i]){ flag[i] = !flag[i]; sfx.tick(); } render(); return; }   // 시작 전 깃발은 지뢰 배치에 영향 없음
+                    if(!started){ started = true; flag[i] = false; place(i); every(() => { sec++; setTxt('mn-time', `⏱️ ${sec}초`); }, 1000); }
                     if(asFlag){ if(!open[i]){ flag[i] = !flag[i]; sfx.tick(); } render(); return; }
                     if(flag[i]) return;
                     if(open[i]){   // 코드 열기: 주변 깃발 수 = 숫자이면 나머지를 연다
@@ -2327,8 +2336,8 @@
                     const ci = current(); if(ci !== lastIdx){ lastIdx = ci; sfx.tick(); }
                     if(k < 1){ G.raf = requestAnimationFrame(step); return; }
                     const chosen = items[current()]; setTxt('rl-res', `🎉 ${chosen}`); $('rl-res').classList.remove('pop'); void $('rl-res').offsetWidth; $('rl-res').classList.add('pop'); sfx.win();
-                    if(exclude && items.length > 2){ after(() => { items = items.filter((_, i) => i !== current()); draw(); }, 1500); }
-                    spinning = false;
+                    if(exclude && items.length > 2){ const idx = current(); after(() => { items = items.filter((_, i) => i !== idx); draw(); spinning = false; }, 1200); }
+                    else spinning = false;
                 };
                 G.raf = requestAnimationFrame(step);
             });
@@ -2753,7 +2762,7 @@
             };
             const hitObj = (o, cx, cy) => {
                 if(G.over) return;
-                if(o.bomb){ remove(o); sfx.boom(); addScore(-50); floatText(area, '💥 -50', cx, cy, '#f87171'); shakeEl(area); return; }
+                if(o.bomb){ remove(o); sfx.boom(); setScore(Math.max(0, score - 50)); floatText(area, '💥 -50', cx, cy, '#f87171'); shakeEl(area); return; }
                 remove(o); hits++;
                 const pts = mode === 'fly' ? 30 : mode === 'jump' ? 25 : 15; addScore(pts); (mode === 'rise' ? sfx.pop : sfx.coin)();
                 floatText(area, mode === 'fly' ? '👏 찰싹!' : mode === 'rise' ? '💥 펑!' : mode === 'fall' ? '♻️ 수거!' : '🔕 꺼짐!', cx, cy, '#facc15');
