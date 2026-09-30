@@ -127,6 +127,13 @@
         .hidden { display: none !important; }
         @media (max-width: 400px) { #btn-full { display: none !important; } }
     </style>
+    <!-- 📱 앱처럼 설치 (홈 화면에 추가) -->
+    <link rel="manifest" href="manifest.webmanifest">
+    <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-title" content="게임센터100">
+    <style>.install-btn{display:none}html.can-install .install-btn{display:inline}.install-btn button{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:pointer;text-decoration:underline;text-underline-offset:3px}</style>
 </head>
 <body class="h-[100dvh] flex flex-col select-none prevent-select">
 
@@ -163,7 +170,7 @@
             <div id="home-extra"></div>
             <div id="game-menu" class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3 md:gap-4"></div>
             <p class="text-center text-sm text-[#a9a3c2] mt-8">최고 기록은 이 기기의 브라우저에 저장돼요 · 엽쌤스쿨 🍀</p>
-            <p class="text-center text-sm text-[#a9a3c2] mt-2" style="color:#a9a3c2;font-size:13px;text-align:center;margin-top:8px">© 2026 엽쌤 · 수업에는 자유롭게 사용하세요 🙌 · <a href="https://gmlduqzhd123-lab.github.io/YScode/" style="color:inherit;text-decoration:underline;text-underline-offset:3px">엽쌤의 다른 앱 보기 →</a></p>
+            <p class="text-center text-sm text-[#a9a3c2] mt-2" style="color:#a9a3c2;font-size:13px;text-align:center;margin-top:8px">© 2026 엽쌤 · 수업에는 자유롭게 사용하세요 🙌 · <a href="https://gmlduqzhd123-lab.github.io/YScode/" style="color:inherit;text-decoration:underline;text-underline-offset:3px">엽쌤의 다른 앱 보기 →</a><span class="install-btn"> · <button type="button">📲 앱 설치</button></span></p>
         </div>
     </main>
 
@@ -2936,6 +2943,30 @@
         gameDefs.forEach(g => { if(!E[g.e]) console.warn('엔진 없음:', g.e, g.t); });
         window.addEventListener('keydown', e => { if(e.key === 'Escape' && !$('settings').classList.contains('hidden')) $('settings').classList.add('hidden'); });
         window.onload = () => { loadMainScreen(); };
+    </script>
+    <!-- 📲 앱 설치 버튼 (설치할 수 있는 브라우저에서만 보임) -->
+    <script>
+    (function () {
+        var deferred = null, root = document.documentElement;
+        var ios = /iphone|ipad|ipod/i.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+        var installed = (window.matchMedia && matchMedia('(display-mode: standalone)').matches) || navigator.standalone === true;
+        window.addEventListener('beforeinstallprompt', function (e) { e.preventDefault(); deferred = e; root.classList.add('can-install'); });
+        window.addEventListener('appinstalled', function () { deferred = null; root.classList.remove('can-install'); });
+        if (ios && !installed) root.classList.add('can-install');
+        document.addEventListener('click', function (e) {
+            var btn = e.target.closest && e.target.closest('.install-btn button');
+            if (!btn) return;
+            if (deferred) {
+                deferred.prompt();
+                deferred.userChoice.then(function () { deferred = null; root.classList.remove('can-install'); });
+            } else if (ios) {
+                alert('Safari 아래쪽 공유 버튼(□↑)을 누른 뒤 "홈 화면에 추가"를 선택하세요.');
+            }
+        });
+        if ('serviceWorker' in navigator && location.protocol.indexOf('http') === 0) {
+            window.addEventListener('load', function () { navigator.serviceWorker.register('sw.js').catch(function () { /* 설치 기능만 빠지고 앱은 그대로 동작 */ }); });
+        }
+    })();
     </script>
 </body>
 </html>
