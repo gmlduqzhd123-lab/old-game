@@ -555,7 +555,7 @@
 
         // ==========================================
         // 1-0. 배경 음악: 직접 연주하는 경쾌한 8비트 곡 (음원 파일·저작권 걱정 없음)
-        //   소개·목록 화면에서만 흐르고, 게임을 시작하면 효과음이 잘 들리도록 잠시 멈춘다.
+        //   게임 중에는 효과음이 잘 들리도록 조금 작게 흐르고, 소리가 곧 게임인 리듬·기억력·피아노에서는 멈춘다.
         //   브라우저 정책상 소리는 첫 터치/클릭/키 입력 뒤에 시작된다.
         // ==========================================
         const bgm = (() => {
@@ -573,7 +573,7 @@
             const CHORD = { C: [48, [60, 64, 67]], G: [43, [59, 62, 67]], Am: [45, [57, 60, 64]], F: [41, [57, 60, 65]], Em: [40, [55, 59, 64]], G7: [43, [59, 62, 65]] };
             let on = store.get('bgm', true), vol = store.get('bgmVol', 50) / 100, scene = 'menu';
             let bus = null, noise = null, timer = null, nextT = 0, step = 0, playing = false;
-            const level = () => vol * 0.6;
+            const level = () => vol * 0.6 * (scene === 'play' ? 0.6 : 1);
             function setup(ac){
                 if(bus) return;
                 bus = ac.createGain(); bus.gain.value = 0.0001;
@@ -625,7 +625,7 @@
                 if(!playing) return; playing = false; clearTimeout(timer);
                 const t = actx.currentTime; bus.gain.cancelScheduledValues(t); bus.gain.setValueAtTime(bus.gain.value, t); bus.gain.linearRampToValueAtTime(0.0001, t + 0.35);
             }
-            const want = () => on && vol > 0 && scene === 'menu' && !document.hidden;
+            const want = () => on && vol > 0 && scene !== 'quiet' && !document.hidden;
             function sync(){
                 refresh();
                 if(!want()){ stop(); return; }
@@ -647,7 +647,13 @@
             // 첫 터치·클릭·키 입력에서 시작 (음악 버튼을 누른 경우는 버튼이 직접 처리)
             ['pointerdown', 'keydown', 'touchend'].forEach(ev => document.addEventListener(ev, e => { if(!(e.target.closest && e.target.closest('.bgm-btn'))) sync(); }, { capture: true, passive: true }));
             document.addEventListener('visibilitychange', sync);
-            return { sync, toggle, setVol, get on(){ return on; }, get vol(){ return vol; }, scene(s){ scene = s; sync(); } };
+            const QUIET = ['rhythm', 'simon', 'piano'];   // 소리를 듣고 하는 게임
+            function setScene(s, engine){
+                scene = s === 'play' && QUIET.includes(engine) ? 'quiet' : s;
+                if(playing){ const t = actx.currentTime; bus.gain.cancelScheduledValues(t); bus.gain.setValueAtTime(bus.gain.value, t); bus.gain.linearRampToValueAtTime(level(), t + 0.4); }
+                sync();
+            }
+            return { sync, toggle, setVol, get on(){ return on; }, get playing(){ return playing; }, get gain(){ return bus ? +bus.gain.value.toFixed(3) : 0; }, get vol(){ return vol; }, scene: setScene };
         })();
         document.addEventListener('click', e => { if(e.target.closest && e.target.closest('.bgm-btn')){ bgm.toggle(); if(bgm.on) sfx.tick(); } });
 
@@ -1114,7 +1120,7 @@
             const eng = E[game.e];
             const useDiff = !eng.noScore && !eng.noDiff;
             DF = useDiff ? (DIFFS[store.get('diff:' + id, 'normal')] || DIFFS.normal) : DIFFS.normal;
-            newRuntime(game); G.diff = useDiff; audio(); bgm.scene('play');
+            newRuntime(game); G.diff = useDiff; audio(); bgm.scene('play', game.e);
             $('diff-board').classList.toggle('hidden', !useDiff); $('diff-board').textContent = `${DF.icon} ${DF.name}`;
             store.set('recent', [id, ...store.get('recent', []).filter(x => x !== id)].slice(0, 8));
             setScore(0); showBest();
