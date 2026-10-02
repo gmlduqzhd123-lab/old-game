@@ -272,6 +272,43 @@
         .ix-foot { text-align: center; padding: 10px 20px max(30px, env(safe-area-inset-bottom)); font-size: 13px; color: #a9a3c2; }
         .ix-foot a { color: inherit; text-decoration: underline; text-underline-offset: 3px; }
 
+
+        /* 🎨 앱 아이콘 색감(보라→바이올렛→핑크→주황)에 맞춘 히어로 */
+        .ix-hero { border-radius: 0 0 44px 44px; box-shadow: 0 30px 60px -40px rgba(107,92,240,.7); }
+        .ix-aurora { background: radial-gradient(circle at 20% 12%, rgba(255,255,255,.32), transparent 42%), radial-gradient(circle at 88% 96%, rgba(255,196,90,.6), transparent 46%), linear-gradient(140deg, #6b5cf0 0%, #a855f7 42%, #ec5c9c 78%, #f7a23b 100%); }
+        .ix-blob.b1 { background: radial-gradient(circle, rgba(255,255,255,.22), rgba(255,255,255,0) 62%); }
+        .ix-blob.b2 { background: radial-gradient(circle, rgba(236,92,156,.45), rgba(236,92,156,0) 62%); }
+        .ix-blob.b3 { background: radial-gradient(circle, rgba(247,162,59,.45), rgba(247,162,59,0) 62%); }
+        .ix-blob.b4 { background: radial-gradient(circle, rgba(107,92,240,.40), rgba(107,92,240,0) 62%); }
+        .ix-grid { background-image: linear-gradient(rgba(255,255,255,.12) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.12) 1px, transparent 1px); }
+        .ix-hero .ix-glass { background: rgba(255,255,255,.18); border-color: rgba(255,255,255,.42); box-shadow: 0 12px 30px -14px rgba(50,20,120,.45), inset 0 1px 0 rgba(255,255,255,.5); }
+        .ix-token { background: linear-gradient(145deg, rgba(255,255,255,.42), rgba(255,255,255,.14)); border-color: rgba(255,255,255,.6); box-shadow: 0 18px 36px -14px rgba(50,20,120,.5), inset 0 1px 0 rgba(255,255,255,.7); }
+        .ix-hero .ix-pill, #intro-view .ix-hero .install-btn button.ix-pill, .ix-hero .ix-quick .ix-pill { color: #fff; }
+        .ix-hero .ix-quick .ix-pill b { color: #ffe07a; }
+        .ix-logo { background: none; box-shadow: 0 8px 20px -8px rgba(50,20,120,.55); overflow: hidden; }
+        .ix-logo img { width: 100%; height: 100%; display: block; }
+        .ix-brand .ix-org { font-size: 12px; color: rgba(255,255,255,.85); }
+        .ix-brand .ix-name { font-size: clamp(15px,4.3vw,19px); color: #fff; white-space: nowrap; font-weight: 800; }
+        .ix-brand .ix-name span { color: #ffe07a; }
+        .ix-chip { color: #fff; }
+        .ix-chip i { background: #ffe07a; box-shadow: 0 0 0 4px rgba(255,224,122,.3); }
+        .ix-pre { color: #fff; text-shadow: 0 2px 12px rgba(60,20,120,.3); }
+        .ix-title { background: linear-gradient(100deg, #fff 0%, #fff 38%, #ffe7a8 50%, #fff 62%, #fff 100%); background-size: 220% auto; -webkit-background-clip: text; background-clip: text; filter: drop-shadow(0 8px 22px rgba(60,20,120,.35)); }
+        .ix-lead { color: rgba(255,255,255,.94); text-shadow: 0 1px 10px rgba(60,20,120,.3); }
+        .ix-lead b { color: #ffe07a !important; }
+        .ix-hero .ix-cta { background: #fff; color: #6b3fd6; box-shadow: 0 18px 38px -12px rgba(50,20,120,.6), inset 0 -3px 0 rgba(107,92,240,.12); }
+        .ix-hero .ix-cta:hover { box-shadow: 0 24px 46px -12px rgba(50,20,120,.65); }
+        .ix-hero .ix-cta .arr, .ix-final .ix-cta .arr { background: linear-gradient(140deg, #6b5cf0, #a855f7 42%, #ec5c9c 78%, #f7a23b); color: #fff; }
+        .ix-hero .ix-cta::after { background: linear-gradient(100deg, transparent, rgba(168,85,247,.18), transparent); }
+        .ix-cta-wrap::before { border-color: rgba(255,255,255,.6); }
+        .ix-stat b { background: none; color: #fff; -webkit-text-fill-color: #fff; text-shadow: 0 2px 12px rgba(60,20,120,.3); }
+        .ix-stat span { color: rgba(255,255,255,.88); }
+        .ix-scroll { color: rgba(255,255,255,.85); }
+        .ix-eyebrow { color: #a855f7; }
+        .ix-h2 em { background: linear-gradient(120deg, #6b5cf0, #a855f7 40%, #ec5c9c 75%, #f7a23b); -webkit-background-clip: text; background-clip: text; }
+        .ix-final { background: radial-gradient(circle at 15% 20%, rgba(255,255,255,.25), transparent 40%), radial-gradient(circle at 90% 100%, rgba(255,196,90,.55), transparent 45%), linear-gradient(140deg, #6b5cf0 0%, #a855f7 42%, #ec5c9c 78%, #f7a23b 100%); }
+        .ix-final .ix-cta { color: #6b3fd6; }
+
         /* 스크롤하면 나타나기 */
         .ix-reveal { opacity: 0; transform: translateY(28px); transition: opacity .8s ease, transform .8s cubic-bezier(.2,.8,.2,1); transition-delay: var(--dl, 0s); }
         .ix-reveal.in { opacity: 1; transform: none; }
@@ -303,7 +340,7 @@
             <span class="ix-token desk" style="--s:52px;--z:24;--r:-4deg;--d:7.4s;--dl:-6s;bottom:24%;right:21%">🚀</span>
 
             <nav class="ix-nav ix-rise">
-                <div class="ix-brand"><div class="ix-logo">🕹️</div><div style="line-height:1.1"><div style="font-size:12px;color:#8b7cf6">엽쌤스쿨</div><div style="font-size:clamp(15px,4.3vw,19px);color:#2e2a42;white-space:nowrap">쉬는시간 오락실 <span style="color:#f472b6">100</span></div></div></div>
+                <div class="ix-brand"><div class="ix-logo"><img src="icons/icon-192.png?v=2" alt=""></div><div style="line-height:1.1"><div class="ix-org">엽쌤스쿨</div><div class="ix-name">쉬는시간 오락실 <span>100</span></div></div></div>
                 <div style="display:flex;gap:8px;align-items:center">
                     <span class="install-btn ix-wide"><button type="button" class="ix-pill ix-glass">📲 앱 설치</button></span>
                     <button type="button" class="ix-pill ix-glass" data-ix="home"><span class="ix-wide">게임 </span>목록 →</button>
@@ -368,7 +405,7 @@
     <header class="shrink-0 px-3 md:px-6 pt-2 pb-2 flex items-center gap-2 md:gap-3" style="padding-top:max(8px, env(safe-area-inset-top))">
         <!-- 홈 모드 -->
         <div id="hdr-home" class="flex items-center gap-2 min-w-0 flex-1 cursor-pointer" title="소개 화면으로">
-            <div class="w-11 h-11 md:w-12 md:h-12 rounded-2xl bg-white border-2 border-[#ece5fb] flex items-center justify-center text-2xl md:text-3xl shadow-[0_3px_0_#e6ddfb] shrink-0">🕹️</div>
+            <img src="icons/icon-192.png?v=2" alt="" class="w-11 h-11 md:w-12 md:h-12 rounded-2xl shadow-[0_3px_0_#e6ddfb] shrink-0">
             <div class="min-w-0 leading-tight">
                 <div class="text-xs md:text-sm text-[#8b7cf6]">엽쌤스쿨</div>
                 <h1 class="text-[#2e2a42] whitespace-nowrap" style="font-size:clamp(14px,4.3vw,24px)">쉬는시간 오락실 <span class="text-[#f472b6]">100</span></h1>
