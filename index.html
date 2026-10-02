@@ -133,6 +133,11 @@
         .timebar { transition: width .1s linear; }
         .hidden { display: none !important; }
         @media (max-width: 400px) { #btn-full { display: none !important; } }
+        @media (max-width: 359px) { #btn-bgm { display: none; } }   /* 아주 좁은 화면: 설정 창에서 켜고 끄기 */
+        .bgm-btn { position: relative; }
+        .bgm-btn.bgm-off { opacity: .6; }
+        .bgm-btn.bgm-off::after { content: ''; position: absolute; left: 50%; top: 50%; width: 26px; height: 2.5px; border-radius: 2px; background: #e11d48; transform: translate(-50%, -50%) rotate(-40deg); box-shadow: 0 0 0 1.5px #fff; }
+        .ix-pill.bgm-btn.bgm-off::after { left: 26px; }
     </style>
     <!-- 📱 앱처럼 설치 (홈 화면에 추가) -->
     <link rel="manifest" href="manifest.webmanifest">
@@ -343,6 +348,7 @@
                 <div class="ix-brand"><div class="ix-logo"><img src="icons/icon-192.png?v=2" alt=""></div><div style="line-height:1.1"><div class="ix-org">엽쌤스쿨</div><div class="ix-name">쉬는시간 오락실 <span>100</span></div></div></div>
                 <div style="display:flex;gap:8px;align-items:center">
                     <span class="install-btn ix-wide"><button type="button" class="ix-pill ix-glass">📲 앱 설치</button></span>
+                    <button type="button" class="ix-pill ix-glass bgm-btn" aria-label="배경 음악">🎵<span class="bgm-lb ix-wide">음악 끄기</span></button>
                     <button type="button" class="ix-pill ix-glass" data-ix="home"><span class="ix-wide">게임 </span>목록 →</button>
                 </div>
             </nav>
@@ -420,7 +426,8 @@
             </div>
         </div>
         <button id="btn-full" class="icon-btn hidden" title="전체 화면" aria-label="전체 화면">⛶</button>
-        <button id="btn-sound" class="icon-btn" title="소리 켜기/끄기" aria-label="소리">🔊</button>
+        <button id="btn-bgm" class="icon-btn bgm-btn" title="배경 음악 끄기" aria-label="배경 음악">🎵</button>
+        <button id="btn-sound" class="icon-btn" title="효과음 켜기/끄기" aria-label="효과음">🔊</button>
         <button id="btn-settings" class="icon-btn" title="설정" aria-label="설정">⚙️</button>
     </header>
 
@@ -478,6 +485,8 @@
         <div class="panel pop text-left">
             <h2 class="text-2xl mb-4 text-center">⚙️ 설정</h2>
             <label class="block mb-4"><span class="flex justify-between mb-1"><span>🔊 효과음 크기</span><b id="vol-txt">70</b></span><input id="vol" type="range" min="0" max="100" step="5" class="w-full"></label>
+            <label class="flex items-center justify-between mb-2 cursor-pointer"><span>🎵 배경 음악</span><input id="bgm-on" type="checkbox" class="w-6 h-6 accent-[#8b7cf6]"></label>
+            <label class="block mb-4"><span class="flex justify-between mb-1"><span>🎚️ 배경 음악 크기</span><b id="bgm-vol-txt">50</b></span><input id="bgm-vol" type="range" min="0" max="100" step="5" class="w-full"></label>
             <label class="flex items-center justify-between mb-4 cursor-pointer"><span>🔠 글자 크게 보기</span><input id="bigtext" type="checkbox" class="w-6 h-6 accent-[#8b7cf6]"></label>
             <button id="set-full" class="btn3d w-full py-3 mb-3 rounded-2xl bg-indigo-500 text-lg">⛶ 전체 화면 켜기/끄기</button>
             <button id="set-close" class="btn3d w-full py-3 rounded-2xl bg-white border-2 border-[#ece5fb] text-lg">닫기</button>
@@ -545,6 +554,104 @@
         refreshSoundBtn();
 
         // ==========================================
+        // 1-0. 배경 음악: 직접 연주하는 경쾌한 8비트 곡 (음원 파일·저작권 걱정 없음)
+        //   소개·목록 화면에서만 흐르고, 게임을 시작하면 효과음이 잘 들리도록 잠시 멈춘다.
+        //   브라우저 정책상 소리는 첫 터치/클릭/키 입력 뒤에 시작된다.
+        // ==========================================
+        const bgm = (() => {
+            const STEP = 60 / 138 / 2;   // 8분음표 길이 (138 BPM)
+            const NN = { C: 0, D: 2, E: 4, F: 5, G: 7, A: 9, B: 11 };
+            const nt = s => s === '.' || s === '-' ? s : 12 * (+s.slice(-1) + 1) + NN[s[0]];
+            // 마디마다 8분음표 8칸: 음 이름, '-' 이어서, '.' 쉼
+            const MEL = [
+                'E5 G5 C6 G5 A5 G5 E5 .', 'D5 . G5 . B5 A5 G5 .', 'C5 E5 A5 E5 G5 E5 C5 .', 'F5 - A5 - G5 F5 E5 D5',
+                'E5 G5 C6 G5 A5 G5 E5 G5', 'B5 - A5 G5 D6 - B5 .', 'A5 G5 F5 A5 G5 F5 E5 D5', 'D5 E5 F5 G5 - . G5 .',
+                'A5 . A5 C6 - A5 G5 F5', 'G5 . G5 B5 - G5 F5 D5', 'E5 G5 B5 G5 E5 G5 B5 D6', 'C6 - B5 A5 E5 - . .',
+                'F5 A5 C6 A5 F5 A5 C6 D6', 'D6 - B5 G5 D5 G5 B5 .', 'C6 G5 E5 G5 C6 - E6 .', 'D6 C6 B5 A5 G5 . G5 .',
+            ].map(b => b.split(' ').map(nt));
+            const PROG = 'C G Am F C G F G F G Em Am F G C G7'.split(' ');
+            const CHORD = { C: [48, [60, 64, 67]], G: [43, [59, 62, 67]], Am: [45, [57, 60, 64]], F: [41, [57, 60, 65]], Em: [40, [55, 59, 64]], G7: [43, [59, 62, 65]] };
+            let on = store.get('bgm', true), vol = store.get('bgmVol', 50) / 100, scene = 'menu';
+            let bus = null, noise = null, timer = null, nextT = 0, step = 0, playing = false;
+            const level = () => vol * 0.6;
+            function setup(ac){
+                if(bus) return;
+                bus = ac.createGain(); bus.gain.value = 0.0001;
+                const lp = ac.createBiquadFilter(); lp.type = 'lowpass'; lp.frequency.value = 4200;
+                bus.connect(lp); lp.connect(ac.destination);
+                noise = ac.createBuffer(1, ac.sampleRate * 0.3 | 0, ac.sampleRate);
+                const d = noise.getChannelData(0); for(let i = 0; i < d.length; i++) d[i] = Math.random() * 2 - 1;
+            }
+            function note(ac, midi, t, dur, type, v){
+                const o = ac.createOscillator(), g = ac.createGain();
+                o.type = type; o.frequency.setValueAtTime(noteFreq(midi), t);
+                g.gain.setValueAtTime(0.0001, t); g.gain.linearRampToValueAtTime(v, t + 0.008); g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
+                o.connect(g); g.connect(bus); o.start(t); o.stop(t + dur + 0.02);
+            }
+            function drum(ac, t, kind){
+                const g = ac.createGain();
+                if(kind === 'kick'){
+                    const o = ac.createOscillator(); o.frequency.setValueAtTime(150, t); o.frequency.exponentialRampToValueAtTime(45, t + 0.12);
+                    g.gain.setValueAtTime(0.25, t); g.gain.exponentialRampToValueAtTime(0.0001, t + 0.16);
+                    o.connect(g); g.connect(bus); o.start(t); o.stop(t + 0.18); return;
+                }
+                const hat = kind === 'hat', len = hat ? 0.035 : 0.12, s = ac.createBufferSource(), f = ac.createBiquadFilter();
+                s.buffer = noise; f.type = hat ? 'highpass' : 'bandpass'; f.frequency.value = hat ? 7000 : 1800;
+                g.gain.setValueAtTime(hat ? 0.045 : 0.14, t); g.gain.exponentialRampToValueAtTime(0.0001, t + len);
+                s.connect(f); f.connect(g); g.connect(bus); s.start(t); s.stop(t + len + 0.02);
+            }
+            function play8(ac, n, t){
+                const bar = n >> 3, i = n & 7, mel = MEL[bar], [root, tri] = CHORD[PROG[bar]], m = mel[i];
+                if(typeof m === 'number'){ let len = 1; while(i + len < 8 && mel[i + len] === '-') len++; note(ac, m, t, STEP * (len - 0.15), 'square', 0.05); }
+                note(ac, root + [0, 12, 7, 12][i & 3], t, STEP * 0.8, 'triangle', 0.17);   // 통통 튀는 베이스
+                if(i & 1) tri.forEach(x => note(ac, x, t, STEP * 0.45, 'triangle', 0.035));  // 엇박 화음
+                if(i === 0 || i === 4 || (i === 5 && bar % 2)) drum(ac, t, 'kick');
+                if(i === 2 || i === 6 || (bar % 4 === 3 && i === 7)) drum(ac, t, 'snare');
+                drum(ac, t, 'hat'); drum(ac, t + STEP / 2, 'hat');
+            }
+            function tick(){
+                if(!playing) return;
+                const ac = actx;
+                while(nextT < ac.currentTime + 0.25){ play8(ac, step, nextT); step = (step + 1) % (MEL.length * 8); nextT += STEP; }
+                timer = setTimeout(tick, 50);
+            }
+            function start(ac){
+                if(playing) return; setup(ac); playing = true;
+                const t = ac.currentTime; nextT = t + 0.08;
+                bus.gain.cancelScheduledValues(t); bus.gain.setValueAtTime(0.0001, t); bus.gain.linearRampToValueAtTime(level(), t + 0.8);
+                tick();
+            }
+            function stop(){
+                if(!playing) return; playing = false; clearTimeout(timer);
+                const t = actx.currentTime; bus.gain.cancelScheduledValues(t); bus.gain.setValueAtTime(bus.gain.value, t); bus.gain.linearRampToValueAtTime(0.0001, t + 0.35);
+            }
+            const want = () => on && vol > 0 && scene === 'menu' && !document.hidden;
+            function sync(){
+                refresh();
+                if(!want()){ stop(); return; }
+                const ac = audio(); if(!ac) return;
+                if(ac.state === 'running') start(ac);
+                else ac.resume().then(() => { if(want()) start(ac); }).catch(() => {});
+            }
+            function refresh(){
+                document.querySelectorAll('.bgm-btn').forEach(b => {
+                    b.classList.toggle('bgm-off', !on);
+                    b.setAttribute('aria-pressed', on ? 'true' : 'false');
+                    b.title = on ? '배경 음악 끄기' : '배경 음악 켜기';
+                    const lb = b.querySelector('.bgm-lb'); if(lb) lb.textContent = on ? '음악 끄기' : '음악 켜기';
+                });
+                const cb = $('bgm-on'); if(cb) cb.checked = on;
+            }
+            function toggle(v){ on = typeof v === 'boolean' ? v : !on; store.set('bgm', on); sync(); }
+            function setVol(v){ vol = v; store.set('bgmVol', Math.round(v * 100)); if(playing){ const t = actx.currentTime; bus.gain.cancelScheduledValues(t); bus.gain.setValueAtTime(Math.max(level(), 0.0001), t); } sync(); }
+            // 첫 터치·클릭·키 입력에서 시작 (음악 버튼을 누른 경우는 버튼이 직접 처리)
+            ['pointerdown', 'keydown', 'touchend'].forEach(ev => document.addEventListener(ev, e => { if(!(e.target.closest && e.target.closest('.bgm-btn'))) sync(); }, { capture: true, passive: true }));
+            document.addEventListener('visibilitychange', sync);
+            return { sync, toggle, setVol, get on(){ return on; }, get vol(){ return vol; }, scene(s){ scene = s; sync(); } };
+        })();
+        document.addEventListener('click', e => { if(e.target.closest && e.target.closest('.bgm-btn')){ bgm.toggle(); if(bgm.on) sfx.tick(); } });
+
+        // ==========================================
         // 1-1. 설정 (효과음 크기, 글자 크게, 전체 화면)
         // ==========================================
         const canFull = !!(document.fullscreenEnabled || document.webkitFullscreenEnabled);
@@ -561,12 +668,15 @@
         $('btn-settings').addEventListener('click', () => {
             $('vol').value = Math.round(soundVol * 100); $('vol-txt').textContent = Math.round(soundVol * 100);
             $('bigtext').checked = document.documentElement.classList.contains('big-text');
+            $('bgm-vol').value = Math.round(bgm.vol * 100); $('bgm-vol-txt').textContent = Math.round(bgm.vol * 100); $('bgm-on').checked = bgm.on;
             $('settings').classList.remove('hidden');
         });
         $('set-close').addEventListener('click', () => $('settings').classList.add('hidden'));
         $('settings').addEventListener('click', e => { if(e.target.id === 'settings') $('settings').classList.add('hidden'); });
         $('vol').addEventListener('input', e => { soundVol = +e.target.value / 100; $('vol-txt').textContent = e.target.value; store.set('vol', +e.target.value); soundOn = soundVol > 0; store.set('sound', soundOn); refreshSoundBtn(); });
         $('vol').addEventListener('change', () => sfx.coin());
+        $('bgm-on').addEventListener('change', e => bgm.toggle(e.target.checked));
+        $('bgm-vol').addEventListener('input', e => { $('bgm-vol-txt').textContent = e.target.value; bgm.setVol(+e.target.value / 100); });
         $('bigtext').addEventListener('change', e => { applyBigText(e.target.checked); store.set('bigtext', e.target.checked); });
 
         // ==========================================
@@ -977,13 +1087,13 @@
         function loadMainScreen(){
             closeModal(); stopGame();
             currentId = null; setScore(0);
-            showView('home'); setControls('none'); container.innerHTML = '';
+            showView('home'); setControls('none'); container.innerHTML = ''; bgm.scene('menu');
             initMenu();
         }
 
         function selectGame(id){
             if(!history.state || history.state.app !== 'game') history.pushState({ app: 'game' }, '');   // 휴대폰 뒤로 가기 → 목록
-            closeModal(); stopGame();
+            closeModal(); stopGame(); bgm.scene('menu');
             const game = gameDefs.find(g => g.id === id); if(!game) return;
             currentId = id; const eng = E[game.e], k = CATS[game.c];
             setScore(0); showBest(); applyTheme(game); showView('game');
@@ -1004,7 +1114,7 @@
             const eng = E[game.e];
             const useDiff = !eng.noScore && !eng.noDiff;
             DF = useDiff ? (DIFFS[store.get('diff:' + id, 'normal')] || DIFFS.normal) : DIFFS.normal;
-            newRuntime(game); G.diff = useDiff; audio();
+            newRuntime(game); G.diff = useDiff; audio(); bgm.scene('play');
             $('diff-board').classList.toggle('hidden', !useDiff); $('diff-board').textContent = `${DF.icon} ${DF.name}`;
             store.set('recent', [id, ...store.get('recent', []).filter(x => x !== id)].slice(0, 8));
             setScore(0); showBest();
@@ -1034,7 +1144,7 @@
         }
         function showIntro(){
             closeModal(); stopGame(); currentId = null; setControls('none');
-            document.body.classList.add('intro-on'); renderIntro();
+            document.body.classList.add('intro-on'); renderIntro(); bgm.scene('menu');
         }
         window.addEventListener('popstate', e => {
             const st = e.state && e.state.app;
