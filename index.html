@@ -141,17 +141,8 @@
         .qr-mini .qr-thumb { width: 34px; height: 34px; border-radius: 6px; padding: 2px; }
         @media (max-width: 767px) { .qr-mini { padding: 4px; } .qr-mini-t { display: none; } }
         @media (max-width: 419px) { #btn-qr { display: none; } }   /* 휴대폰: 이미 접속한 화면이라 숨김 (맨 아래 'QR로 접속'은 그대로) */
-        .ix-qr { display: inline-flex; align-items: center; gap: 12px; padding: 7px 16px 7px 7px; border-radius: 22px; background: #fff; color: #2e2a42; text-align: left;
-            box-shadow: 0 16px 34px -14px rgba(50,20,120,.6), inset 0 -3px 0 #efe8fc; transition: transform .2s; }
-        .ix-qr:hover { transform: translateY(-2px) scale(1.02); }
-        .ix-qr .qr-thumb { width: 84px; height: 84px; border-radius: 14px; padding: 4px; border: 2px solid #ece5fb; }
-        .ix-qr-t { display: flex; flex-direction: column; line-height: 1.3; white-space: nowrap; }
-        .ix-qr-t b { font-size: 16px; color: #5b3fd0; }
-        .ix-qr-t small { font-size: 12.5px; color: #655e80; font-weight: 600; }
-        @media (max-width: 1023px) { .ix-qr .qr-thumb { width: 64px; height: 64px; } }
-        @media (min-width: 1400px) { .ix-qr .qr-thumb { width: 108px; height: 108px; } .ix-qr-t b { font-size: 18px; } }
-        @media (max-width: 767px) { .ix-qr { padding: 5px; border-radius: 16px; } .ix-qr-t { display: none; } .ix-qr .qr-thumb { width: 46px; height: 46px; border-radius: 10px; padding: 2px; border-width: 1px; } }
-        @media (max-width: 519px) { .ix-qr { display: none; } }   /* 휴대폰: 이미 접속한 화면이라 숨김 */
+        .ix-qr .qr-thumb { width: 20px; height: 20px; border-radius: 4px; padding: 1.5px; }   /* 옆 버튼과 같은 알약 모양, 작은 QR 아이콘 */
+        @media (max-width: 519px) { .ix-pill.ix-qr { display: none; } }   /* 휴대폰: 이미 접속한 화면이라 숨김 */
         .bgm-btn { position: relative; }
         .bgm-btn.bgm-off { opacity: .6; }
         .bgm-btn.bgm-off::after { content: ''; position: absolute; left: 50%; top: 50%; width: 26px; height: 2.5px; border-radius: 2px; background: #e11d48; transform: translate(-50%, -50%) rotate(-40deg); box-shadow: 0 0 0 1.5px #fff; }
@@ -366,7 +357,7 @@
                 <div class="ix-brand"><div class="ix-logo"><img src="icons/icon-192.png?v=2" alt=""></div><div style="line-height:1.1"><div class="ix-org">엽쌤스쿨</div><div class="ix-name">쉬는시간 오락실 <span>100</span></div></div></div>
                 <div style="display:flex;gap:8px;align-items:center">
                     <span class="install-btn ix-wide"><button type="button" class="ix-pill ix-glass">📲 앱 설치</button></span>
-                    <button type="button" class="ix-qr" data-qr title="QR 코드 크게 보기"><span class="qr-thumb"></span><span class="ix-qr-t"><b>📱 QR로 접속</b><small>누르면 크게 보여요</small></span></button>
+                    <button type="button" class="ix-pill ix-glass ix-qr" data-qr title="QR 코드 크게 보기"><span class="qr-thumb"></span>QR로 접속</button>
                     <button type="button" class="ix-pill ix-glass bgm-btn" aria-label="배경 음악">🎵<span class="bgm-lb ix-wide">음악 끄기</span></button>
                     <button type="button" class="ix-pill ix-glass" data-ix="home"><span class="ix-wide">게임 </span>목록 →</button>
                 </div>
