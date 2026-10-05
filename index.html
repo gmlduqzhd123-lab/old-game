@@ -502,6 +502,15 @@
             <label class="flex items-center justify-between mb-2 cursor-pointer"><span>🎵 배경 음악</span><input id="bgm-on" type="checkbox" class="w-6 h-6 accent-[#8b7cf6]"></label>
             <label class="block mb-4"><span class="flex justify-between mb-1"><span>🎚️ 배경 음악 크기</span><b id="bgm-vol-txt">50</b></span><input id="bgm-vol" type="range" min="0" max="100" step="5" class="w-full"></label>
             <label class="flex items-center justify-between mb-4 cursor-pointer"><span>🔠 글자 크게 보기</span><input id="bigtext" type="checkbox" class="w-6 h-6 accent-[#8b7cf6]"></label>
+            <div class="border-t border-[#ece5fb] pt-3 mt-3 mb-4">
+                <span class="block text-sm font-bold text-[#655e80] mb-2">💾 데이터 및 기록 관리</span>
+                <div class="grid grid-cols-2 gap-2 mb-2">
+                    <button id="btn-export-data" type="button" class="btn3d py-2.5 px-2 rounded-xl bg-white border-2 border-[#ece5fb] text-sm text-[#2e2a42]">📤 백업 저장</button>
+                    <button id="btn-import-data" type="button" class="btn3d py-2.5 px-2 rounded-xl bg-white border-2 border-[#ece5fb] text-sm text-[#2e2a42]">📥 백업 복원</button>
+                </div>
+                <input id="file-import-data" type="file" accept=".json" class="hidden">
+                <button id="btn-reset-data" type="button" class="btn3d w-full py-2.5 rounded-xl bg-red-50 border-2 border-red-200 text-sm text-red-500">🗑️ 저장된 모든 기록 초기화</button>
+            </div>
             <button id="set-full" class="btn3d w-full py-3 mb-3 rounded-2xl bg-indigo-500 text-lg">⛶ 전체 화면 켜기/끄기</button>
             <button id="set-close" class="btn3d w-full py-3 rounded-2xl bg-white border-2 border-[#ece5fb] text-lg">닫기</button>
             <p class="text-xs text-[#a9a3c2] mt-3 text-center">TV·전자칠판에 띄울 때는 전체 화면을 추천해요.</p>
@@ -531,7 +540,40 @@
         // 기록 저장 (브라우저 저장소가 막혀 있어도 게임은 정상 동작)
         const store = {
             get(k, d){ try { const v = localStorage.getItem('yeop100:' + k); return v === null ? d : JSON.parse(v); } catch(e) { return d; } },
-            set(k, v){ try { localStorage.setItem('yeop100:' + k, JSON.stringify(v)); } catch(e) {} }
+            set(k, v){ try { localStorage.setItem('yeop100:' + k, JSON.stringify(v)); } catch(e) {} },
+            clearAll(){
+                try {
+                    const keys = [];
+                    for(let i = 0; i < localStorage.length; i++){
+                        const k = localStorage.key(i);
+                        if(k && k.startsWith('yeop100:')) keys.push(k);
+                    }
+                    keys.forEach(k => localStorage.removeItem(k));
+                    return true;
+                } catch(e) { return false; }
+            },
+            exportData(){
+                try {
+                    const data = {};
+                    for(let i = 0; i < localStorage.length; i++){
+                        const k = localStorage.key(i);
+                        if(k && k.startsWith('yeop100:')){
+                            data[k.slice('yeop100:'.length)] = JSON.parse(localStorage.getItem(k));
+                        }
+                    }
+                    return JSON.stringify(data, null, 2);
+                } catch(e) { return null; }
+            },
+            importData(jsonStr){
+                try {
+                    const data = JSON.parse(jsonStr);
+                    if(typeof data !== 'object' || !data) return false;
+                    for(const [k, v] of Object.entries(data)){
+                        localStorage.setItem('yeop100:' + k, JSON.stringify(v));
+                    }
+                    return true;
+                } catch(e) { return false; }
+            }
         };
 
         // ==========================================
@@ -698,6 +740,42 @@
         $('bgm-on').addEventListener('change', e => bgm.toggle(e.target.checked));
         $('bgm-vol').addEventListener('input', e => { $('bgm-vol-txt').textContent = e.target.value; bgm.setVol(+e.target.value / 100); });
         $('bigtext').addEventListener('change', e => { applyBigText(e.target.checked); store.set('bigtext', e.target.checked); });
+        // 데이터 백업 / 복원 / 초기화
+        $('btn-reset-data').addEventListener('click', () => {
+            if(confirm('정말 모든 최고 기록과 설정(스티커판, 픽셀 그림 등)을 초기화할까요?\n이 작업은 되돌릴 수 없습니다.')){
+                store.clearAll();
+                alert('모든 데이터가 초기화되었습니다.');
+                location.reload();
+            }
+        });
+        $('btn-export-data').addEventListener('click', () => {
+            const json = store.exportData();
+            if(!json || json === '{}'){ alert('내보낼 저장 데이터가 아직 없습니다.'); return; }
+            const blob = new Blob([json], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `yeop100_backup_${new Date().toISOString().slice(0,10)}.json`;
+            a.click();
+            URL.revokeObjectURL(url);
+        });
+        $('btn-import-data').addEventListener('click', () => $('file-import-data').click());
+        $('file-import-data').addEventListener('change', e => {
+            const file = e.target.files && e.target.files[0];
+            if(!file) return;
+            const reader = new FileReader();
+            reader.onload = ev => {
+                const ok = store.importData(ev.target.result);
+                if(ok){
+                    alert('데이터 복원이 완료되었습니다! 화면을 새로고침합니다.');
+                    location.reload();
+                } else {
+                    alert('올바른 백업 파일 형식이 아닙니다.');
+                }
+            };
+            reader.readAsText(file);
+            e.target.value = '';
+        });
 
         // ==========================================
         // 2. 게임 실행 수명주기 (타이머/이벤트 누수 방지)
@@ -825,6 +903,17 @@
 
         window.addEventListener('keydown', e => {
             if(isTyping()) return;
+            // ESC: 설정 닫기 또는 뒤로 가기
+            if(e.key === 'Escape'){
+                if(!$('settings').classList.contains('hidden')){ $('settings').classList.add('hidden'); return; }
+                if(!modal.classList.contains('hidden')){ closeModal(); goList(); return; }
+                if(!gameView.classList.contains('hidden')){ $('btn-back').click(); return; }
+            }
+            // 게임 결과 모달 열려 있을 때: Enter / R은 다시하기, M은 목록
+            if(!modal.classList.contains('hidden')){
+                if(e.key === 'Enter' || e.key === 'r' || e.key === 'R'){ e.preventDefault(); $('btn-modal-retry').click(); return; }
+                if(e.key === 'm' || e.key === 'M'){ e.preventDefault(); $('btn-modal-main').click(); return; }
+            }
             const k = keyMap[e.key];
             if(['ArrowUp','ArrowDown','ArrowLeft','ArrowRight',' '].includes(e.key)) e.preventDefault();
             if(!k || !G || G.over) return;
