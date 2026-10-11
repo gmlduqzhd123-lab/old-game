@@ -181,7 +181,9 @@
         @keyframes ixFloat { 0%, 100% { translate: 0 0; } 50% { translate: 0 -16px; } }
         .ix-mini { display: none; gap: 10px; justify-content: center; margin-bottom: 16px; }
         .ix-mini span { width: 44px; height: 44px; border-radius: 15px; display: flex; align-items: center; justify-content: center; font-size: 23px; animation: ixFloat 5.5s ease-in-out infinite; }
-        @media (max-width: 519px) { .ix-wide { display: none !important; } .ix-nav { flex-wrap: wrap; row-gap: 10px; } .ix-nav > div:last-child { width: 100%; justify-content: flex-end; } .ix-nav .ix-pill, #intro-view .install-btn button.ix-pill { padding: 8px 13px; } }   /* 휴대폰: 제목 아래 줄에 설치·QR·음악·목록 */
+        .ix-nav-actions, .ix-nav-key, .ix-nav-more { display: flex; gap: 8px; align-items: center; }
+        /* 휴대폰: 맨 윗줄 = 제목 + 설치·QR, 둘째 줄 = 음악·목록 */
+        @media (max-width: 519px) { .ix-wide { display: none !important; } nav.ix-nav { flex-wrap: wrap; gap: 10px 8px; padding-left: 14px; padding-right: 14px; } .ix-nav-actions { display: contents; } .ix-nav .ix-brand { gap: 8px; min-width: 0; } .ix-nav .ix-brand .ix-logo { width: 36px; height: 36px; border-radius: 12px; } .ix-nav .ix-brand .ix-name { font-size: 14px; } .ix-nav .ix-brand .ix-org { font-size: 11px; } .ix-nav-key { gap: 6px; } .ix-nav-more { width: 100%; justify-content: flex-end; } .ix-nav .ix-pill, #intro-view .install-btn button.ix-pill { padding: 8px 13px; } .ix-nav-key .ix-pill, #intro-view .ix-nav-key .install-btn button.ix-pill { padding: 7px 10px; gap: 5px; font-size: 13.5px; } }
         @media (max-width: 767px) {
             .ix-token { display: none; }                 /* 휴대폰: 떠다니는 아이콘이 글자를 가리지 않도록 한 줄로 */
             .ix-mini { display: flex; }
@@ -355,11 +357,15 @@
 
             <nav class="ix-nav ix-rise">
                 <div class="ix-brand"><div class="ix-logo"><img src="icons/icon-192.png?v=2" alt=""></div><div style="line-height:1.1"><div class="ix-org">엽쌤스쿨</div><div class="ix-name">쉬는시간 오락실 <span>100</span></div></div></div>
-                <div style="display:flex;gap:8px;align-items:center">
-                    <span class="install-btn"><button type="button" class="ix-pill ix-glass" aria-label="앱 설치"><span aria-hidden="true">📲</span><span><span class="ix-wide">앱 </span>설치</span></button></span>
-                    <button type="button" class="ix-pill ix-glass ix-qr" data-qr title="QR 코드 크게 보기"><span class="qr-thumb"></span><span>QR<span class="ix-wide">로 접속</span></span></button>
-                    <button type="button" class="ix-pill ix-glass bgm-btn" aria-label="배경 음악">🎵<span class="bgm-lb ix-wide">음악 끄기</span></button>
-                    <button type="button" class="ix-pill ix-glass" data-ix="home"><span class="ix-wide">게임 </span>목록 →</button>
+                <div class="ix-nav-actions">
+                    <div class="ix-nav-key">
+                        <span class="install-btn"><button type="button" class="ix-pill ix-glass" aria-label="앱 설치"><span aria-hidden="true">📲</span><span><span class="ix-wide">앱 </span>설치</span></button></span>
+                        <button type="button" class="ix-pill ix-glass ix-qr" data-qr title="QR 코드 크게 보기"><span class="qr-thumb"></span><span>QR<span class="ix-wide">로 접속</span></span></button>
+                    </div>
+                    <div class="ix-nav-more">
+                        <button type="button" class="ix-pill ix-glass bgm-btn" aria-label="배경 음악">🎵<span class="bgm-lb ix-wide">음악 끄기</span></button>
+                        <button type="button" class="ix-pill ix-glass" data-ix="home"><span class="ix-wide">게임 </span>목록 →</button>
+                    </div>
                 </div>
             </nav>
 
