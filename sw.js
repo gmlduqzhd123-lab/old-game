@@ -1,5 +1,5 @@
 // 엽쌤스쿨 쉬는시간 오락실 100 서비스 워커: 앱 설치(홈 화면에 추가)와 오프라인 열기를 돕는다.
-const CACHE_VERSION = 'old-game-v5';
+const CACHE_VERSION = 'old-game-v6';
 // 같은 주소(gmlduqzhd123-lab.github.io)의 다른 앱들과 저장소를 함께 쓰므로, 이 앱의 이전 캐시만 지운다.
 const CACHE_PREFIX = 'old-game-v';
 const APP_SHELL = [
