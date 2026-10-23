@@ -31,12 +31,26 @@
             --sans: 'Pretendard Variable', Pretendard, -apple-system, BlinkMacSystemFont, 'Apple SD Gothic Neo', 'Malgun Gothic', 'Noto Sans KR', sans-serif; --card: #ffffff; --line: #ece5fb;
             --accent: #8b7cf6; --accent-d: #6a5ae0;
         }
-        html { font-size: 16px; }
+        html { font-size: 16px; height: auto; min-height: 100%; overflow-x: hidden; overflow-y: auto; -webkit-overflow-scrolling: touch; touch-action: pan-y; }
         html.big-text { font-size: 18.5px; }
         body {
             font-family: var(--sans); font-weight: 500; letter-spacing: -.01em;
             -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale;
-            overflow: hidden; touch-action: manipulation; color: var(--ink);
+            min-height: 100vh; min-height: 100dvh;
+            overflow: visible;
+            touch-action: pan-y; color: var(--ink);
+            background-color: var(--bg);
+            background-image: radial-gradient(#f3e3d3 1.2px, transparent 1.2px);
+            background-size: 22px 22px;
+        }
+        html:fullscreen:not(.game-on), html:-webkit-full-screen:not(.game-on) { height: 100%; overflow-y: auto; }
+        html.game-on, body.game-on {
+            height: 100%; height: 100vh; height: 100dvh;
+            max-height: 100vh; max-height: 100dvh;
+            overflow: hidden; touch-action: manipulation;
+        }
+        body:not(.game-on) > header {
+            position: sticky; top: 0; z-index: 30;
             background-color: var(--bg);
             background-image: radial-gradient(#f3e3d3 1.2px, transparent 1.2px);
             background-size: 22px 22px;
@@ -66,9 +80,12 @@
         .icon-btn:active { transform: translateY(2px); box-shadow: 0 1px 0 #e6ddfb; }
 
         /* 홈: 분류 탭과 게임 카드 */
-        .cat-tab { white-space: nowrap; padding: 8px 14px; border-radius: 999px; background: #fff; border: 2px solid var(--line); font-size: 15px; flex-shrink: 0; }
+        #home-view { touch-action: pan-y; }
+        #cat-tabs, #home-extra .overflow-x-auto { -webkit-overflow-scrolling: touch; touch-action: pan-x pan-y; }
+        .cat-tab { white-space: nowrap; padding: 8px 14px; border-radius: 999px; background: #fff; border: 2px solid var(--line); font-size: 15px; flex-shrink: 0; touch-action: pan-x pan-y; }
         .cat-tab.on { background: var(--c, var(--accent)); border-color: var(--c, var(--accent)); color: #fff; box-shadow: 0 3px 0 rgba(46,42,66,.15); }
-        .game-card { position: relative; display: flex; flex-direction: column; align-items: center; gap: 6px; padding: 14px 8px 12px; background: #fff; border: 2px solid var(--line); border-radius: 22px; box-shadow: 0 5px 0 var(--soft2); text-align: center; transition: transform .1s; min-width: 0; }
+        .game-card { position: relative; display: flex; flex-direction: column; align-items: center; gap: 6px; padding: 14px 8px 12px; background: #fff; border: 2px solid var(--line); border-radius: 22px; box-shadow: 0 5px 0 var(--soft2); text-align: center; transition: transform .1s; min-width: 0; touch-action: pan-y; }
+        .menu-btn, .ix-cat, .ix-game { touch-action: pan-y; }
         .game-card:hover { transform: translateY(-2px); border-color: var(--c); }
         .game-card:active { transform: translateY(3px); box-shadow: 0 2px 0 var(--soft2); }
         .card-icon { width: 62px; height: 62px; border-radius: 20px; background: var(--soft); display: flex; align-items: center; justify-content: center; font-size: 34px; }
@@ -79,7 +96,7 @@
         button { font-weight: 700; }
         .card-title { font-size: 15px; font-weight: 700; line-height: 1.3; word-break: keep-all; }
         .card-best { position: absolute; top: 7px; right: 8px; font-size: 11px; background: #fff4d6; color: #b7791f; border-radius: 999px; padding: 1px 7px; }
-        .mini-card { display: flex; align-items: center; gap: 8px; padding: 8px 14px 8px 8px; background: #fff; border: 2px solid var(--line); border-radius: 18px; white-space: nowrap; flex-shrink: 0; box-shadow: 0 3px 0 var(--soft2); }
+        .mini-card { display: flex; align-items: center; gap: 8px; padding: 8px 14px 8px 8px; background: #fff; border: 2px solid var(--line); border-radius: 18px; white-space: nowrap; flex-shrink: 0; box-shadow: 0 3px 0 var(--soft2); touch-action: pan-x pan-y; }
         .mini-card .card-icon { width: 38px; height: 38px; font-size: 22px; border-radius: 12px; }
 
         /* 게임 화면 */
@@ -88,7 +105,7 @@
         #game-container.canvas-mode { background: transparent; border: none; box-shadow: none; overflow: visible; }
         canvas { touch-action: none; outline: none; max-width: 100%; max-height: 100%; object-fit: contain; border-radius: 22px; display: block; }
         .canvas-mode canvas { border: 3px solid var(--soft2, #e6ddfb); box-shadow: 0 6px 0 var(--soft2, #e6ddfb); max-height: calc(100% - 8px); }
-        #dom-wrapper { background: linear-gradient(180deg, #fffdf9, var(--soft, #fff) 180%); }
+        #dom-wrapper { background: linear-gradient(180deg, #fffdf9, var(--soft, #fff) 180%); -webkit-overflow-scrolling: touch; touch-action: pan-y; }
         @media (min-width: 768px) {
             #dom-wrapper > :first-child { margin-top: auto; }
             #dom-wrapper > :last-child { margin-bottom: auto; }
@@ -102,10 +119,16 @@
         .act-btn { min-width: 96px; height: 96px; border-radius: 999px; background: var(--c, var(--accent)); color: #fff; font-size: 17px; line-height: 1.15; padding: 0 12px; box-shadow: 0 6px 0 rgba(46,42,66,.22); word-break: keep-all; }
         .act-btn.pressed, .act-btn:active { transform: translateY(4px); box-shadow: 0 2px 0 rgba(46,42,66,.22); }
         @media (min-width: 1024px) { .pad-btn { width: 50px; height: 50px; } .act-btn { min-width: 84px; height: 84px; } }
+        @media (max-height: 520px) {
+            body.game-on > header { padding-top: 4px !important; padding-bottom: 4px !important; }
+            body.game-on .hud-chip { padding: 2px 10px; font-size: 14px; }
+            .pad-btn { width: 42px; height: 42px; font-size: 18px; border-radius: 13px; }
+            .act-btn { min-width: 72px; height: 72px; font-size: 14px; }
+        }
 
         /* 결과창 / 설정창 */
-        .overlay { position: absolute; inset: 0; background: rgba(255,247,238,.82); backdrop-filter: blur(6px); display: flex; align-items: center; justify-content: center; z-index: 50; padding: 16px; }
-        .panel { background: #fff; border: 3px solid var(--line); border-radius: 28px; box-shadow: 0 8px 0 #e6ddfb, 0 20px 40px rgba(46,42,66,.12); padding: 24px 20px; width: 100%; max-width: 380px; text-align: center; }
+        .overlay { position: absolute; inset: 0; background: rgba(255,247,238,.82); backdrop-filter: blur(6px); display: flex; align-items: center; justify-content: center; z-index: 50; padding: 16px; overflow-y: auto; -webkit-overflow-scrolling: touch; touch-action: pan-y; }
+        .panel { background: #fff; border: 3px solid var(--line); border-radius: 28px; box-shadow: 0 8px 0 #e6ddfb, 0 20px 40px rgba(46,42,66,.12); padding: 24px 20px; width: 100%; max-width: 380px; max-height: 100%; overflow-y: auto; -webkit-overflow-scrolling: touch; touch-action: pan-y; text-align: center; }
         .star { font-size: 40px; color: #e7e1fa; display: inline-block; }
         .star.on { color: #fbbf24; animation: starPop .4s both; text-shadow: 0 3px 0 #f59e0b55; }
         @keyframes starPop { 0% { transform: scale(0) rotate(-40deg); } 70% { transform: scale(1.3); } 100% { transform: scale(1); } }
@@ -158,13 +181,13 @@
     <style>.install-btn{display:none}html.can-install .install-btn{display:inline}.install-btn button{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:pointer;text-decoration:underline;text-underline-offset:3px}</style>
     <!-- ✨ 첫 화면(앱 소개) 스타일 -->
     <style>
-        #intro-view { flex: 1; min-height: 0; overflow-y: auto; overflow-x: hidden; scroll-behavior: smooth; }
+        #intro-view { flex: 1 0 auto; overflow: visible; touch-action: pan-y; }
         body:not(.intro-on) #intro-view { display: none; }
         body.intro-on > header, body.intro-on #home-view, body.intro-on #game-view { display: none !important; }
         body.intro-on { background-image: none; }
 
         /* 히어로: 움직이는 오로라 배경 + 떠다니는 게임 아이콘 */
-        .ix-hero { position: relative; overflow: hidden; min-height: min(100dvh, 1000px); display: flex; flex-direction: column; isolation: isolate; }
+        .ix-hero { position: relative; overflow: hidden; min-height: 100vh; min-height: min(100dvh, 1000px); display: flex; flex-direction: column; isolation: isolate; }
         .ix-aurora { position: absolute; inset: 0; z-index: -2; background: linear-gradient(180deg, #fffaf4 0%, #fdf4ff 55%, #fff7ee 100%); }
         .ix-blob { position: absolute; width: 70vmax; height: 70vmax; border-radius: 50%; animation: ixDrift 22s ease-in-out infinite alternate; will-change: transform; }
         .ix-blob.b1 { background: radial-gradient(circle, rgba(167,139,250,.55), rgba(167,139,250,0) 62%); top: -32vmax; left: -26vmax; }
@@ -336,7 +359,7 @@
         }
     </style>
 </head>
-<body class="h-[100dvh] flex flex-col select-none prevent-select">
+<body class="flex flex-col select-none prevent-select">
 
     <!-- ✨ 첫 화면: 앱 소개 -->
     <section id="intro-view" aria-label="쉬는시간 오락실 소개">
@@ -449,7 +472,7 @@
     </header>
 
     <!-- 홈 화면: 게임 카드 목록 -->
-    <main id="home-view" class="flex-1 min-h-0 overflow-y-auto px-3 md:px-6 pb-8">
+    <main id="home-view" class="flex-1 px-3 md:px-6 pb-8">
         <div class="max-w-6xl mx-auto">
             <div class="relative mb-3">
                 <span class="absolute left-4 top-1/2 -translate-y-1/2 text-lg">🔍</span>
@@ -918,8 +941,8 @@
                 if(e.key === 'm' || e.key === 'M'){ e.preventDefault(); $('btn-modal-main').click(); return; }
             }
             const k = keyMap[e.key];
-            if(['ArrowUp','ArrowDown','ArrowLeft','ArrowRight',' '].includes(e.key)) e.preventDefault();
             if(!k || !G || G.over) return;
+            if(['ArrowUp','ArrowDown','ArrowLeft','ArrowRight',' '].includes(e.key)) e.preventDefault();
             if(!keys[k]) taps[k] = true;
             keys[k] = true;
             if(G.onPress) G.onPress(k, e);
@@ -1175,15 +1198,57 @@
             const list = gameDefs.filter(g => (curCat === '전체' || q || g.c === curCat) && (!q || g.t.toLowerCase().includes(q) || g.d.toLowerCase().includes(q)));
             $('game-menu').innerHTML = list.map(cardHTML).join('') || '<p class="col-span-full text-center text-[#655e80] p-8">검색 결과가 없어요 🥲</p>';
         }
+        let homeScrollY = 0, dragSuppressClickUntil = 0;
+        function scrollRootTo(top = 0){
+            window.scrollTo(0, top);
+            document.documentElement.scrollTop = top;
+            document.body.scrollTop = top;
+            homeView.scrollTop = top;
+        }
+        // 태블릿 PC 스타일러스 펜(pen)·터치 마우스(mouse) 드래그 스크롤 보강 (게임 카드 위에서 드래그해도 목록이 부드럽게 스크롤되도록)
+        (() => {
+            let active = false, moved = false, pid = null, startY = 0, lastY = 0;
+            window.addEventListener('pointerdown', e => {
+                if(document.body.classList.contains('game-on')) return;
+                if(e.pointerType !== 'pen' && e.pointerType !== 'mouse') return;
+                if(e.button !== 0) return;
+                if(e.target.closest('input, textarea, select, header, a, #cat-tabs, #home-extra .overflow-x-auto, #settings, .yq-back')) return;
+                active = true; moved = false; pid = e.pointerId; startY = lastY = e.clientY;
+            }, { passive: true });
+            window.addEventListener('pointermove', e => {
+                if(!active || e.pointerId !== pid) return;
+                const dy = e.clientY - lastY;
+                if(!moved && Math.abs(e.clientY - startY) > 8) moved = true;
+                if(moved){
+                    lastY = e.clientY;
+                    window.scrollBy(0, -dy);
+                }
+            }, { passive: true });
+            const end = e => {
+                if(!active || (e && e.pointerId !== undefined && e.pointerId !== pid)) return;
+                if(moved) dragSuppressClickUntil = performance.now() + 250;
+                active = false; moved = false; pid = null;
+            };
+            window.addEventListener('pointerup', end, { passive: true });
+            window.addEventListener('pointercancel', end, { passive: true });
+            document.addEventListener('click', e => {
+                if(performance.now() < dragSuppressClickUntil){
+                    e.stopPropagation(); e.preventDefault();
+                    dragSuppressClickUntil = 0;
+                }
+            }, true);
+        })();
         document.addEventListener('click', e => {
             const b = e.target.closest('.menu-btn'); if(b){ selectGame(+b.dataset.id); return; }
-            const t = e.target.closest('[data-cat]'); if(t){ curCat = t.dataset.cat; store.set('cat', curCat); initMenu(); $('home-view').scrollTo({ top: 0 }); }
+            const t = e.target.closest('[data-cat]'); if(t){ curCat = t.dataset.cat; store.set('cat', curCat); homeScrollY = 0; initMenu(); scrollRootTo(0); }
         });
-        $('menu-search').addEventListener('input', initMenu);
+        $('menu-search').addEventListener('input', () => { homeScrollY = 0; initMenu(); });
 
         function showView(mode){
             document.body.classList.remove('intro-on');
             const home = mode === 'home';
+            document.documentElement.classList.toggle('game-on', !home);
+            document.body.classList.toggle('game-on', !home);
             homeView.classList.toggle('hidden', !home);
             gameView.classList.toggle('hidden', home); gameView.classList.toggle('flex', !home);
             $('hdr-home').classList.toggle('hidden', !home); $('hdr-home').classList.toggle('flex', home);
@@ -1201,14 +1266,18 @@
             currentId = null; setScore(0);
             showView('home'); setControls('none'); container.innerHTML = ''; bgm.scene('menu');
             initMenu();
+            scrollRootTo(homeScrollY);
         }
 
         function selectGame(id){
+            if(!homeView.classList.contains('hidden') && !document.body.classList.contains('intro-on')){
+                homeScrollY = window.scrollY || document.documentElement.scrollTop || homeView.scrollTop || 0;
+            }
             if(!history.state || history.state.app !== 'game') history.pushState({ app: 'game' }, '');   // 휴대폰 뒤로 가기 → 목록
             closeModal(); stopGame(); bgm.scene('menu');
             const game = gameDefs.find(g => g.id === id); if(!game) return;
             currentId = id; const eng = E[game.e], k = CATS[game.c];
-            setScore(0); showBest(); applyTheme(game); showView('game');
+            setScore(0); showBest(); applyTheme(game); showView('game'); scrollRootTo(0);
             setControls('none'); container.classList.remove('canvas-mode');
             $('hud').classList.toggle('invisible', !!eng.noScore);
             const useDiff = !eng.noScore && !eng.noDiff;
@@ -1252,10 +1321,12 @@
         function enterHome(cat){   // 소개 → 목록
             if(cat){ curCat = cat; store.set('cat', cat); $('menu-search').value = ''; }
             if(!history.state) history.pushState({ app: 'home' }, '');
-            loadMainScreen(); homeView.scrollTo({ top: 0 }); sfx.coin();
+            homeScrollY = 0; loadMainScreen(); scrollRootTo(0); sfx.coin();
         }
         function showIntro(){
             closeModal(); stopGame(); currentId = null; setControls('none');
+            document.documentElement.classList.remove('game-on');
+            document.body.classList.remove('game-on');
             document.body.classList.add('intro-on'); renderIntro(); bgm.scene('menu');
         }
         window.addEventListener('popstate', e => {
@@ -1307,11 +1378,11 @@
                 // 스크롤하면 부드럽게 나타나기
                 const items = view.querySelectorAll('.ix-reveal');
                 if('IntersectionObserver' in window){
-                    ixObserver = new IntersectionObserver(es => es.forEach(en => { if(en.isIntersecting){ en.target.classList.add('in'); ixObserver.unobserve(en.target); } }), { root: view, threshold: .12 });
+                    ixObserver = new IntersectionObserver(es => es.forEach(en => { if(en.isIntersecting){ en.target.classList.add('in'); ixObserver.unobserve(en.target); } }), { root: null, threshold: .12 });
                     items.forEach(el => ixObserver.observe(el));
                 } else items.forEach(el => el.classList.add('in'));
             }
-            view.scrollTo({ top: 0 });
+            scrollRootTo(0);
             // 숫자 올라가는 효과
             view.querySelectorAll('[data-count]').forEach(el => {
                 const to = +el.dataset.count, t0 = performance.now();
@@ -2165,7 +2236,7 @@
                 const nb = i => { const x = i % N, y = Math.floor(i / N), r = []; for(let dy = -1; dy <= 1; dy++) for(let dx = -1; dx <= 1; dx++){ if(!dx && !dy) continue; const nx = x + dx, ny = y + dy; if(nx >= 0 && ny >= 0 && nx < N && ny < N) r.push(ny * N + nx); } return r; };
                 const cnt = i => nb(i).filter(j => mines[j]).length;
                 const NUMC = ['', '#2563eb', '#16a34a', '#dc2626', '#7c3aed', '#c2410c', '#0e7490', '#2e2a42', '#6b7280'];
-                const cell = Math.floor(Math.min(340, wrap.clientWidth - 16) / N);
+                const cell = Math.floor(Math.min(340, wrap.clientWidth - 40 - (N - 1) * 2) / N);
                 wrap.innerHTML = statBar([['mn-left', `🚩 ${M}`], ['mn-time', '⏱️ 0초']]) + `<div id="mn-grid" class="grid gap-[2px] bg-slate-700 p-1 rounded-lg" style="grid-template-columns:repeat(${N},${cell}px)"></div><button id="mn-mode" class="mt-3 px-5 py-2 ${btnCls('bg-slate-700', 'rgb(30,41,59)')}">⛏️ 열기 모드</button><p class="text-xs text-slate-500 mt-2">PC: 우클릭 = 깃발 · 모바일: 길게 누르기 또는 모드 전환 · 숫자 칸 클릭 = 주변 한번에 열기</p>`;
                 const grid = $('mn-grid');
                 const render = () => {
@@ -2310,7 +2381,7 @@
             };
             const play = (holes) => {
                 const { sol, p } = make(holes), given = p.map(v => v > 0), cur = [...p]; let sel = cur.indexOf(0), mistakes = 0, wrong = new Set();
-                const cs = Math.floor(Math.min(360, wrap.clientWidth - 12) / 9);
+                const cs = Math.floor(Math.min(360, wrap.clientWidth - 38) / 9);
                 wrap.innerHTML = statBar([['sd-mis', '실수 0/3'], ['sd-left', '']]) + `<div id="sd-grid" class="grid bg-[#8b7cf6] p-[3px] gap-0 rounded-lg" style="grid-template-columns:repeat(9,${cs}px)"></div><div id="sd-pad" class="grid grid-cols-5 gap-1.5 mt-3" style="width:${cs * 9}px">${[1,2,3,4,5,6,7,8,9].map(n => `<button data-n="${n}" class="py-2 bg-indigo-700 rounded-lg text-xl font-bold active:scale-95">${n}</button>`).join('')}<button data-n="0" class="py-2 bg-slate-600 rounded-lg text-lg active:scale-95">⌫</button></div>`;
                 const render = () => {
                     const sv = cur[sel], sr = Math.floor(sel / 9), sc = sel % 9;
@@ -2417,7 +2488,7 @@
             };
             const isBox = (x, y) => boxes.findIndex(b => b[0] === x && b[1] === y);
             const render = () => {
-                const cs = Math.floor(Math.min(46, (Math.min(380, wrap.clientWidth) - 16) / W));
+                const cs = Math.floor(Math.min(46, (Math.min(380, wrap.clientWidth) - 44) / W));
                 let h = statBar([['sk-lv', `스테이지 ${lv + 1}/${STG.length}`], ['sk-mv', `이동 ${moves}`]]) + `<div class="grid gap-0 bg-slate-900 p-2 rounded-xl" style="grid-template-columns:repeat(${W},${cs}px)">`;
                 for(let y = 0; y < H; y++) for(let x = 0; x < W; x++){
                     const goal = goals.includes(x + ',' + y), b = isBox(x, y) >= 0, wall = map[y][x] === '#';
