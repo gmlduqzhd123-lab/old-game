@@ -10,16 +10,16 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
         with:
           path: site/${{ github.event.repository.name }}
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v5
         with:
           node-version: 22
       - name: 점검 도구 설치
         run: |
           npm init -y >/dev/null
-          npm install --no-save --no-audit --no-fund playwright@1.56.1
+          npm install --no-save --no-audit --no-fund playwright@1.65.0
           npx playwright install --with-deps chromium
       - name: 실제 주소와 같은 경로로 띄우기
         run: (cd site && python3 -m http.server 8080 >/dev/null 2>&1 &) && sleep 2
